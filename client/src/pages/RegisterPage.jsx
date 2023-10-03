@@ -55,7 +55,12 @@ export default function RegisterPage() {
                  placeholder="your@email.com"
                  value={email}
                  onChange={ev => setEmail(ev.target.value)} />
-          <input
+          
+          <input type="password"
+                 placeholder="password"
+                 value={password}
+                 onChange={ev => setPassword(ev.target.value)} />
+                 <input
                  type="checkbox"
                  checked={isDriver}
                  onChange={(ev) => setIsDriver(ev.target.checked)}
@@ -78,10 +83,6 @@ export default function RegisterPage() {
   </>
 )}
 
-          <input type="password"
-                 placeholder="password"
-                 value={password}
-                 onChange={ev => setPassword(ev.target.value)} />
           <button className="primary">Register</button>
           <div className="text-center py-2 text-gray-500">
             Already a member? <Link className="underline text-black" to={'/login'}>Login</Link>
