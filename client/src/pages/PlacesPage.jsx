@@ -25,7 +25,7 @@ export default function PlacesPage() {
             <Link to={'/account/places/'+place._id} className="flex cursor-pointer gap-4 bg-gray-100 p-4 rounded-2xl"
              style={{ marginBottom: '16px' }} >
               <div className="grow-0 shrink">
-                <h2 className="text-xl">{place.title}</h2>
+                <h2 className="text-xl">{place.from}</h2>
                 <p className="text-sm mt-2">{place.description}</p>
               </div>
             </Link>

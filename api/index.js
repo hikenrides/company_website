@@ -123,15 +123,15 @@ app.post('/places', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {token} = req.cookies;
   const {
-    title,address,addedPhotos,description,price,
-    perks,extraInfo,checkIn,checkOut,maxGuests,
+    from,destination,addedPhotos,description,price,
+    perks,extraInfo,date,maxGuests,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const placeDoc = await Place.create({
       owner:userData.id,price,
-      title,address,photos:addedPhotos,description,
-      perks,extraInfo,checkIn,checkOut,maxGuests,
+      from,destination,photos:addedPhotos,description,
+      perks,extraInfo,date,maxGuests,
     });
     res.json(placeDoc);
   });

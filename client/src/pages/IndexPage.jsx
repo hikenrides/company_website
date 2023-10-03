@@ -15,7 +15,7 @@ export default function IndexPage() {
         <Link to={'/place/'+place._id} className="flex cursor-pointer gap-4 bg-gray-100 p-4 rounded-2xl"
          style={{ marginBottom: '16px' }}>
           <h2 className="font-bold">{place.address}</h2>
-          <h3 className="text-sm text-gray-500">{place.title}</h3>
+          <h3 className="text-sm text-gray-500">{place.from}</h3>
           <div className="mt-1">
             <span className="font-bold">${place.price}</span> per night
           </div>

@@ -21,7 +21,7 @@ export default function BookingsPage() {
             <div className="w-48">
             </div>
             <div className="py-3 pr-3 grow">
-              <h2 className="text-xl">{booking.place.title}</h2>
+              <h2 className="text-xl">{booking.place.from}</h2>
               <div className="text-xl">
                 <BookingDates booking={booking} className="mb-2 mt-4 text-gray-500" />
                 <div className="flex gap-1">
