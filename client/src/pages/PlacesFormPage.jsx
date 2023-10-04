@@ -1,4 +1,3 @@
-import Perks from "../Perks.jsx";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import AccountNav from "../AccountNav";
@@ -10,9 +9,7 @@ export default function PlacesFormPage() {
   const {id} = useParams();
   const [from,setFrom] = useState('');
   const [destination,setDestination] = useState('');
-  const [addedPhotos,setAddedPhotos] = useState([]);
   const [description,setDescription] = useState('');
-  const [perks,setPerks] = useState([]);
   const [extraInfo,setExtraInfo] = useState('');
   const [date,setDate] = useState('');
   const [maxGuests,setMaxGuests] = useState(1);
@@ -26,9 +23,7 @@ export default function PlacesFormPage() {
        const {data} = response;
        setFrom(data.from);
        setDestination(data.address);
-       setAddedPhotos(data.photos);
        setDescription(data.description);
-       setPerks(data.perks);
        setExtraInfo(data.extraInfo);
        setDate(data.date);
        setMaxGuests(data.maxGuests);
@@ -58,7 +53,7 @@ export default function PlacesFormPage() {
     ev.preventDefault();
     const placeData = {
       from, destination, addedPhotos,
-      description, perks, extraInfo,
+      description, extraInfo,
       date, maxGuests, price,
     };
     if (id) {
@@ -89,11 +84,7 @@ export default function PlacesFormPage() {
         <input type="text" value={destination} onChange={ev => setDestination(ev.target.value)}placeholder="Province, City, Township, or specific address)"/>
         {preInput('Vehicle description','description of the vehicle')}
         <textarea value={description} onChange={ev => setDescription(ev.target.value)} />
-        {preInput('Perks','select all the perks of your place')}
-        <div className="grid mt-2 gap-2 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-          <Perks selected={perks} onChange={setPerks} />
-        </div>
-        {preInput('Extra info','house rules, etc')}
+        {preInput('Extra info','trip rules, etc')}
         <textarea value={extraInfo} onChange={ev => setExtraInfo(ev.target.value)} />
         {preInput('Check in&out times','add check in and out times, remember to have some time window for cleaning the room between guests')}
         <div className="grid gap-2 grid-cols-2 md:grid-cols-4">

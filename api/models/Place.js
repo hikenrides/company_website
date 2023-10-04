@@ -4,12 +4,9 @@ const placeSchema = new mongoose.Schema({
   owner: {type:mongoose.Schema.Types.ObjectId, ref:'User'},
   from: String,
   destination: String,
-  photos: [String],
   description: String,
-  perks: [String],
   extraInfo: String,
-  checkIn: Number,
-  checkOut: Number,
+  date: Date,
   maxGuests: Number,
   price: Number,
 });

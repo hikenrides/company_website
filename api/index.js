@@ -108,30 +108,20 @@ app.post('/logout', (req,res) => {
   res.cookie('token', '').json(true);
 });
 
-const photosMiddleware = multer({dest:'/tmp'});
-app.post('/upload', photosMiddleware.array('photos', 100), async (req,res) => {
-  const uploadedFiles = [];
-  for (let i = 0; i < req.files.length; i++) {
-    const {path,originalname,mimetype} = req.files[i];
-    const url = await uploadToS3(path, originalname, mimetype);
-    uploadedFiles.push(url);
-  }
-  res.json(uploadedFiles);
-});
 
 app.post('/places', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {token} = req.cookies;
   const {
-    from,destination,addedPhotos,description,price,
-    perks,extraInfo,date,maxGuests,
+    from,destination,description,price
+    ,extraInfo,date,maxGuests,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const placeDoc = await Place.create({
       owner:userData.id,price,
-      from,destination,photos:addedPhotos,description,
-      perks,extraInfo,date,maxGuests,
+      from,destination,description
+      ,extraInfo,date,maxGuests,
     });
     res.json(placeDoc);
   });
@@ -156,16 +146,16 @@ app.put('/places', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {token} = req.cookies;
   const {
-    id, title,address,addedPhotos,description,
-    perks,extraInfo,checkIn,checkOut,maxGuests,price,
+    id, from,destination,description,
+    extraInfo,date,maxGuests,price,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const placeDoc = await Place.findById(id);
     if (userData.id === placeDoc.owner.toString()) {
       placeDoc.set({
-        title,address,photos:addedPhotos,description,
-        perks,extraInfo,checkIn,checkOut,maxGuests,price,
+        from,destination,description,
+        extraInfo,date,maxGuests,price,
       });
       await placeDoc.save();
       res.json('ok');
@@ -182,10 +172,10 @@ app.post('/bookings', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
   const {
-    place,checkIn,checkOut,numberOfGuests,name,phone,price,
+    place,numberOfGuests,name,phone,price,
   } = req.body;
   Booking.create({
-    place,checkIn,checkOut,numberOfGuests,name,phone,price,
+    place,numberOfGuests,name,phone,price,
     user:userData.id,
   }).then((doc) => {
     res.json(doc);

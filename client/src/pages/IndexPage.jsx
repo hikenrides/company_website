@@ -12,12 +12,12 @@ export default function IndexPage() {
   return (
     <div className="mt-20">
       {places.length > 0 && places.map(place => (
-        <Link to={'/place/'+place._id} className="flex cursor-pointer gap-4 bg-gray-100 p-4 rounded-2xl"
+        <Link to={'/place/'+place._id} className="block cursor-pointer gap-4 bg-gray-100 p-4 rounded-2xl"
          style={{ marginBottom: '16px' }}>
-          <h2 className="font-bold">{place.address}</h2>
-          <h3 className="text-sm text-gray-500">{place.from}</h3>
+          <h2 className="font-bold">From: {place.destination}</h2>
+          <h3 className="text-sm text-gray-500">To: {place.from}</h3>
           <div className="mt-1">
-            <span className="font-bold">${place.price}</span> per night
+            <span className="font-bold">R{place.price}</span> per person
           </div>
         </Link>
       ))}
