@@ -36,11 +36,11 @@ export default function RegisterPage() {
         <h1 className="text-4xl text-center mb-4">Register</h1>
         <form className="max-w-md mx-auto" onSubmit={registerUser}>
           <input type="text"
-                 placeholder="John Doe"
+                 placeholder="fullname"
                  value={name}
                  onChange={ev => setName(ev.target.value)} />
           <input type="text"
-                 placeholder="Male"
+                 placeholder="Gender"
                  value={gender}
                  onChange={ev => setGender(ev.target.value)} />
           <input type="text"
@@ -65,12 +65,12 @@ export default function RegisterPage() {
                  checked={isDriver}
                  onChange={(ev) => setIsDriver(ev.target.checked)}
             />
-          <label htmlFor="isDriver">I am a driver</label>
+          <label htmlFor="isDriver">I'm a driver</label>
           {isDriver && (
   <>
     <input
       type="text"
-      placeholder="Driver's License"
+      placeholder="Driver's License No"
       value={driverLicense}
       onChange={(ev) => setDriverLicense(ev.target.value)}
     />

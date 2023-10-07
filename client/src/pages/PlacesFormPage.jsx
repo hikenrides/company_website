@@ -52,7 +52,7 @@ export default function PlacesFormPage() {
   async function savePlace(ev) {
     ev.preventDefault();
     const placeData = {
-      from, destination, addedPhotos,
+      from, destination,
       description, extraInfo,
       date, maxGuests, price,
     };
