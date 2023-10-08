@@ -24,13 +24,28 @@ export default function BookingPage() {
 
   return (
     <div className="my-8">
+      <div className="bg-gray-200 p-6 my-6 rounded-2xl justify-between">
       <h1 className="text-3xl">{booking.place.title}</h1>
       <AddressLink className="my-2 block">{booking.place.destination}</AddressLink>
-      <div className="bg-gray-200 p-6 my-6 rounded-2xl flex items-center justify-between">
         <div>
-          <h2 className="text-2xl mb-4">Your booking information:</h2>
+          <h2 className="text-2xl mb-4">Your booking information</h2>
+          <h2>
+            <span style={{ color: '#00008B' }}>pick-up location:</span> {booking.place.from}
+          </h2>
+          <h2>
+            <span style={{ color: '#00008B' }}>Car-description: </span>{booking.place.description}
+          </h2>
+          <h2>
+            <span style={{ color: '#00008B' }}>departing-date: </span> {booking.place.date}
+          </h2>
+          <h2>
+            <span style={{ color: '#00008B' }}>time: </span> 
+          </h2>
+          <h2>
+            <span style={{ color: '#00008B' }}>Reference number: </span> 
+          </h2>
         </div>
-        <div className="bg-primary p-6 text-white rounded-2xl">
+        <div className="bg-primary text-white rounded-2xl">
           <div>Total price</div>
           <div className="text-3xl">${booking.price}</div>
         </div>

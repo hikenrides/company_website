@@ -178,10 +178,10 @@ app.post('/bookings', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
   const {
-    place,numberOfGuests,name,phone,price,
+    place,passengers,name,phone,price,
   } = req.body;
   Booking.create({
-    place,numberOfGuests,name,phone,price,
+    place,passengers,name,phone,price,
     user:userData.id,
   }).then((doc) => {
     res.json(doc);

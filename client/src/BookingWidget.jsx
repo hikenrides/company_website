@@ -4,7 +4,7 @@ import {Navigate} from "react-router-dom";
 import {UserContext} from "./UserContext.jsx";
 
 export default function BookingWidget({place}) {
-  const [numberOfGuests,setNumberOfGuests] = useState(1);
+  const [passengers,setPassengers] = useState(1);
   const [name,setName] = useState('');
   const [phone,setPhone] = useState('');
   const [redirect,setRedirect] = useState('');
@@ -18,9 +18,9 @@ export default function BookingWidget({place}) {
 
   async function bookThisPlace() {
     const response = await axios.post('/bookings', {
-      numberOfGuests,name,phone,
+      passengers,name,phone,
       place:place._id,
-      price:place.numberOfGuests * place.price,
+      price:passengers * place.price,
     });
     const bookingId = response.data._id;
     setRedirect(`/account/bookings/${bookingId}`);
@@ -37,12 +37,12 @@ export default function BookingWidget({place}) {
       </div>
       <div className="border rounded-2xl mt-4">
         <div className="py-3 px-4 border-t">
-          <label>Number of guests:</label>
+          <label>Number of passengers:</label>
           <input type="number"
-                 value={numberOfGuests}
-                 onChange={ev => setNumberOfGuests(ev.target.value)}/>
+                 value={passengers}
+                 onChange={ev => setPassengers(ev.target.value)}/>
         </div>
-        {numberOfGuests > 0 && (
+        {passengers > 0 && (
           <div className="py-3 px-4 border-t">
             <label>Your full name:</label>
             <input type="text"
@@ -57,8 +57,8 @@ export default function BookingWidget({place}) {
       </div>
       <button onClick={bookThisPlace} className="primary mt-4">
         Book this place
-        {numberOfGuests > 0 && (
-          <span> R{numberOfGuests * place.price}</span>
+        {passengers > 0 && (
+          <span> R{passengers * place.price}</span>
         )}
       </button>
     </div>
