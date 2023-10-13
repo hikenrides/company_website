@@ -4,6 +4,7 @@ import {Link, Navigate, useParams} from "react-router-dom";
 import axios from "axios";
 import PlacesPage from "./PlacesPage";
 import AccountNav from "../AccountNav";
+import RequestsPage from "./RequestsPage.jsx"
 
 export default function ProfilePage() {
   const [redirect,setRedirect] = useState(null);
@@ -41,6 +42,9 @@ export default function ProfilePage() {
       )}
       {subpage === 'places' && (
         <PlacesPage />
+      )}
+      {subpage === 'requests' && (
+        <RequestsPage />
       )}
     </div>
   );

@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const User = require('./models/User.js');
 const Place = require('./models/Place.js');
 const Booking = require('./models/Booking.js');
+const Request = require('./models/requests.js');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const mime = require('mime-types');
@@ -173,6 +174,39 @@ app.get('/places', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   res.json( await Place.find() );
 });
+
+app.get('/requests/:id', async (req,res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const {id} = req.params;
+  res.json(await Request.findById(id));
+});
+
+app.put('/requests', async (req,res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const {token} = req.cookies;
+  const {
+    id, from,destination,
+    extraInfo,date,NumOfPassengers,price,
+  } = req.body;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+    const RequestDoc = await Place.findById(id);
+    if (userData.id === RequestDoc.owner.toString()) {
+      RequestDoc.set({
+        from,destination,
+        extraInfo,date,NumOfPassengers,price,
+      });
+      await RequestDoc.save();
+      res.json('ok');
+    }
+  });
+});
+
+app.get('/requests', async (req,res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  res.json( await Request.find() );
+});
+
 
 app.post('/bookings', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
