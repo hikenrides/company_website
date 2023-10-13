@@ -61,7 +61,6 @@ export default function TripRequest() {
       });
       setRedirect(true);
     } else {
-      // new place
       await axios.post('/requests', RequestData);
       setRedirect(true);
     }

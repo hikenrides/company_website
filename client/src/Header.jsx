@@ -16,19 +16,25 @@ export default function Header() {
         <span className="font-bold text-xl text-white">hikenrides</span>
       </Link>
       <div className="flex gap-2 border border-gray-300 rounded-full py-2 px-4 shadow-md shadow-gray-300">
+        <Link to={'/account/trips'} >
         <div
-          className={`text-white cursor-pointer ${activeTab === "tripOffers" ? "shadow-md shadow-gray-300" : ""}`}
+          className={`flex text-white cursor-pointer ${activeTab === "tripOffers" ? "shadow-md shadow-gray-300" : ""}`}
           onClick={() => handleTabClick("tripOffers")}
         >
+
           Trip Offers
         </div>
+        </Link>
         <div className="border-l border-gray-300"></div>
+        <Link to={'/account/requests'} >
         <div
-          className={`text-white cursor-pointer ${activeTab === "requestedTrips" ? "shadow-md shadow-gray-300" : ""}`}
+          className={`flex text-white cursor-pointer ${activeTab === "requestedTrips" ? "shadow-md shadow-gray-300" : ""}`}
           onClick={() => handleTabClick("requestedTrips")}
         >
+  
           Requested Trips
         </div>
+        </Link>
       </div>
       <Link to={user ? '/account' : '/login'} className="flex items-center gap-2 border border-gray-300 rounded-full py-2 px-4">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-white">

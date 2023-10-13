@@ -9,8 +9,6 @@ const Place = require('./models/Place.js');
 const Booking = require('./models/Booking.js');
 const Request = require('./models/requests.js');
 const cookieParser = require('cookie-parser');
-const multer = require('multer');
-const mime = require('mime-types');
 
 require('dotenv').config();
 const app = express();
@@ -134,12 +132,39 @@ app.post('/places', (req,res) => {
   });
 });
 
+app.post('/requests', (req,res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const {token} = req.cookies;
+  const {
+    from,destination,price
+    ,extraInfo,date,NumOfPassengers,
+  } = req.body;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+    const RequestDoc = await Request.create({
+      owner:userData.id,price,
+      from,destination,
+      extraInfo,date,NumOfPassengers,
+    });
+    res.json(RequestDoc);
+  });
+});
+
 app.get('/user-places', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {token} = req.cookies;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     const {id} = userData;
     res.json( await Place.find({owner:id}) );
+  });
+});
+
+app.get('/requested-trips', (req,res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const {token} = req.cookies;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    const {id} = userData;
+    res.json( await Request.find({owner:id}) );
   });
 });
 
@@ -190,7 +215,7 @@ app.put('/requests', async (req,res) => {
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
-    const RequestDoc = await Place.findById(id);
+    const RequestDoc = await Request.findById(id);
     if (userData.id === RequestDoc.owner.toString()) {
       RequestDoc.set({
         from,destination,
