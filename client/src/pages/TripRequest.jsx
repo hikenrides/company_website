@@ -50,22 +50,23 @@ export default function TripRequest() {
   async function saveRequest(ev) {
     ev.preventDefault();
     const RequestData = {
-      from, destination,
+      from,
+      destination,
       extraInfo,
-      date, NumOfPassengers, price,
+      date,
+      NumOfPassengers,
+      price,
     };
     if (id) {
       // update
-      await axios.put('/requests', {
-        id, ...RequestData
-      });
+      await axios.put(`/requests/${id}`, RequestData); // Here, specify the correct endpoint for updating a specific request
       setRedirect(true);
     } else {
       await axios.post('/requests', RequestData);
       setRedirect(true);
     }
-
   }
+  
 
   if (redirect) {
     return <Navigate to={'/account/requests'} />

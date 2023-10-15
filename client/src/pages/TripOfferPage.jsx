@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {Link} from "react-router-dom";
 
-export default function IndexPage() {
+export default function TripOfferPage() {
   const [places,setPlaces] = useState([]);
   useEffect(() => {
     axios.get('/places').then(response => {

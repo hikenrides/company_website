@@ -15,7 +15,7 @@ import BookingPage from "./pages/BookingPage";
 import TripRequest from "./pages/TripRequest"
 import RequestsPage from './pages/RequestsPage';
 import TripOfferPage from './pages/TripOfferPage';
-import RequestedTripPage from './pages/RequestedTripPage';
+import RequestOfferPage from './pages/RequestOfferPage';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 axios.defaults.withCredentials = true;
@@ -38,7 +38,7 @@ function App() {
           <Route path="/account/bookings" element={<BookingsPage />} />
           <Route path="/account/bookings/:id" element={<BookingPage />} />
           <Route path="/account/trips" element={<TripOfferPage />} />
-          <Route path="/account/requests" element={<RequestedTripPage />} />
+          <Route path="/account/requests" element={<RequestOfferPage />} />
         </Route>
       </Routes>
     </UserContextProvider>
