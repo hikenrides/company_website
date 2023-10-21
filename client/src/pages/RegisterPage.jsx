@@ -10,7 +10,6 @@ export default function RegisterPage() {
   const [email,setEmail] = useState('');
   const [isDriver, setIsDriver] = useState(false);
   const [driverLicense, setDriverLicense] = useState('');
-  const [licenseCode, setLicenseCode] = useState('');
   const [password,setPassword] = useState('');
   async function registerUser(ev) {
     ev.preventDefault();
@@ -22,7 +21,6 @@ export default function RegisterPage() {
         email,
         isDriver,
         driverLicense: isDriver ? driverLicense : '',
-        licenseCode: isDriver ? licenseCode : '',
         password,
       });
       alert('Registration successful. Now you can log in');
@@ -73,12 +71,6 @@ export default function RegisterPage() {
       placeholder="Driver's License No"
       value={driverLicense}
       onChange={(ev) => setDriverLicense(ev.target.value)}
-    />
-    <input
-      type="text"
-      placeholder="License Code"
-      value={licenseCode}
-      onChange={(ev) => setLicenseCode(ev.target.value)}
     />
   </>
 )}

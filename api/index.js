@@ -37,14 +37,14 @@ function getUserDataFromReq(req) {
   });
 }
 
-app.get('/api/test', (req,res) => {
+app.get('/api/database', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   res.json('test ok');
 });
 
 app.post('/register', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const {name,gender,phone_number,age,email,isDriver,driverLicense,licenseCode,password} = req.body;
+  const {name,gender,phone_number,age,email,isDriver,driverLicense,password} = req.body;
 
   try {
     console.log('Received registration request:', {name, email});
@@ -56,7 +56,6 @@ app.post('/register', async (req,res) => {
       email,
       isDriver,
       driverLicense,
-      licenseCode,
       password: bcrypt.hashSync(password, bcryptSalt),
     });
     console.log('User registered:', userDoc);

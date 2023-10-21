@@ -9,7 +9,6 @@ const UserSchema = new Schema({
   email: {type:String, unique:true},
   isDriver: { type: Boolean, default: false },
   driverLicense: String,
-  licenseCode: String,
   password: String,
 });
 

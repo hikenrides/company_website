@@ -32,7 +32,7 @@ export default function PlacesFormPage() {
   }, [id]);
   function inputHeader(text) {
     return (
-      <h2 className="text-2xl mt-4">{text}</h2>
+      <h2 className="text-white text-2xl mt-4">{text}</h2>
     );
   }
   function inputDescription(text) {
@@ -79,33 +79,34 @@ export default function PlacesFormPage() {
       <AccountNav />
       <form onSubmit={savePlace}>
         {preInput('From', 'Please indicate your preferred pick-up location for passengers.')}
-        <input type="text" value={from} onChange={ev => setFrom(ev.target.value)} placeholder="Province, City, township, or specific address"/>
+        <input className="bg-gray-300" type="text" value={from} onChange={ev => setFrom(ev.target.value)} placeholder="Province, City, township, or specific address"/>
         {preInput('Destination', 'indicate the destination of your trip')}
-        <input type="text" value={destination} onChange={ev => setDestination(ev.target.value)}placeholder="Province, City, Township, or specific address)"/>
+        <input className="bg-gray-300" type="text" value={destination} onChange={ev => setDestination(ev.target.value)}placeholder="Province, City, Township, or specific address)"/>
         {preInput('Vehicle description','description of the vehicle')}
-        <textarea value={description} onChange={ev => setDescription(ev.target.value)} />
+        <textarea className="bg-gray-300" value={description} onChange={ev => setDescription(ev.target.value)} />
         {preInput('Extra info','trip rules, etc')}
-        <textarea value={extraInfo} onChange={ev => setExtraInfo(ev.target.value)} />
+        <textarea className="bg-gray-300" value={extraInfo} onChange={ev => setExtraInfo(ev.target.value)} />
         {preInput('Check in&out times','add check in and out times, remember to have some time window for cleaning the room between guests')}
         <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
           <div>
-            <h3 className="mt-2 -mb-1">Date</h3>
+            <h3 className="text-white mt-2 -mb-1">Date</h3>
           <DatePicker
-  selected={date}
-  onChange={(date) => setDate(date)} 
-  placeholderText="Select leaving date" 
-  dateFormat="MM/dd/yyyy" 
-/>
-</div>
+            className="bg-gray-300"
+            selected={date}
+            onChange={(date) => setDate(date)} 
+            placeholderText="Select leaving date" 
+            dateFormat="MM/dd/yyyy" 
+          />
+          </div>
           
           <div>
-            <h3 className="mt-2 -mb-1">Max number of passengers</h3>
-            <input type="number" value={maxGuests}
+            <h3 className="text-white mt-2 -mb-1">Max number of passengers</h3>
+            <input className="bg-gray-300" type="number" value={maxGuests}
                    onChange={ev => setMaxGuests(ev.target.value)}/>
           </div>
           <div>
-            <h3 className="mt-2 -mb-1">Price per person</h3>
-            <input type="number" value={price}
+            <h3 className="text-white mt-2 -mb-1">Price per person</h3>
+            <input className="bg-gray-300" type="number" value={price}
                    onChange={ev => setPrice(ev.target.value)}/>
           </div>
         </div>
