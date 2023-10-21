@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { UserContext } from "./UserContext.jsx";
+import {motion} from 'framer-motion';
 
 export default function Header() {
   const { user } = useContext(UserContext);
@@ -9,11 +10,133 @@ export default function Header() {
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
   };
+  
+  let easeing = [0.6,-0.05,0.01,0.99];
+
+const stagger = {
+  animate:{
+    transition:{
+      delayChildren:0.4,
+      staggerChildren:0.2,
+      staggerDirection:1
+    }
+  }
+}
+
+const fadeInUp = {
+  initial:{
+    y:-60,
+    opacity:0,
+    transition:{
+      duration:0.6, ease:easeing
+    }
+  },
+  animate:{
+    y:0,
+    opacity:1,
+    transition:{
+      duration:0.6,
+      delay:0.5,
+      ease:easeing
+    }
+  }
+};
+
+const transition = {duration:1.4,ease:[0.6,0.01,-0.05,0.9]};
+
+const firstName = {
+  initial:{
+    y:-20,
+  },
+  animate:{
+    y:0,
+    transition:{
+      delayChildren:0.4,
+      staggerChildren:0.04,
+      staggerDirection:-1
+    }
+  }
+}
+
+const lastName = {
+  initial:{
+    y:-20,
+  },
+  animate:{
+    y:0,
+    transition:{
+      delayChildren:0.4,
+      staggerChildren:0.04,
+      staggerDirection:1
+    }
+  }
+}
+
+const letter = {
+  initial:{
+    y:400,
+  },
+  animate:{
+    y:0,
+    transition:{duration:1, ...transition}
+  }
+};
+
+const btnGroup={
+  initial:{
+    y:-60,
+    opacity:0,
+    transition:{duration:0.6, ease:easeing}
+  },
+  animate:{
+    y:0,
+    opacity:1,
+    animation:{
+      duration:0.6,
+      ease:easeing
+    }
+  }
+};
+const star={
+  initial:{
+    y:60,
+    opacity:0,
+    transition:{duration:0.8, ease:easeing}
+  },
+  animate:{
+    y:0,
+    opacity:1,
+    animation:{
+      duration:0.6,
+      ease:easeing
+    }
+  }
+};
+
+const header={
+  initial:{
+    y:-60,
+    opacity:0,
+    transition:{duration:0.05, ease:easeing}
+  },
+  animate:{
+    y:0,
+    opacity:1,
+    animation:{
+      duration:0.6,
+      ease:easeing
+    }
+  }
+};
+
+  
+  
+  
 
   return (
     <header className="flex justify-between">
       <Link to={'/'} className="flex gap-1">
-        <span className="font-bold text-xl text-white">hikenrides</span>
+        <motion.div className="logo_wrapper" variants={header}>hike<span>nrides</span></motion.div>
       </Link>
       
       <div className="flex gap-2 border border-gray-300 rounded-full py-2 px-4 shadow-md shadow-gray-300">
@@ -22,7 +145,6 @@ export default function Header() {
           className={`flex text-white cursor-pointer ${activeTab === "tripOffers" ? "shadow-md shadow-gray-300" : ""}`}
           onClick={() => handleTabClick("tripOffers")}
         >
-
           Trip Offers
         </div>
         </Link>
