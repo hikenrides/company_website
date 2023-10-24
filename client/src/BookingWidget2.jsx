@@ -3,7 +3,7 @@ import axios from "axios";
 import {Navigate} from "react-router-dom";
 import {UserContext} from "./UserContext.jsx";
 
-export default function BookingWidget({place}) {
+export default function BookingWidget2({request}) {
   const [passengers,setPassengers] = useState(1);
   const [name,setName] = useState('');
   const [phone,setPhone] = useState('');
@@ -17,13 +17,13 @@ export default function BookingWidget({place}) {
   }, [user]);
 
   async function bookThisPlace() {
-    const response = await axios.post('/bookings', {
+    const response = await axios.post('/bookings2', {
       passengers,name,phone,
-      place:place._id,
-      price:passengers * place.price,
+      request:request._id,
+      price:passengers * request.price,
     });
     const bookingId = response.data._id;
-    setRedirect(`/account/bookings/${bookingId}`);
+    setRedirect(`/account/bookings../${bookingId}`);
   }
 
   if (redirect) {
@@ -33,7 +33,9 @@ export default function BookingWidget({place}) {
   return (
     <div className="bg-white shadow p-4 rounded-2xl">
       <div className="text-2xl text-center">
-        Price: R{place.price}
+        Price: {passengers > 0 && (
+          <span> R{passengers * request.price}</span>
+        )}
       </div>
       <div className="border rounded-2xl mt-4">
         <div className="py-3 px-4 border-t">
@@ -56,10 +58,7 @@ export default function BookingWidget({place}) {
         )}
       </div>
       <button onClick={bookThisPlace} className="primary mt-4">
-        Request Ride
-        {passengers > 0 && (
-          <span> R{passengers * place.price}</span>
-        )}
+        Accept Request
       </button>
     </div>
   );

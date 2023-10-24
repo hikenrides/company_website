@@ -203,7 +203,7 @@ function IndexPage() {
             <motion.div className="btn btn_secondary" variants={btnGroup} whileHover={{scale:1.05}} whileTap={{scale:0.95}}>
             <Link to={user ? '/account' : '/login'}>
         <div className=''>
-          LOGIN
+          LOGIN/REGISTER
         </div>
       </Link>
             </motion.div>
@@ -219,7 +219,7 @@ function IndexPage() {
                 <motion.span variants={star} whileHover={{scale:1.2, rotate:180,borderRadius:'100%',cursor:'pointer'}}><IoStar/></motion.span>
                 <motion.span variants={star} whileHover={{scale:1.2, rotate:180,borderRadius:'100%',cursor:'pointer'}}><IoStar/></motion.span>
             </IconContext.Provider>
-            <motion.p className="more_review" variants={star}>More then 50+ people taking services.</motion.p>
+            <motion.p className="more_review" variants={star}>Travel Smart</motion.p>
           </motion.div>
         </div>
         <motion.div className="right_content_wrapper">          

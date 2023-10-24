@@ -1,5 +1,5 @@
 import React from 'react';
-import {IoMailOutline, IoChevronForward, IoApps, IoNotifications, IoPieChart, IoNewspaper, IoCard, IoColorFill} from "react-icons/io5";
+import {IoNewspaper} from "react-icons/io5";
 import {IconContext} from "react-icons";
 import {motion} from 'framer-motion';
 
@@ -61,120 +61,105 @@ function Card() {
                 animate={{y:0, opacity:1}}
                 exit={{opacity:0}}
                 transition={{duration:.5, delay:1.8}}
-            >Our Services</motion.span>
-            <motion.h2
-                initial={{y:200, opacity:0}}
-                animate={{y:0, opacity:1}}
-                exit={{opacity:0}}
-                transition={{duration:.5, delay:1}}
-            >Spend Less Money On Your Travels<br/>By Using Our Services.</motion.h2>
+            >Why Use Our Services?</motion.span>
         </div>
 
 
         <motion.div className="service_card" variants={container} initial="hidden" exit="exit" whileInView="show" viewport={{once:false}}>
 
             <motion.div className="card" variants={item}>
-                <motion.span className="service_icon" style={{backgroundColor:"#ddfbf9"}} variants={hoverEffect} whileHover="whileHover" whileTap='whileTap'>
-                    <IconContext.Provider value={{color:"#14da8f", size:"22px"}}>
-                        <IoMailOutline/>
-                    </IconContext.Provider>
-                </motion.span>
-                <h3>Ui/Ux Design<br/>For Mobile & Web</h3>
-                <a href="#">
-                    <span>learn more</span>
-                    <IconContext.Provider value={{color:"#14da8f", size:"18px"}}>
-                        <IoChevronForward/>
-                    </IconContext.Provider>
-                </a>
-            </motion.div>
-
-            <motion.div className="card" variants={item}>
-                <motion.span className="service_icon" style={{backgroundColor:"#e7daf8"}} variants={hoverEffect} whileHover="whileHover" whileTap='whileTap'>
-                    <IconContext.Provider value={{color:"#5700cf", size:"22px"}}>
-                        <IoApps/>
-                    </IconContext.Provider>
-                </motion.span>
-                <h3>Web & Mobile<br/>App Development</h3>
-                <a href="#">
-                    <span>learn more</span>
-                    <IconContext.Provider value={{color:"#14da8f", size:"18px"}}>
-                        <IoChevronForward/>
-                    </IconContext.Provider>
-                </a>
-            </motion.div>
-            <motion.div className="card" variants={item}>
-                <motion.span className="service_icon" style={{backgroundColor:"#ffede6"}} variants={hoverEffect} whileHover="whileHover" whileTap='whileTap'>
-                    <IconContext.Provider value={{color:"#ff8559", size:"22px"}}>
-                        <IoColorFill/>
-                    </IconContext.Provider>
-                </motion.span>
-                <h3>Illustration Design<br/>(Flat, 3d & More)</h3>
-                <a href="#">
-                    <span>learn more</span>
-                    <IconContext.Provider value={{color:"#14da8f", size:"18px"}}>
-                        <IoChevronForward/>
-                    </IconContext.Provider>
-                </a>
-            </motion.div>
-            <motion.div className="card" variants={item}>
-                <motion.span className="service_icon" style={{backgroundColor:"#ffe1e9"}} variants={hoverEffect} whileHover="whileHover" whileTap='whileTap'>
-                    <IconContext.Provider value={{color:"#fa3970", size:"22px"}}>
-                        <IoNotifications/>
-                    </IconContext.Provider>
-                </motion.span>
-                <h3>Stratagy & Product<br/>Management</h3>
-                <a href="#">
-                    <span>learn more</span>
-                    <IconContext.Provider value={{color:"#14da8f", size:"18px"}}>
-                        <IoChevronForward/>
-                    </IconContext.Provider>
-                </a>
-            </motion.div>
-            <motion.div className="card" variants={item}>
-                <motion.span className="service_icon" style={{backgroundColor:"#dcedff"}} variants={hoverEffect} whileHover="whileHover" whileTap='whileTap'>
-                    <IconContext.Provider value={{color:"#56a8f4", size:"22px"}}>
+                <motion.span className="service_icon" style={{backgroundColor:"#ddfbf9"}} variants={hoverEffect} >
+                <IconContext.Provider value={{color:"#56a8f4", size:"22px"}}>
                         <IoNewspaper/>
                     </IconContext.Provider>
                 </motion.span>
-                <h3>Custome Wordpress<br/>Design & Dev.</h3>
-                <a href="#">
-                    <span>learn more</span>
-                    <IconContext.Provider value={{color:"#14da8f", size:"18px"}}>
-                        <IoChevronForward/>
+                <h3>Travel at any distance for less by sharing trips<br/>with others heading to your destination.</h3>
+                
+            </motion.div>
+
+            <motion.div className="card" variants={item}>
+                <motion.span className="service_icon" style={{backgroundColor:"#e7daf8"}} variants={hoverEffect} >
+                <IconContext.Provider value={{color:"#56a8f4", size:"22px"}}>
+                        <IoNewspaper/>
                     </IconContext.Provider>
+                </motion.span>
+                <h3>Affordable long-distance travel made possible  <br/>by ride-sharing with similar destination routes.</h3>
+               
+            </motion.div>
+            <motion.div className="card" variants={item}>
+                <motion.span className="service_icon" style={{backgroundColor:"#ffede6"}} variants={hoverEffect} >
+                <IconContext.Provider value={{color:"#56a8f4", size:"22px"}}>
+                        <IoNewspaper/>
+                    </IconContext.Provider>
+                </motion.span>
+                <h3>Share trips to cut costs and travel further<br/>our budget-friendly ride-sharing service.</h3>
+               
+            </motion.div>
+            <motion.div className="card" variants={item}>
+                <motion.span className="service_icon" style={{backgroundColor:"#ffe1e9"}} variants={hoverEffect}>
+                <IconContext.Provider value={{color:"#56a8f4", size:"22px"}}>
+                        <IoNewspaper/>
+                    </IconContext.Provider>
+                </motion.span>
+                <h3>Connect with others heading your way and<br/>save on long-distance travel expenses.</h3>
+
+            </motion.div>
+        </motion.div>
+
+
+        <div className="title_wrapper">
+            <motion.span className="service_title"
+                initial={{y:20, opacity:0}}
+                animate={{y:0, opacity:1}}
+                exit={{opacity:0}}
+                transition={{duration:.5, delay:1.8}}
+            >Process to getting a ride</motion.span>
+        </div>
+
+
+        <motion.div className="service_card" variants={container} initial="hidden" exit="exit" whileInView="show" viewport={{once:false}}>
+
+            
+            <motion.div className="card" variants={item}>
+                <motion.span className="service_icon" style={{backgroundColor:"#D2691E"}} variants={hoverEffect}>
+                <IconContext.Provider value={{color:"#56a8f4", size:"22px"}}>
+                        1
+                    </IconContext.Provider>
+                </motion.span>
+                <h3>Browse and select Available trips/rides<br/>and find a suitable one for you</h3>
+                <a href="#">
+                    <span>Click to view Available trips →</span>
                 </a>
             </motion.div>
             <motion.div className="card" variants={item}>
-                <motion.span className="service_icon" style={{backgroundColor:"#dbf9ed"}} variants={hoverEffect} whileHover="whileHover" whileTap='whileTap'>
-                    <IconContext.Provider value={{color:"#06d786", size:"22px"}}>
-                        <IoPieChart/>
+                <motion.span className="service_icon" style={{backgroundColor:"#D2691E"}} variants={hoverEffect}>
+                <IconContext.Provider value={{color:"#56a8f4", size:"22px"}}>
+                        2
                     </IconContext.Provider>
                 </motion.span>
-                <h3>Digital Marketing<br/>& Management</h3>
-                <a href="#">
-                    <span>learn more</span>
-                    <IconContext.Provider value={{color:"#14da8f", size:"18px"}}>
-                        <IoChevronForward/>
-                    </IconContext.Provider>
-                </a>
+                <h3>Insert the details required and make payment<br/>NB: refundable if driver cancels the ride</h3>
             </motion.div>
             <motion.div className="card" variants={item}>
-                <motion.span className="service_icon" style={{backgroundColor:"#fffada"}} variants={hoverEffect} whileHover="whileHover" whileTap='whileTap'>
-                    <IconContext.Provider value={{color:"#f1df11", size:"22px"}}>
-                        <IoCard/>
+                <motion.span className="service_icon" style={{backgroundColor:"#D2691E"}} variants={hoverEffect}>
+                <IconContext.Provider value={{color:"#56a8f4", size:"22px"}}>
+                        3
                     </IconContext.Provider>
                 </motion.span>
-                <h3>Branding Design<br/>(Logo & Packaging)</h3>
-                <a href="#">
-                    <span>learn more</span>
-                    <IconContext.Provider value={{color:"#14da8f", size:"18px"}}>
-                        <IoChevronForward/>
+                <h3>Contact details of the driver will be sent to you<br/>and you will also receive a reference number</h3>
+            </motion.div>
+            <motion.div className="card" variants={item}>
+                <motion.span className="service_icon" style={{backgroundColor:"#D2691E"}} variants={hoverEffect}>
+                <IconContext.Provider value={{color:"#56a8f4", size:"22px"}}>
+                        4
                     </IconContext.Provider>
-                </a>
+                </motion.span>
+                <h3>The driver will receive payment after getting the reference number <br/>from you at the pickup</h3>
             </motion.div>
         </motion.div>
 
     </motion.div>
+
+    
   )
 }
 

@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const User = require('./models/User.js');
 const Place = require('./models/Place.js');
 const Booking = require('./models/Booking.js');
+const Booking2 = require('./models/Booking2.js')
 const Request = require('./models/requests.js');
 const cookieParser = require('cookie-parser');
 
@@ -249,12 +250,33 @@ app.post('/bookings', async (req, res) => {
   });
 });
 
+app.post('/bookings2', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const userData = await getUserDataFromReq(req);
+  const {
+    request,passengers,name,phone,price,
+  } = req.body;
+  Booking2.create({
+    request,passengers,name,phone,price,
+    user:userData.id,
+  }).then((doc) => {
+    res.json(doc);
+  }).catch((err) => {
+    throw err;
+  });
+});
 
 
 app.get('/bookings', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
   res.json( await Booking.find({user:userData.id}).populate('place') );
+});
+
+app.get('/bookings2', async (req,res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const userData = await getUserDataFromReq(req);
+  res.json( await Booking2.find({user:userData.id}).populate('request') );
 });
 
 app.listen(port, () => {
