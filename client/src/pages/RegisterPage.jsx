@@ -1,86 +1,121 @@
-import {Link} from "react-router-dom";
-import {useState} from "react";
+import { Link } from "react-router-dom";
+import { useState } from "react";
 import axios from "axios";
 
 export default function RegisterPage() {
-  const [name,setName] = useState('');
-  const [gender, setGender] = useState('');
-  const [phone_number, setNumber] = useState('');
-  const [age, setAge] = useState('');
-  const [email,setEmail] = useState('');
-  const [isDriver, setIsDriver] = useState(false);
-  const [driverLicense, setDriverLicense] = useState('');
-  const [password,setPassword] = useState('');
+  const [name, setName] = useState("");
+  const [gender, setGender] = useState("");
+  const [phone_number, setNumber] = useState("");
+  const [age, setAge] = useState("");
+  const [email, setEmail] = useState("");
+  const [isDriver, setIsDriver] = useState("");
+  const [driverLicense, setDriverLicense] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  const isDriverValue = isDriver === 'Yes';
+
   async function registerUser(ev) {
     ev.preventDefault();
+    if (password !== confirmPassword) {
+      setPasswordError(true);
+      return;
+    }
     try {
-      await axios.post('/register', {
+      await axios.post("/register", {
         name,
         gender,
         phone_number,
         email,
-        isDriver,
-        driverLicense: isDriver ? driverLicense : '',
+        isDriver: isDriverValue,
+        driverLicense: isDriver === "Yes" ? driverLicense : "",
         password,
       });
-      alert('Registration successful. Now you can log in');
+      alert("Registration successful. Now you can log in");
     } catch (e) {
-      console.log('Registration failed. Please try again later');
+      console.log("Registration failed. Please try again later");
     }
   }
-  return (
-    <div className="mt-4 grow flex items-center justify-around">
-      <div className="mb-64">
-        <h1 className="text-4xl text-center mb-4">Register</h1>
-        <form className="max-w-md mx-auto" onSubmit={registerUser}>
-          <input type="text"
-                 placeholder="fullname"
-                 value={name}
-                 onChange={ev => setName(ev.target.value)} />
-          <input type="text"
-                 placeholder="Gender"
-                 value={gender}
-                 onChange={ev => setGender(ev.target.value)} />
-          <input type="text"
-                 placeholder="Phone number"
-                 value={phone_number}
-                 onChange={ev => setNumber(ev.target.value)} />
-          <input type="text"
-                 placeholder="Age"
-                 value={age}
-                 onChange={ev => setAge(ev.target.value)} />
-          <input type="email"
-                 placeholder="your@email.com"
-                 value={email}
-                 onChange={ev => setEmail(ev.target.value)} />
-          
-          <input type="password"
-                 placeholder="password"
-                 value={password}
-                 onChange={ev => setPassword(ev.target.value)} />
-                 <input
-                 type="checkbox"
-                 checked={isDriver}
-                 onChange={(ev) => setIsDriver(ev.target.checked)}
-            />
-          <label htmlFor="isDriver">I'm a driver</label>
-          {isDriver && (
-  <>
-    <input
-      type="text"
-      placeholder="Driver's License No"
-      value={driverLicense}
-      onChange={(ev) => setDriverLicense(ev.target.value)}
-    />
-  </>
-)}
 
-          <button className="primary">Register</button>
-          <div className="text-center py-2 text-gray-500">
-            Already a member? <Link className="underline text-black" to={'/login'}>Login</Link>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
+              return (
+                <div className="mt-4 grow flex items-center justify-around">
+                  <div className="mb-64">
+                    <h1 className="text-4xl text-center mb-4">Register</h1>
+                    <form className="max-w-md mx-auto" onSubmit={registerUser}>
+                      <input type="text"
+                             placeholder="fullname"
+                             value={name}
+                             onChange={ev => setName(ev.target.value)} />
+                      <input type="text"
+                             placeholder="Gender"
+                             value={gender}
+                             onChange={ev => setGender(ev.target.value)} />
+                      <input type="text"
+                             placeholder="Phone number"
+                             value={phone_number}
+                             onChange={ev => setNumber(ev.target.value)} />
+                      <input type="text"
+                             placeholder="Age"
+                             value={age}
+                             onChange={ev => setAge(ev.target.value)} />
+             <select
+            value={isDriver}
+            onChange={(ev) => setIsDriver(ev.target.value)}
+          >
+            <option value="">Are you a driver?</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+          {isDriver === "Yes" && (
+            <>
+              <input
+                type="text"
+                placeholder="Driver's License No"
+                value={driverLicense}
+                onChange={(ev) => setDriverLicense(ev.target.value)}
+              />
+            </>
+          )}
+                  
+                      <input type="email"
+                             placeholder="your@email.com"
+                             value={email}
+                             onChange={ev => setEmail(ev.target.value)} />
+                      
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="password"
+                        value={password}
+                        onChange={(ev) => setPassword(ev.target.value)}
+                      />
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Confirm Password"
+                        value={confirmPassword}
+                        onChange={(ev) => setConfirmPassword(ev.target.value)}
+                      />
+                      {passwordError && <p>Passwords do not match</p>}
+                      <div>
+                        <input
+                          type="checkbox"
+                          checked={showPassword}
+                          onChange={togglePasswordVisibility}
+                        />
+                        <label>Show Password</label>
+                      </div>
+
+                         
+                      <button className="primary">Register</button>
+                      <div className="text-center py-2 text-gray-500">
+                        Already a member? <Link className="underline text-black" to={'/login'}>Login</Link>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              );
+            }

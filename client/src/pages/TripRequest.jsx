@@ -30,7 +30,7 @@ export default function TripRequest() {
   }, [id]);
   function inputHeader(text) {
     return (
-      <h2 className="text-2xl mt-4">{text}</h2>
+      <h2 className="text-white text-2xl mt-4">{text}</h2>
     );
   }
   function inputDescription(text) {
@@ -82,7 +82,7 @@ export default function TripRequest() {
         <input type="text" value={destination} onChange={ev => setDestination(ev.target.value)}placeholder="Province, City, Township, or specific address)"/>
         {preInput('Extra info','trip rules, etc')}
         <textarea value={extraInfo} onChange={ev => setExtraInfo(ev.target.value)} />
-        {preInput('Check in&out times','add check in and out times, remember to have some time window for cleaning the room between guests')}
+        {preInput('Departure','add departing date, number of passengers and price per person')}
         <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
           <div>
             <h3 className="mt-2 -mb-1">Date</h3>

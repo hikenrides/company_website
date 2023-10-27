@@ -39,3 +39,14 @@
 .read-the-docs {
   color: #888;
 }
+
+.vehicle-description {
+  align-items: center;
+}
+.horizontal-selects {
+  display: flex;
+}
+
+.select-container {
+  margin-right: 20px; /* Adjust this value to control the spacing between the selects */
+}

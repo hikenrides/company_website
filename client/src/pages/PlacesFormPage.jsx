@@ -9,7 +9,10 @@ export default function PlacesFormPage() {
   const {id} = useParams();
   const [from,setFrom] = useState('');
   const [destination,setDestination] = useState('');
-  const [description,setDescription] = useState('');
+  const [color, setColor] = useState('white');
+  const [brand, setBrand] = useState('');
+  const [type, setType] = useState('');
+  const [seats, setSeats] = useState('4');
   const [extraInfo,setExtraInfo] = useState('');
   const [date,setDate] = useState('');
   const [maxGuests,setMaxGuests] = useState(1);
@@ -23,7 +26,10 @@ export default function PlacesFormPage() {
        const {data} = response;
        setFrom(data.from);
        setDestination(data.address);
-       setDescription(data.description);
+       setColor(data.color);
+       setBrand(data.brand);
+       setType(data.type);
+       setSeats(data.seats);
        setExtraInfo(data.extraInfo);
        setDate(data.date);
        setMaxGuests(data.maxGuests);
@@ -53,7 +59,7 @@ export default function PlacesFormPage() {
     ev.preventDefault();
     const placeData = {
       from, destination,
-      description, extraInfo,
+      color,brand,type,seats, extraInfo,
       date, maxGuests, price,
     };
     if (id) {
@@ -82,11 +88,100 @@ export default function PlacesFormPage() {
         <input className="bg-gray-300" type="text" value={from} onChange={ev => setFrom(ev.target.value)} placeholder="Province, City, township, or specific address"/>
         {preInput('Destination', 'indicate the destination of your trip')}
         <input className="bg-gray-300" type="text" value={destination} onChange={ev => setDestination(ev.target.value)}placeholder="Province, City, Township, or specific address)"/>
-        {preInput('Vehicle description','description of the vehicle')}
-        <textarea className="bg-gray-300" value={description} onChange={ev => setDescription(ev.target.value)} />
+        <div className="vehicle-description">
+  {preInput('Vehicle description', 'description of the vehicle')}
+  <div className="horizontal-selects">
+    <div className="select-container">
+      <label htmlFor="colorSelect" className="text-white mt-2 -mb-1">
+        Color: 
+      </label>
+      <select id="colorSelect" className="bg-gray-300" value={color} onChange={ev => setColor(ev.target.value)}>
+        <option value="red">Red</option>
+        <option value="blue">Blue</option>
+        <option value="black">Black</option>
+        {/* Add more color options here */}
+      </select>
+    </div>
+    <div className="select-container">
+      <label htmlFor="brandSelect" className="text-white mt-2 -mb-1">
+        Brand: 
+      </label>
+      <select id="brandSelect" className="bg-gray-300" value={brand} onChange={ev => setBrand(ev.target.value)}>
+        <option value="toyota">Toyota</option>
+        <option value="honda">Honda</option>
+        <option value="ford">Ford</option>
+        <option value="toyota">Renault</option>
+        <option value="honda">Haval</option>
+        <option value="ford">BMW</option>
+        <option value="toyota">ALFA Romeo</option>
+        <option value="honda">GWM</option>
+        <option value="ford">BAIC</option>
+        <option value="toyota">Volkswagen</option>
+        <option value="honda">Cadillac</option>
+        <option value="ford">Peugeot</option>
+        <option value="toyota">SEAT</option>
+        <option value="honda">Mercedes-Benz</option>
+        <option value="ford">Nissan</option>
+        <option value="toyota">Hyundai</option>
+        <option value="honda">Kia</option>
+        <option value="ford">Suzuki</option>
+        <option value="toyota">Audi</option>
+        <option value="honda">Fiat</option>
+        <option value="ford">Aston Martin</option>
+        <option value="toyota">Opel</option>
+        <option value="honda">Porsche</option>
+        {/* Add more brand options here */}
+      </select>
+    </div>
+    <div className="select-container">
+      <label htmlFor="typeSelect" className="text-white mt-2 -mb-1">
+        Type: 
+      </label>
+      <select id="typeSelect" className="bg-gray-300" value={type} onChange={ev => setType(ev.target.value)}>
+        <option value="sedan">Truck</option>
+        <option value="suv">Hatchback</option>
+        <option value="truck">Sedan</option>
+        <option value="sedan">Mini-van</option>
+        <option value="suv">Van</option>
+        <option value="truck">Cross-over</option>
+        <option value="sedan">Station Wagon</option>
+        <option value="suv">Coupe</option>
+        <option value="truck">pickup truck</option>
+        <option value="sedan">Sports car</option>
+        <option value="suv">SUV</option>
+        <option value="truck">Electric vehicle</option>
+        <option value="sedan">Compact</option>
+        <option value="suv">Roadster</option>
+        {/* Add more type options here */}
+      </select>
+    </div>
+    <div className="select-container">
+      <label htmlFor="seatsSelect" className="text-white mt-2 -mb-1">
+        Number of Seats: 
+      </label>
+      <select id="seatsSelect" className="bg-gray-300" value={seats} onChange={ev => setSeats(ev.target.value)}>
+        <option value="2">2</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        {/* Add more seat options here */}
+      </select>
+    </div>
+  </div>
+</div>
+
+
         {preInput('Extra info','trip rules, etc')}
         <textarea className="bg-gray-300" value={extraInfo} onChange={ev => setExtraInfo(ev.target.value)} />
-        {preInput('Check in&out times','add check in and out times, remember to have some time window for cleaning the room between guests')}
+        {preInput('Departure','add departing date, number of passengers and price per person')}
         <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
           <div>
             <h3 className="text-white mt-2 -mb-1">Date</h3>

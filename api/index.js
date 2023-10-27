@@ -119,14 +119,14 @@ app.post('/places', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {token} = req.cookies;
   const {
-    from,destination,description,price
+    from,destination,color,brand,type,seats,price
     ,extraInfo,date,maxGuests,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const placeDoc = await Place.create({
       owner:userData.id,price,
-      from,destination,description
+      from,destination,color,brand,type,seats
       ,extraInfo,date,maxGuests,
     });
     res.json(placeDoc);
@@ -179,7 +179,7 @@ app.put('/places', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {token} = req.cookies;
   const {
-    id, from,destination,description,
+    id, from,destination,color,brand,type,seats,
     extraInfo,date,maxGuests,price,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -187,7 +187,7 @@ app.put('/places', async (req,res) => {
     const placeDoc = await Place.findById(id);
     if (userData.id === placeDoc.owner.toString()) {
       placeDoc.set({
-        from,destination,description,
+        from,destination,color,brand,type,seats,
         extraInfo,date,maxGuests,price,
       });
       await placeDoc.save();

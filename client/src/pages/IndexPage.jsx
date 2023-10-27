@@ -165,8 +165,8 @@ function IndexPage() {
                 <motion.span variants={letter}>r</motion.span>
                 <motion.span variants={letter} className="second">w</motion.span>
                 <motion.span variants={letter}>a</motion.span>
-                <motion.span variants={letter}>y</motion.span>
-                <motion.span variants={letter} className="second">o</motion.span>
+                <motion.span variants={letter}>y,</motion.span>
+                <motion.span variants={letter} className="second">O</motion.span>
                 <motion.span variants={letter}>u</motion.span>
                 <motion.span variants={letter}>r</motion.span>
                 <motion.span variants={letter} className="second">c</motion.span>
