@@ -22,8 +22,8 @@ export default function RequestOfferPage() {
           className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
           style={{ marginBottom: '16px' }}
         >
-          <h2 className="font-bold">From: {request.destination}</h2>
-          <h3 className="text-sm text-gray-500">To: {request.from}</h3>
+          <h2 className="font-bold"><span style={{ color: 'orange' }}>pick-up area:</span> {request.destination}</h2>
+          <h3 className="text-sm text-gray-500"><span style={{ color: 'orange' }}>Destination:</span> {request.from}</h3>
           <div className="mt-1">
             <span className="font-bold">R{request.price}</span> per person
           </div>

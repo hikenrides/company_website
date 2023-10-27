@@ -24,10 +24,22 @@ export default function RequestsPage() {
           {requests.length > 0 && requests.map(request => (
             <Link to={'/account/Myrequests'+request._id} className="flex cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
              style={{ marginBottom: '16px' }} >
-              <div className="grow-0 shrink">
-                <h2 className="text-xl">{request.from}</h2>
-                <p className="text-sm mt-2">{request.description}</p>
+              <div className="grow-0 shrink" style={{ display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <h2 className="text-xl" style={{ color: 'orange', marginRight: '8px' }}>pick-up area: </h2><span>{request.from}</span>
               </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <h2 className="text-xl" style={{ color: 'orange', marginRight: '8px' }}>destination: </h2><span>{request.destination}</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <h2 style={{ color: 'orange', marginRight: '8px' }}>price: </h2><span>{request.price} per person</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+              <p className="text-sm mt-2" style={{ color: 'orange', marginRight: '8px' }}>date: </p>
+<span>{new Date(request.date).toLocaleDateString('en-US')}</span>
+
+              </div>
+            </div>
             </Link>
           ))}
         </div>

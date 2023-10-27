@@ -5,7 +5,7 @@ import {motion} from 'framer-motion';
 
 export default function Header() {
   const { user } = useContext(UserContext);
-  const [activeTab, setActiveTab] = useState("tripOffers"); // Default active tab
+  const [activeTab, setActiveTab] = useState(""); // Default active tab
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
