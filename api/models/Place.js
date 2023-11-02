@@ -2,7 +2,9 @@ const mongoose = require('mongoose');
 
 const placeSchema = new mongoose.Schema({
   owner: {type:mongoose.Schema.Types.ObjectId, ref:'User'},
+  province: String,
   from: String,
+  province2: String,
   destination: String,
   color: String,
   brand: String,

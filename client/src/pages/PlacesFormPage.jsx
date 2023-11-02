@@ -5,9 +5,24 @@ import {Navigate, useParams} from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+const provinces = [
+  "Eastern Cape",
+  "Free State",
+  "Gauteng",
+  "KwaZulu-Natal",
+  "Limpopo",
+  "Mpumalanga",
+  "North West",
+  "Northern Cape",
+  "Western Cape",
+];
+
+
 export default function PlacesFormPage() {
   const {id} = useParams();
+  const [province, setProvince] = useState('');
   const [from,setFrom] = useState('');
+  const [province2,setProvince2] = useState('');
   const [destination,setDestination] = useState('');
   const [color, setColor] = useState('white');
   const [brand, setBrand] = useState('');
@@ -24,7 +39,9 @@ export default function PlacesFormPage() {
     }
     axios.get('/places/'+id).then(response => {
        const {data} = response;
+       setProvince(data.province)
        setFrom(data.from);
+       setProvince2(data.province2)
        setDestination(data.address);
        setColor(data.color);
        setBrand(data.brand);
@@ -53,12 +70,13 @@ export default function PlacesFormPage() {
         {inputDescription(description)}
       </>
     );
+    
   }
 
   async function savePlace(ev) {
     ev.preventDefault();
     const placeData = {
-      from, destination,
+      province, from, province2, destination,
       color,brand,type,seats, extraInfo,
       date, maxGuests, price,
     };
@@ -80,13 +98,45 @@ export default function PlacesFormPage() {
     return <Navigate to={'/account/places'} />
   }
 
+  function renderProvinceOptions() {
+    return provinces.map((province, index) => (
+      <option key={index} value={province}>
+        {province}
+      </option>
+    ));
+  }
+
   return (
     <div>
       <AccountNav />
       <form onSubmit={savePlace}>
-        {preInput('From', 'Please indicate your preferred pick-up location for passengers.')}
-        <input className="bg-gray-300" type="text" value={from} onChange={ev => setFrom(ev.target.value)} placeholder="Province, City, township, or specific address"/>
+      {preInput('From', 'Please indicate your preferred pick-up location for passengers.')}
+
+          <select
+            className="bg-gray-300"
+            value={province}
+            onChange={(ev) => setProvince(ev.target.value)}
+          >
+            <option value="">Select Province</option>
+            {renderProvinceOptions()}
+          </select>
+          <input
+            className="bg-gray-300"
+            type="text"
+            value={from}
+            onChange={(ev) => setFrom(ev.target.value)}
+            placeholder="City, Township, or specific address"
+          />
+ 
         {preInput('Destination', 'indicate the destination of your trip')}
+        <select
+            className="bg-gray-300"
+            value={province2}
+            onChange={(ev) => setProvince2(ev.target.value)}
+          >
+            <option value="">Select Province</option>
+            {renderProvinceOptions()}
+          </select>
         <input className="bg-gray-300" type="text" value={destination} onChange={ev => setDestination(ev.target.value)}placeholder="Province, City, Township, or specific address)"/>
         <div className="vehicle-description">
   {preInput('Vehicle description', 'description of the vehicle')}
@@ -179,7 +229,7 @@ export default function PlacesFormPage() {
 </div>
 
 
-        {preInput('Extra info','trip rules, etc')}
+        {preInput('Extra info(optional)','trip rules, etc')}
         <textarea className="bg-gray-300" value={extraInfo} onChange={ev => setExtraInfo(ev.target.value)} />
         {preInput('Departure','add departing date, number of passengers and price per person')}
         <div className="grid gap-2 grid-cols-2 md:grid-cols-4">

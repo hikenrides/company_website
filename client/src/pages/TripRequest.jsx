@@ -80,7 +80,7 @@ export default function TripRequest() {
         <input type="text" value={from} onChange={ev => setFrom(ev.target.value)} placeholder="Province, City, township, or specific address"/>
         {preInput('Destination', 'indicate the destination of your trip')}
         <input type="text" value={destination} onChange={ev => setDestination(ev.target.value)}placeholder="Province, City, Township, or specific address)"/>
-        {preInput('Extra info','trip rules, etc')}
+        {preInput('Extra info(optional)','trip rules, etc')}
         <textarea value={extraInfo} onChange={ev => setExtraInfo(ev.target.value)} />
         {preInput('Departure','add departing date, number of passengers and price per person')}
         <div className="grid gap-2 grid-cols-2 md:grid-cols-4">

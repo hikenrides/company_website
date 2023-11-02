@@ -28,10 +28,10 @@ export default function PlacesPage() {
           <Link to={''} className="flex cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl" style={{ marginBottom: '16px' }} >
             <div className="grow-0 shrink" style={{ display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <h2 className="text-xl" style={{ color: 'orange', marginRight: '8px' }}>pick-up area: </h2><span>{place.from}</span>
+                <h2 className="text-xl" style={{ color: 'orange', marginRight: '8px' }}>pick-up area: </h2><span>{place.province}, {place.from}</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <h2 className="text-xl" style={{ color: 'orange', marginRight: '8px' }}>destination: </h2><span>{place.destination}</span>
+                <h2 className="text-xl" style={{ color: 'orange', marginRight: '8px' }}>destination: </h2><span>{place.province2}, {place.destination}</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <h2 style={{ color: 'orange', marginRight: '8px' }}>price: </h2><span>{place.price} per person</span>
