@@ -5,22 +5,51 @@ import {Navigate, useParams} from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+const provinces = [
+  "Eastern Cape",
+  "Free State",
+  "Gauteng",
+  "KwaZulu-Natal",
+  "Limpopo",
+  "Mpumalanga",
+  "North West",
+  "Northern Cape",
+  "Western Cape",
+];
+
+
 export default function TripRequest() {
   const {id} = useParams();
+  const [province, setProvince] = useState('');
   const [from,setFrom] = useState('');
+  const [province2,setProvince2] = useState('');
   const [destination,setDestination] = useState('');
   const [extraInfo,setExtraInfo] = useState('');
   const [date,setDate] = useState('');
   const [NumOfPassengers,setPassengers] = useState(1);
   const [price,setPrice] = useState(100);
   const [redirect,setRedirect] = useState(false);
+  const [formError, setFormError] = useState(false);
+
+  const validateForm = () => {
+    if (province && from && province2 && destination && date && NumOfPassengers && price) {
+      setFormError(false);
+      return true;
+    } else {
+      setFormError(true);
+      return false;
+    }
+  };
+
   useEffect(() => {
     if (!id) {
       return;
     }
     axios.get('/requests/'+id).then(response => {
        const {data} = response;
+       setProvince(data.province)
        setFrom(data.from);
+       setProvince2(data.province2)
        setDestination(data.address);
        setExtraInfo(data.extraInfo);
        setDate(data.date);
@@ -49,8 +78,13 @@ export default function TripRequest() {
 
   async function saveRequest(ev) {
     ev.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
     const RequestData = {
+      province,
       from,
+      province2,
       destination,
       extraInfo,
       date,
@@ -72,14 +106,48 @@ export default function TripRequest() {
     return <Navigate to={'/account/requests'} />
   }
 
+  function renderProvinceOptions() {
+    return provinces.map((province, index) => (
+      <option key={index} value={province}>
+        {province}
+      </option>
+    ));
+  }
+
   return (
     <div>
       <AccountNav />
       <form onSubmit={saveRequest}>
+      {formError && (
+        <p style={{ color: 'red' }}>Please fill out all the required information!</p>
+      )}
         {preInput('From', 'Please indicate your preferred pick-up location for passengers.')}
-        <input type="text" value={from} onChange={ev => setFrom(ev.target.value)} placeholder="Province, City, township, or specific address"/>
+        <select
+            className="bg-gray-300"
+            value={province}
+            onChange={(ev) => setProvince(ev.target.value)}
+          >
+            <option value="">Select Province</option>
+            {renderProvinceOptions()}
+          </select>
+          <input
+            className="bg-gray-300"
+            type="text"
+            value={from}
+            onChange={(ev) => setFrom(ev.target.value)}
+            placeholder="City, Township, or specific address"
+          />
+ 
         {preInput('Destination', 'indicate the destination of your trip')}
-        <input type="text" value={destination} onChange={ev => setDestination(ev.target.value)}placeholder="Province, City, Township, or specific address)"/>
+        <select
+            className="bg-gray-300"
+            value={province2}
+            onChange={(ev) => setProvince2(ev.target.value)}
+          >
+            <option value="">Select Province</option>
+            {renderProvinceOptions()}
+          </select>
+        <input type="text" value={destination} onChange={ev => setDestination(ev.target.value)}placeholder="City, Township, or specific address)"/>
         {preInput('Extra info(optional)','trip rules, etc')}
         <textarea value={extraInfo} onChange={ev => setExtraInfo(ev.target.value)} />
         {preInput('Departure','add departing date, number of passengers and price per person')}

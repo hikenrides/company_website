@@ -137,14 +137,14 @@ app.post('/requests', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {token} = req.cookies;
   const {
-    from,destination,price
+    province,from,province2,destination,price
     ,extraInfo,date,NumOfPassengers,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const RequestDoc = await Request.create({
       owner:userData.id,price,
-      from,destination,
+      province,from,province2,destination,
       extraInfo,date,NumOfPassengers,
     });
     res.json(RequestDoc);
@@ -211,7 +211,7 @@ app.put('/requests', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {token} = req.cookies;
   const {
-    id, from,destination,
+    id, province,from,province2,destination,
     extraInfo,date,NumOfPassengers,price,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -219,7 +219,7 @@ app.put('/requests', async (req,res) => {
     const RequestDoc = await Request.findById(id);
     if (userData.id === RequestDoc.owner.toString()) {
       RequestDoc.set({
-        from,destination,
+        province,from,province2,destination,
         extraInfo,date,NumOfPassengers,price,
       });
       await RequestDoc.save();

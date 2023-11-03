@@ -33,6 +33,19 @@ export default function PlacesFormPage() {
   const [maxGuests,setMaxGuests] = useState(1);
   const [price,setPrice] = useState(100);
   const [redirect,setRedirect] = useState(false);
+  const [formError, setFormError] = useState(false);
+
+  const validateForm = () => {
+    if (province && from && province2 && destination && color && brand && type && seats && date && maxGuests && price) {
+      setFormError(false);
+      return true;
+    } else {
+      setFormError(true);
+      return false;
+    }
+  };
+
+  
   useEffect(() => {
     if (!id) {
       return;
@@ -75,6 +88,9 @@ export default function PlacesFormPage() {
 
   async function savePlace(ev) {
     ev.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
     const placeData = {
       province, from, province2, destination,
       color,brand,type,seats, extraInfo,
@@ -104,12 +120,17 @@ export default function PlacesFormPage() {
         {province}
       </option>
     ));
+
+    
   }
 
   return (
     <div>
       <AccountNav />
       <form onSubmit={savePlace}>
+      {formError && (
+        <p style={{ color: 'red' }}>Please fill out all the required information!</p>
+      )}
       {preInput('From', 'Please indicate your preferred pick-up location for passengers.')}
 
           <select
@@ -137,7 +158,7 @@ export default function PlacesFormPage() {
             <option value="">Select Province</option>
             {renderProvinceOptions()}
           </select>
-        <input className="bg-gray-300" type="text" value={destination} onChange={ev => setDestination(ev.target.value)}placeholder="Province, City, Township, or specific address)"/>
+        <input className="bg-gray-300" type="text" value={destination} onChange={ev => setDestination(ev.target.value)}placeholder="City, Township, or specific address)"/>
         <div className="vehicle-description">
   {preInput('Vehicle description', 'description of the vehicle')}
   <div className="horizontal-selects">
@@ -257,6 +278,7 @@ export default function PlacesFormPage() {
         </div>
         <button className="primary my-4">Save</button>
       </form>
+      
     </div>
   );
 }
