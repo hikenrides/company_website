@@ -37,8 +37,10 @@ export default function ProfilePage() {
       {subpage === 'profile' && (
         <div className="text-center max-w-lg mx-auto text-white">
           Logged in as {user.name} ({user.email})<br />
+          <h2 className="text-xl" style={{ color: 'black', marginRight: '8px' }}>Balance: R0</h2>
           <button onClick={logout} className="primary max-w-sm mt-2">Logout</button>
         </div>
+        
       )}
       {subpage === 'places' && (
         <PlacesPage />
