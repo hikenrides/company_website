@@ -71,7 +71,7 @@ const header={
         </div>
         {!!user && (
           <div className="text-white">
-            {user.name}
+          {user.name}
           </div>
         )}
       </Link>
