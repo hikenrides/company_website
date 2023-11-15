@@ -6,7 +6,7 @@ const allowCors = fn => async (req, res) => {
     res.setHeader('Access-Control-Allow-Methods', 'https://hikenrides.com')
     res.setHeader(
       'Access-Control-Allow-Headers',
-      '*'
+      'https://hikenrides.com'
     )
     if (req.method === 'OPTIONS') {
       res.status(200).end()
