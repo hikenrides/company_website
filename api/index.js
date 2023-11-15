@@ -12,6 +12,8 @@ const Request = require('./models/requests.js');
 const cookieParser = require('cookie-parser');
 
 
+const allowCors = require('./allowCors');
+
 require('dotenv').config();
 const app = express();
 
@@ -22,10 +24,7 @@ const bucket = 'hikenrides-booking-app';
 app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(__dirname+'/uploads'));
-app.use(cors({
-  credentials: true,
-  origin: 'https:hikenrides.com',
-}));
+app.use(cors())
 
 
 
