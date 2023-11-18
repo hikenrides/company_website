@@ -15,7 +15,7 @@ const cookieParser = require('cookie-parser');
 const allowCors = require('./allowCors');
 
 require('dotenv').config();
-const app = express();
+const app = express();ss
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
@@ -48,7 +48,7 @@ app.get('/api/database', (req,res) => {
 
 app.post('/register', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const {name,gender,phone_number,age,email,isDriver,driverLicense,password} = req.body;
+  const {name,gender,phone_number,age,email,isDriver,driverLicense,password,messages} = req.body;
 
   try {
     console.log('Received registration request:', {name, email});
@@ -61,6 +61,7 @@ app.post('/register', async (req,res) => {
       isDriver,
       driverLicense,
       password: bcrypt.hashSync(password, bcryptSalt),
+      messages,
     });
     console.log('User registered:', userDoc);
     res.json(userDoc);

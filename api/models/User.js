@@ -10,6 +10,7 @@ const UserSchema = new Schema({
   isDriver: { type: Boolean, default: false },
   driverLicense: String,
   password: String,
+  messages: String,
 });
 
 const UserModel = mongoose.model('User', UserSchema);
