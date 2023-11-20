@@ -47,7 +47,7 @@ app.get('/api/database', (req,res) => {
 
 app.post('/register', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const {name,gender,phone_number,age,email,isDriver,driverLicense,password,messages} = req.body;
+  const {name,gender,phone_number,age,email,isDriver,driverLicense,password,messages,balance} = req.body;
 
   try {
     console.log('Received registration request:', {name, email});
@@ -61,6 +61,7 @@ app.post('/register', async (req,res) => {
       driverLicense,
       password: bcrypt.hashSync(password, bcryptSalt),
       messages,
+      balance
     });
     console.log('User registered:', userDoc);
     res.json(userDoc);
