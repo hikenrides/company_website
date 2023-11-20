@@ -11,11 +11,10 @@ const Booking2 = require('./models/Booking2.js')
 const Request = require('./models/requests.js');
 const cookieParser = require('cookie-parser');
 
-
 const allowCors = require('./allowCors');
 
 require('dotenv').config();
-const app = express();ss
+const app = express();
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
