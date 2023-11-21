@@ -9,6 +9,8 @@ const Place = require('./models/Place.js');
 const Booking = require('./models/Booking.js');
 const Booking2 = require('./models/Booking2.js')
 const Request = require('./models/requests.js');
+const Message = require('./models/message.js');
+
 const cookieParser = require('cookie-parser');
 
 const allowCors = require('./allowCors');
@@ -71,6 +73,33 @@ app.post('/register', async (req,res) => {
   }
 });
 
+app.post('/messages', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { token } = req.cookies;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+
+    const { sender, receiver, content } = req.body;
+
+    try {
+      // Ensure that the sender is the authenticated user
+      if (userData.id !== sender) {
+        return res.status(403).json({ error: 'Forbidden' });
+      }
+
+      const messageDoc = await Message.create({
+        sender,
+        receiver,
+        content,
+      });
+
+      res.json(messageDoc);
+    } catch (error) {
+      console.error('Error creating message:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+});
 
 app.post('/login', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
