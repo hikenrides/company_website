@@ -40,7 +40,7 @@ const header={
         <motion.div className="logo_wrapper" variants={header}>hike<span>n</span>rides</motion.div>
       </Link>
       
-      <div className="flex gap-2 border border-gray-300 rounded-full py-2 px-4 shadow-md shadow-gray-300">
+      <div className="flex gap-2 border border-gray-300 rounded-full py-1 px-2 shadow-md shadow-gray-300">
         <Link to={'/account/trips'} >
         <div
           className={`flex text-white cursor-pointer ${activeTab === "tripOffers" ? "shadow-md shadow-gray-300" : ""}`}

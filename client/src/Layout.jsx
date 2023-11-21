@@ -9,6 +9,7 @@ const Layout = () => {
     display: "flex",
     flexDirection: "column",
     minHeight: "100vh",
+    width: "100%",
     position: "relative", // Ensure proper positioning of the notification icon
   };
 
