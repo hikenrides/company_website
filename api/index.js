@@ -82,7 +82,6 @@ app.post('/messages', async (req, res) => {
     const { sender, receiver, content } = req.body;
 
     try {
-      // Ensure that the sender is the authenticated user
       if (userData.id !== sender) {
         return res.status(403).json({ error: 'Forbidden' });
       }
