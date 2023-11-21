@@ -209,7 +209,9 @@ function IndexPage() {
             </motion.div>
           </motion.div>
 
-
+          <motion.div className="right_content_wrapper2">          
+          <motion.img src={'/images/hikenrides.png'} alt="bg" initial={{x:200, opacity:0}} animate={{x:0, opacity:1}} transition={{duration:.5, delay:0.8}}/>
+        </motion.div>
           <motion.div className="review_container" variants={stagger}>
             <motion.p className="total_review" variants={star}>64+ Reviews</motion.p>
             <IconContext.Provider value={{color:"#fff", size:"18px"}}>
@@ -221,6 +223,7 @@ function IndexPage() {
             </IconContext.Provider>
             <motion.p className="more_review" variants={star}>Travel Smart</motion.p>
           </motion.div>
+          
         </div>
         <motion.div className="right_content_wrapper">          
           <motion.img src={'/images/hikenrides.png'} alt="bg" initial={{x:200, opacity:0}} animate={{x:0, opacity:1}} transition={{duration:.5, delay:0.8}}/>

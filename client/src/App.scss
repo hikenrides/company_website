@@ -109,6 +109,7 @@ header{
 .content_wrapper{
   width:80%;
   margin:0 auto;
+  margin-top: 40px; 
   @extend .dflex;
   justify-content: space-between;
   align-items: center;
@@ -190,6 +191,15 @@ header{
   }
   .right_content_wrapper{
     width:48%;
+    @extend .dflex;
+    justify-content: flex-end;
+    img{
+      display: block;
+      width:100%;
+    }
+  }
+  .right_content_wrapper2{
+    width:0%;
     @extend .dflex;
     justify-content: flex-end;
     img{
@@ -356,9 +366,9 @@ header{
     @extend .dflex;
     justify-content: space-between;
     padding:0 13%;
-    height:120px;
+    height:100px;
     .logo_wrapper{
-      font-size:17px;
+      font-size:21px;
       font-weight: 600;
       span{
         color:$dark_green;
@@ -433,6 +443,111 @@ header{
     }
   }
   
+}
+
+@media (max-width: 600px) {
+  .content_wrapper{
+    width:90%;
+    margin-top: 40px;
+    @extend .dflex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $light_green;
+    clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
+    border-radius: 16px;
+    padding:3%;
+    .left_content_wrapper{
+      width:100%;
+      h2{
+        font-size:5vw;
+        font-weight: 600;
+        line-height: 1.3;
+        overflow: hidden;
+        span{
+          display: inline-block;  
+          span.second{
+            margin-left:10px;
+          }      
+        }
+      }
+      p{
+        font-size:2vw;
+        color:#333;
+        margin:20px 0 30px 0;
+      }
+      .btn_group{
+        @extend .dflex;
+        width:70%;
+        justify-content: space-between;
+        .btn{
+          @extend .dflex;
+          width:100%;
+          height:56px;
+          font-size: 10px;
+          border-radius: 8px;
+          font-weight: 600;
+          &.btn_primary{
+            background-color: $black;
+            color:$white;
+            svg{
+              margin-left:8px;
+            }
+          }
+          &.btn_secondary{
+            background-color:$white;
+            color:$black;
+            border:1px solid $black;
+          }
+        }
+      }
+      .review_container{
+        margin-top:50px;
+        p.total_review{
+          font-weight: 600;
+          font-size: 10px;
+          color:$black;
+          margin:0;
+        }
+        p.more_review{
+          color:#333;
+          font-weight: 400;
+          font-size: 16px;
+          margin-bottom: 20px;
+        }
+        span{
+          display:inline-flex;
+          @extend .dflex;
+          width:30px;
+          height:30px;
+          background-color: $dark_green;
+          border-radius: 8px;
+          margin-top: 10px;
+          +span{
+            margin-left:8px;
+          }
+        }
+      }
+    }
+    .right_content_wrapper{
+      display: none;
+      width:0%;
+      @extend .dflex;
+      justify-content: center;
+      img{
+        display: none;
+        width:0%;
+      }
+    }
+    .right_content_wrapper2{
+      width:100%;
+      @extend .dflex;
+      justify-content: center;
+      img{
+        display: block;
+        width:100%;
+      }
+    }
+  }
 }
 
 //framer-motion animation will be in next part, keep watching..........
