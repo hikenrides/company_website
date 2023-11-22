@@ -74,7 +74,7 @@ export default function Header() {
         </Link>
       </header>
 
-      <div className="tab-container flex gap-2 border border-gray-300 rounded-full py-1 px-2 shadow-md shadow-gray-300 mt-4">
+      <div className="tab-container flex gap-2 border border-gray-300 rounded-full py-1 px-2 shadow-md shadow-gray-300">
         <Link to={"/account/trips"}>
           <div
             className={`flex text-white cursor-pointer ${
