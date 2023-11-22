@@ -30,6 +30,7 @@ const Layout = () => {
     zIndex: 999, // Ensure the notification icon stays on top of other elements
   };
 
+ 
   const handleNotificationClick = () => {
     // Handle the notification click event
     // Implement your logic for showing notifications or other actions
@@ -43,6 +44,7 @@ const Layout = () => {
         {/* You can replace the content with your own icon or notification */}
         <span>🔔</span>
       </div>
+      
     </div>
   );
 };
