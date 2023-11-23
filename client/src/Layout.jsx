@@ -35,7 +35,7 @@ const Layout = () => {
 
  
   const handleNotificationClick = () => {
-    navigate("/account/notifications");
+    navigate("/account/notificationss");
   };
 
   return (
