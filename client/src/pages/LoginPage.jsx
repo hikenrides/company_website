@@ -23,7 +23,7 @@ export default function LoginPage() {
   }
 
   if (redirect) {
-    return <Navigate to={"/"} />;
+    return <Navigate to={"/account/trips"} />;
   }
 
   return (
