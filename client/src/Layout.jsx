@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 
 const Layout = () => {
   const navigate = useNavigate();
-  
+
   const layoutStyle = {
     background: "linear-gradient(135deg, #FFE53B 0%, #FF2525 74%)",
     padding: "1rem", // Adjust the padding as needed
