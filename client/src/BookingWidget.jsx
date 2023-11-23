@@ -31,7 +31,7 @@ export default function BookingWidget({place}) {
       // Send a message to the person who posted the offer
       await axios.post('/messages', {
         sender: user._id,  // Assuming user is the person making the booking
-        receiver: user._id,  // Assuming place.user is the person who posted the offer
+        receiver: place.owner,  // Assuming place.user is the person who posted the offer
         content: `Booking request for place ${place._id}. Booking ID: ${bookingId}`,
       });
   
