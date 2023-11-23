@@ -32,8 +32,7 @@ const Layout = () => {
 
  
   const handleNotificationClick = () => {
-    // Handle the notification click event
-    // Implement your logic for showing notifications or other actions
+    navigate("/account/notifications");
   };
 
   return (
@@ -41,7 +40,7 @@ const Layout = () => {
       <Header />
       <Outlet />
       <div style={notificationStyle} onClick={handleNotificationClick}>
-        {/* You can replace the content with your own icon or notification */}
+        
         <span>🔔</span>
       </div>
       
