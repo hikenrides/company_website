@@ -8,7 +8,6 @@ const ReceiverMessagesPage = ({ place }) => {
   useEffect(() => {
     const fetchReceiverMessages = async () => {
       try {
-        // Assuming place.owner is the receiverId
         const response = await axios.get(`/messages/${place.owner}`);
         setReceiverMessages(response.data);
       } catch (error) {
