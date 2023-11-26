@@ -5,10 +5,15 @@ const MessageViewer = ({ receiverId }) => {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    // Fetch messages for the given receiverId
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`/messages/${receiverId}`);
+        // Include the authentication token in the headers
+        const token = localStorage.getItem('token'); // Make sure to adjust this based on how you store the token
+        const response = await axios.get(`/messages/${receiverId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setMessages(response.data);
       } catch (error) {
         console.error('Error fetching messages:', error);
