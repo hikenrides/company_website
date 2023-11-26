@@ -111,7 +111,7 @@ app.get('/messages/:receiverId', async (req, res) => {
     const { receiverId } = req.params;
 
     try {
-      // Assuming you want to ensure that only the receiver (authenticated user) can fetch their messages
+      // Check if the authenticated user is the recipient of the messages
       if (userData.id !== receiverId) {
         return res.status(403).json({ error: 'Forbidden' });
       }
