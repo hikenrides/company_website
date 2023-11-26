@@ -86,7 +86,7 @@ export default function RegisterPage() {
           />
           <input
             type="text"
-            placeholder="Age (max 3 digits)"
+            placeholder="Age"
             value={age}
             onChange={(ev) => setAge(ev.target.value.slice(0, 3))}
           />
