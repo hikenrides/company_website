@@ -100,6 +100,34 @@ app.post('/messages', async (req, res) => {
   });
 });
 
+// Add this endpoint to your existing code
+
+app.get('/messages/:receiverId', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { token } = req.cookies;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+
+    const { receiverId } = req.params;
+
+    try {
+      // Assuming you want to ensure that only the receiver (authenticated user) can fetch their messages
+      if (userData.id !== receiverId) {
+        return res.status(403).json({ error: 'Forbidden' });
+      }
+
+      // Fetch messages for the given receiverId
+      const messages = await Message.find({ receiver: receiverId });
+
+      res.json(messages);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+});
+
+
 app.post('/login', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {email,password} = req.body;

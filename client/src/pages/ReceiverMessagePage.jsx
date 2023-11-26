@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import MessageViewer from '../MessageViewer';
 import axios from 'axios';
 
@@ -21,7 +21,7 @@ const ReceiverMessagesPage = ({ place }) => {
   return (
     <div>
       <h1>Receiver Messages</h1>
-      <MessageViewer messages={receiverMessages} />
+      <MessageViewer receiverId={place.owner} />
     </div>
   );
 };
