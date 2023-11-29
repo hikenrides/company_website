@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Container, Row, Col } from "reactstrap"; 
 import { Link } from "react-router-dom";
+import FindCarForm from "../FindCarForm";
 
 const provinces = [
   "Eastern Cape",
@@ -30,6 +32,23 @@ export default function TripOfferPage() {
 
   return (
     <div className="mt-20">
+      <section className="p-0 mb-20">
+        <div className="hero__form">
+          <Container>
+            <Row className="form__row">
+              <Col lg="4" md="4">
+                <div className="find__cars-left">
+                  <h2>where are you going?</h2>
+                </div>
+              </Col>
+
+              <Col lg="8" md="8" sm="12">
+                <FindCarForm />
+              </Col>
+            </Row>
+          </Container>
+        </div>
+      </section>
       {provinces.map((province, index) => (
         <div key={index}>
           <h2
