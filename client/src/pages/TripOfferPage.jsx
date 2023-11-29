@@ -86,7 +86,7 @@ export default function TripOfferPage() {
                 <Link
                   key={place._id}
                   to={"/place/" + place._id}
-                  className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
+                  className="block cursor-pointer gap-4 bg-gray-200 p-4 rounded-2xl"
                   style={{ marginBottom: "16px" }}
                 >
                   <h2 className="font-bold">
