@@ -68,6 +68,12 @@ export default function TripOfferPage() {
             >
               <Container>
             <Row className="form__row">
+              <Col lg="4" md="4">
+                <div className="find__cars-left">
+                  <h2>where are you going?</h2>
+                </div>
+              </Col>
+
               <Col lg="8" md="8" sm="12">
                 <FindCarForm />
               </Col>
