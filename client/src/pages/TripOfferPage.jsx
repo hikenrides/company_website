@@ -73,7 +73,7 @@ export default function TripOfferPage() {
       {provinces.map((province, index) => (
         <div key={index}>
           <h2
-            className="cursor-pointer bg-gray-300 p-4 rounded-2xl flex justify-between items-center"
+            className="cursor-pointer bg-gray-100 p-4 rounded-2xl flex justify-between items-center"
             onClick={() => handleProvinceSelect(province)}
             style={{ marginBottom: "16px" }}
           >
