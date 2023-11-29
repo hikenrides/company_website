@@ -34,14 +34,15 @@ export default function TripOfferPage() {
     );
   };
 
+
   const handleSearch = (fromLocation, toLocation) => {
     const matchingPlaces = places.filter(
       (place) =>
-        place.from.toLowerCase().includes(fromLocation.toLowerCase()) &&
-        place.destination.toLowerCase().includes(toLocation.toLowerCase()) &&
+        place.from.toLowerCase().includes(String(fromLocation).toLowerCase()) &&
+        place.destination.toLowerCase().includes(String(toLocation).toLowerCase()) &&
         (selectedProvince ? place.province === selectedProvince : true)
     );
-
+  
     if (matchingPlaces.length > 0) {
       setSearchResults(matchingPlaces);
       setSearchError(false);
@@ -73,7 +74,7 @@ export default function TripOfferPage() {
       {provinces.map((province, index) => (
         <div key={index}>
           <h2
-            className="cursor-pointer bg-gray-100 p-4 rounded-2xl flex justify-between items-center"
+            className="cursor-pointer bg-gray-300 p-4 rounded-2xl flex justify-between items-center"
             onClick={() => handleProvinceSelect(province)}
             style={{ marginBottom: "16px" }}
           >
@@ -111,7 +112,7 @@ export default function TripOfferPage() {
                   <Link
                     key={place._id}
                     to={"/place/" + place._id}
-                    className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
+                    className="block cursor-pointer gap-4 bg-gray-100 p-4 rounded-2xl"
                     style={{ marginBottom: "16px" }}
                   >
                     <h2 className="font-bold">
