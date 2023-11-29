@@ -123,6 +123,11 @@
     .form__group input {
       font-size: 0.7rem !important;
     }
+
+    .d-flex {
+        flex-direction: column;
+        align-items: stretch;
+      }
   
     .select__group {
       width: 100%;
@@ -138,7 +143,5 @@
       font-size: 1rem;
     }
   
-    .hero__form {
-        margin-top: -100px;
-    }
+    
   }

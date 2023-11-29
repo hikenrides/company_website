@@ -32,7 +32,7 @@ export default function TripOfferPage() {
 
   return (
     <div className="mt-20">
-      <section className="p-0 mb-20">
+      <section className="p-0 mb-10">
         <div className="hero__form">
           <Container>
             <Row className="form__row">
