@@ -66,19 +66,6 @@ export default function TripOfferPage() {
               className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
               style={{ marginBottom: '16px' }}
             >
-              <Container>
-            <Row className="form__row">
-              <Col lg="4" md="4">
-                <div className="find__cars-left">
-                  <h2>where are you going?</h2>
-                </div>
-              </Col>
-
-              <Col lg="8" md="8" sm="12">
-                <FindCarForm />
-              </Col>
-            </Row>
-          </Container>
               <h2 className="font-bold">
                 <span style={{ color: 'orange' }}>pick-up area:</span> {place.destination}
               </h2>
