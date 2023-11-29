@@ -58,6 +58,7 @@ export default function TripOfferPage() {
           >
             {province} {selectedProvince === province ? '▲' : '▼'}
           </h2>
+          
           {selectedProvince === province && places.filter(place => place.province === province).map(place => (
             <Link
               key={place._id}
@@ -65,6 +66,13 @@ export default function TripOfferPage() {
               className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
               style={{ marginBottom: '16px' }}
             >
+              <Container>
+            <Row className="form__row">
+              <Col lg="8" md="8" sm="12">
+                <FindCarForm />
+              </Col>
+            </Row>
+          </Container>
               <h2 className="font-bold">
                 <span style={{ color: 'orange' }}>pick-up area:</span> {place.destination}
               </h2>
