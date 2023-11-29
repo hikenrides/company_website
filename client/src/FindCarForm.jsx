@@ -11,12 +11,11 @@ const FindCarForm = () => {
         </FormGroup>
 
         <FormGroup className="form__group">
-        <input type="date" placeholder="Journey date" required />
-          
+          <input type="text" placeholder="To address" required />
         </FormGroup>
 
         <FormGroup className="form__group flex">
-        <input type="text" placeholder="To address" required />
+          <input type="date" placeholder="Journey date" required />
           <svg
           viewBox="0 0 24 24"
           fill="none"
