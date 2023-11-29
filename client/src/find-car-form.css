@@ -147,6 +147,7 @@
         /* Add specific styling for the date input on small screens */
         width: calc(100% - 30px); /* Adjust the width as needed */
         font-size: 0.7rem !important;
+        display: none;
       }
     
 }

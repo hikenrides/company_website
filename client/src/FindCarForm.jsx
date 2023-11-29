@@ -1,38 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import "./find-car-form.css";
 import { Form, FormGroup } from "reactstrap";
 
-const FindCarForm = () => {
+const FindCarForm = ({ onSearch }) => {
+  const [fromLocation, setFromLocation] = useState("");
+  const [toLocation, setToLocation] = useState("");
+
+  const handleSearch = () => {
+    onSearch({ fromLocation, toLocation });
+  };
+
   return (
     <Form className="form">
       <div className="d-flex align-items-center justify-content-between flex">
         <FormGroup className="form__group">
-          <input type="text" placeholder="From address" required />
-        </FormGroup>
-
-        <FormGroup className="form__group">
-          <input type="text" placeholder="To address" required />
+          <input
+            type="text"
+            placeholder="From location"
+            value={fromLocation}
+            onChange={(e) => setFromLocation(e.target.value)}
+            required
+          />
         </FormGroup>
 
         <FormGroup className="form__group flex">
-          <input type="date" placeholder="Journey date" required />
-          <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="ml-10 w-6 h-6"
-        >
-          <path
-            d="M14.9536 14.9458L21 21M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
-            stroke="#000000"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+          <input
+            type="text"
+            placeholder="To location"
+            value={toLocation}
+            onChange={(e) => setToLocation(e.target.value)}
+            required
           />
-        </svg>
+          <button type="button" onClick={handleSearch}>
+            Search
+          </button>
         </FormGroup>
-        
-        
       </div>
     </Form>
   );

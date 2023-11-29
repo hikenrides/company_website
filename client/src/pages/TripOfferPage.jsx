@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Container, Row, Col } from "reactstrap"; 
+import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import FindCarForm from "../FindCarForm";
 
@@ -19,6 +19,7 @@ const provinces = [
 export default function TripOfferPage() {
   const [places, setPlaces] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState('');
+  const [filteredPlaces, setFilteredPlaces] = useState([]);
 
   useEffect(() => {
     axios.get('/places').then(response => {
@@ -28,6 +29,14 @@ export default function TripOfferPage() {
 
   const handleProvinceSelect = (province) => {
     setSelectedProvince(prevState => prevState === province ? '' : province);
+  };
+
+  const handleSearch = ({ fromLocation, toLocation }) => {
+    const filtered = places.filter(place =>
+      place.from.toLowerCase().includes(fromLocation.toLowerCase()) &&
+      place.destination.toLowerCase().includes(toLocation.toLowerCase())
+    );
+    setFilteredPlaces(filtered);
   };
 
   return (
@@ -43,7 +52,7 @@ export default function TripOfferPage() {
               </Col>
 
               <Col lg="8" md="8" sm="12">
-                <FindCarForm />
+                <FindCarForm onSearch={handleSearch} />
               </Col>
             </Row>
           </Container>
@@ -58,8 +67,8 @@ export default function TripOfferPage() {
           >
             {province} {selectedProvince === province ? '▲' : '▼'}
           </h2>
-          
-          {selectedProvince === province && places.filter(place => place.province === province).map(place => (
+
+          {selectedProvince === province && (filteredPlaces.length > 0 ? filteredPlaces : places).map(place => (
             <Link
               key={place._id}
               to={'/place/' + place._id}
