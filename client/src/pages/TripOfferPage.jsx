@@ -32,7 +32,7 @@ export default function TripOfferPage() {
   
   };
 
-  const handleSearch = (fromLocation, destination) => {
+  const handleSearch = (selectedProvince, destination) => {
     // Filter places based on selected province and destination
     const matchingPlaces = places.filter((place) => {
       const normalizedDestination = place.destination.toLowerCase();
