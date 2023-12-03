@@ -30,15 +30,6 @@ export default function Header() {
     },
   };
 
-  useEffect(() => {
-    
-    animation();
-    $(window).on('resize', function(){
-      setTimeout(function(){ animation(); }, 500);
-    });
-    
-  }, []);
-
   function animation(){
     var tabsNewAnim = $('#navbarSupportedContent');
     var activeItemNewAnim = tabsNewAnim.find('.active');
@@ -68,6 +59,17 @@ export default function Header() {
     });
   }
 
+  
+  useEffect(() => {
+    
+    animation();
+    $(window).on('resize', function(){
+      setTimeout(function(){ animation(); }, 500);
+    });
+    
+  }, []);
+
+  
 
   return (
     <div className="flex flex-col items-center">
