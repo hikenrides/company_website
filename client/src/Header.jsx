@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { UserContext } from "./UserContext.jsx";
 import { motion } from "framer-motion";
+
 
 export default function Header() {
   const { user } = useContext(UserContext);
@@ -28,6 +29,15 @@ export default function Header() {
       },
     },
   };
+
+  useEffect(() => {
+    
+    animation();
+    $(window).on('resize', function(){
+      setTimeout(function(){ animation(); }, 500);
+    });
+    
+  }, []);
 
   return (
     <div className="flex flex-col items-center">
@@ -73,9 +83,15 @@ export default function Header() {
           {!!user && <div className="text-white">{user.name}</div>}
         </Link>
       </header>
-
+      <ul className="navbar-nav ml-auto">
       <div className="tab-container flex gap-2 border border-gray-300 rounded-full py-1 px-2 shadow-md shadow-gray-300">
-        <Link to={"/account/trips"}>
+      <div className="hori-selector">
+              <div className="left"></div>
+              <div className="right"></div>
+            </div>
+
+      <li className="nav-item">
+        <Link to={"/account/trips"} className="nav-link">
           <div
             className={`flex text-white cursor-pointer ${
               activeTab === "tripOffers" ? "shadow-md shadow-gray-300" : ""
@@ -85,9 +101,10 @@ export default function Header() {
             Trips
           </div>
         </Link>
+        </li>
         <div className="border-l border-gray-300" style={{ height: '20px', width: '3px' }}></div>
-
-        <Link to={"/account/requests"}>
+        <li className="nav-item">
+        <Link to={"/account/requests"} className="nav-link">
           <div
             className={`flex text-white cursor-pointer ${
               activeTab === "requestedTrips" ? "shadow-md shadow-gray-300" : ""
@@ -97,7 +114,9 @@ export default function Header() {
             Requests
           </div>
         </Link>
+        </li>
       </div>
+      </ul>
     </div>
   );
 }
