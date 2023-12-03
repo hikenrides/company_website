@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./Header";
 import { useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
+import Footer from "./footer";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -42,10 +43,7 @@ const Layout = () => {
     <div style={layoutStyle}>
       <Header />
       <Outlet />
-      <div style={notificationStyle} onClick={handleNotificationClick}>
-        
-        <span>🔔</span>
-      </div>
+      <Footer />
       
     </div>
   );

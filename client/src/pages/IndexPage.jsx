@@ -138,10 +138,6 @@ const header={
 
 
 function IndexPage() {
-  const copyrightStyle = {
-    fontSize: "12px", // Adjust the font size for the copyright message
-    marginTop: "8px", // Add some space between the notification icon and the copyright message
-  };
 
   const { user } = useContext(UserContext);
   return (
@@ -237,7 +233,6 @@ function IndexPage() {
       </motion.div>
 
       <Card/>
-      <h1 style={copyrightStyle}>© 2023 HikeNrides. All Rights Reserved.</h1>
 
 
     </motion.div>
