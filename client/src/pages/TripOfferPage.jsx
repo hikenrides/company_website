@@ -28,11 +28,23 @@ export default function TripOfferPage() {
 
   const handleProvinceSelect = (province) => {
     setSelectedProvince(prevState => prevState === province ? '' : province);
-
-  
   };
 
   const handleSearch = (selectedProvince, destination) => {
+    // Check if places data is available
+    if (places.length === 0) {
+      // Fetch places data again or handle appropriately
+      axios.get('/places').then(response => {
+        setPlaces(response.data);
+        filterAndLogResults(response.data, selectedProvince, destination);
+      });
+    } else {
+      // Places data is available, proceed to filter and log results
+      filterAndLogResults(places, selectedProvince, destination);
+    }
+  };
+  
+  const filterAndLogResults = (places, selectedProvince, destination) => {
     // Filter places based on selected province and destination
     const matchingPlaces = places.filter((place) => {
       const normalizedDestination = place.destination.toLowerCase();
@@ -51,7 +63,6 @@ export default function TripOfferPage() {
       console.log("No matching places found.");
     }
   };
-  
 
   return (
     <div className="mt-20">
