@@ -80,7 +80,7 @@ export default function TripOfferPage() {
               <FindCarForm onSearch={handleSearch} />
 
               </Col>
-              {selectedProvince === province && matchingPlaces.length > 0 && (
+              {matchingPlaces.length > 0 && (
   <div>
     {matchingPlaces.map((place) => (
       <Link
