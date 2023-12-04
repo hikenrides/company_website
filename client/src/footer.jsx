@@ -3,25 +3,16 @@ import './footer.css';
 import fb from './assets/fbimg.png';
 import twitter from './assets/twitterimg.png';
 import linkedin from './assets/linkedinimg.png';
-import insta from './assets/instaimg.png'
+import insta from './assets/instaimg.png';
+import whatsapp from './assets/whatsapp.png';
+import gmail from './assets/gmail.png'
 
 const Footer= () =>{
     return (
         <div className="footer">
             <div className="sb__footer section__padding">
                 <div className="sb__footer-links">
-                    <div className="sb__footer-links-div">
-                        <h4>For Business</h4>
-                        <a href="/employer">
-                            <p>Employer</p>
-                        </a>
-                        <a href="/health plan">
-                            <p>Health Plan</p>
-                        </a>
-                        <a href="/individual">
-                            <p>individual</p>
-                        </a>
-                    </div>
+                    
                     <div className="sb__footer-links_div">
                         <h4>Resources</h4>
                         <a href="/resource">
@@ -35,24 +26,24 @@ const Footer= () =>{
                         </a>
                     </div>
                     <div className="sb__footer-links_div">
-                        <h4>Partners</h4>
-                        <a href="/employer">
-                            <p>Swing Tech</p>
-                        </a>
+                        <h4>Contact Us
+                        </h4>
+                        <p>Whatsapp: +27 64 538 8351</p>
+                        <p>Email: info@hikenrides.com</p>
                     </div>
                     <div className="sb__footer-links_div">
                     <h4>Company</h4>
                         <a href="/about">
-                            <p>About</p>
+                            <p>About Us</p>
                         </a>
                         <a href="/press">
-                            <p>Press</p>
+                            <p>trips</p>
                         </a>
                         <a href="/career">
-                            <p>career</p>
+                            <p>Requests</p>
                         </a>
                         <a href="/contact">
-                            <p>Contact</p>
+                            <p>Drivers</p>
                         </a>
                         
                     </div>
