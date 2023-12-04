@@ -28,7 +28,7 @@ const Footer= () =>{
                     <div className="sb__footer-links_div">
                         <h4>Contact Us
                         </h4>
-                        <p>Whatsapp: +27 64 538 8351</p>
+                        <p>Whatsapp: +27 645388351</p>
                         <p>Email: info@hikenrides.com</p>
                     </div>
                     <div className="sb__footer-links_div">
@@ -50,7 +50,7 @@ const Footer= () =>{
                     <div className="sb__footer-links_div">
                         <h4>Social media</h4>
                         <div className="socialmedia">
-                            <p><img src={fb} alt=""/></p>
+                            <a href="https://www.facebook.com/profile.php?id=61553868901955"><p><img src={fb} alt=""/></p></a>
                             <p><img src={twitter} alt=""/></p>
                             <p><img src={linkedin} alt=""/></p>
                             <p><img src={insta} alt=""/></p>
