@@ -51,7 +51,7 @@ export default function TripOfferPage() {
       const normalizedInput = destination.toLowerCase();
 
       return (
-        (selectedProvince ? place.province === selectedProvince : true) &&
+        (selectedProvince ? place.province2 === selectedProvince : true) &&
         normalizedDestination.includes(normalizedInput)
       );
     });
