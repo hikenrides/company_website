@@ -75,10 +75,33 @@ export default function TripOfferPage() {
                   <h2>where are you going?</h2>
                 </div>
               </Col>
-  
+
               <Col lg="8" md="8" sm="12">
-                <FindCarForm onSearch={handleSearch} />
+              <FindCarForm onSearch={handleSearch} />
+
               </Col>
+              {selectedProvince === province && matchingPlaces.length > 0 && (
+  <div>
+    {matchingPlaces.map((place) => (
+      <Link
+        key={place._id}
+        to={'/place/' + place._id}
+        className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
+        style={{ marginBottom: '16px' }}
+      >
+        <h2 className="font-bold">
+          <span style={{ color: 'orange' }}>pick-up area:</span> {place.province}, {place.from}
+        </h2>
+        <h3 className="text-sm text-gray-500">
+          <span style={{ color: 'orange' }}>Destination:</span> {place.province2}, {place.destination}
+        </h3>
+        <div className="mt-1">
+          <span className="font-bold">R{place.price}</span> per person
+        </div>
+      </Link>
+    ))}
+  </div>
+)}
             </Row>
           </Container>
         </div>
@@ -92,33 +115,27 @@ export default function TripOfferPage() {
           >
             {province} {selectedProvince === province ? '▲' : '▼'}
           </h2>
-  
-          {selectedProvince === province &&
-            (matchingPlaces.length > 0 ? (
-              matchingPlaces.map((place) => (
-                <Link
-                  key={place._id}
-                  to={'/place/' + place._id}
-                  className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
-                  style={{ marginBottom: '16px' }}
-                >
-                  <h2 className="font-bold">
-                    <span style={{ color: 'orange' }}>pick-up area:</span> {place.province}, {place.from}
-                  </h2>
-                  <h3 className="text-sm text-gray-500">
-                    <span style={{ color: 'orange' }}>Destination:</span> {place.province2}, {place.destination}
-                  </h3>
-                  <div className="mt-1">
-                    <span className="font-bold">R{place.price}</span> per person
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <p>No matching places found.</p>
-            ))}
+          
+          {selectedProvince === province && places.filter(place => place.province === province).map(place => (
+            <Link
+              key={place._id}
+              to={'/place/' + place._id}
+              className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
+              style={{ marginBottom: '16px' }}
+            >
+              <h2 className="font-bold">
+                <span style={{ color: 'orange' }}>pick-up area:</span> {place.province}, {place.from}
+              </h2>
+              <h3 className="text-sm text-gray-500">
+                <span style={{ color: 'orange' }}>Destination:</span> {place.province2}, {place.destination}
+              </h3>
+              <div className="mt-1">
+                <span className="font-bold">R{place.price}</span> per person
+              </div>
+            </Link>
+          ))}
         </div>
       ))}
     </div>
   );
-  
 }
