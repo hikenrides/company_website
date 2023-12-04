@@ -105,7 +105,7 @@ export default function TripOfferPage() {
                 <span style={{ color: 'orange' }}>pick-up area:</span> {place.province}, {place.destination}
               </h2>
               <h3 className="text-sm text-gray-500">
-                <span style={{ color: 'orange' }}>Destination:</span> {place2.province}, {place.from}
+                <span style={{ color: 'orange' }}>Destination:</span> {place.province2}, {place.from}
               </h3>
               <div className="mt-1">
                 <span className="font-bold">R{place.price}</span> per person
