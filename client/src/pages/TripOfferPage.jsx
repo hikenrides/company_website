@@ -30,42 +30,23 @@ export default function TripOfferPage() {
     setSelectedProvince(prevState => prevState === province ? '' : province);
   };
 
-  const handleSearch = (selectedProvince, destination) => {
+  const handleSearch = () => {
     // Check if places data is available
     if (places.length === 0) {
       // Fetch places data again or handle appropriately
       axios.get('/places').then(response => {
         setPlaces(response.data);
-        filterAndLogResults(response.data, selectedProvince, destination);
+        logAllPlaces(response.data);
       });
     } else {
-      // Places data is available, proceed to filter and log results
-      filterAndLogResults(places, selectedProvince, destination);
+      // Places data is available, log all places
+      logAllPlaces(places);
     }
   };
   
-  const filterAndLogResults = (places, selectedProvince, destination) => {
-    // Filter places based on selected province and destination
-    const matchingPlaces = places.filter((place) => {
-      const normalizedDestination = place.destination.toLowerCase();
-      const normalizedInput = destination.toLowerCase();
-  
-      return (
-        (selectedProvince ? place.province2 === selectedProvince : true) &&
-        normalizedDestination.includes(normalizedInput)
-      );
-    });
-  
-    console.log("Selected Province:", selectedProvince);
-    console.log("Destination:", destination);
-    console.log("Matching Places:", matchingPlaces);
-  
-    // Update your UI with the matching places or display a message
-    if (matchingPlaces.length > 0) {
-      console.log(matchingPlaces);
-    } else {
-      console.log("No matching places found.");
-    }
+  const logAllPlaces = (places) => {
+    // Log all places to the console
+    console.log("All Places:", places);
   };
   
 
