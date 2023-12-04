@@ -49,13 +49,17 @@ export default function TripOfferPage() {
     const matchingPlaces = places.filter((place) => {
       const normalizedDestination = place.destination.toLowerCase();
       const normalizedInput = destination.toLowerCase();
-
+  
       return (
         (selectedProvince ? place.province2 === selectedProvince : true) &&
         normalizedDestination.includes(normalizedInput)
       );
     });
-
+  
+    console.log("Selected Province:", selectedProvince);
+    console.log("Destination:", destination);
+    console.log("Matching Places:", matchingPlaces);
+  
     // Update your UI with the matching places or display a message
     if (matchingPlaces.length > 0) {
       console.log(matchingPlaces);
@@ -63,6 +67,7 @@ export default function TripOfferPage() {
       console.log("No matching places found.");
     }
   };
+  
 
   return (
     <div className="mt-20">
