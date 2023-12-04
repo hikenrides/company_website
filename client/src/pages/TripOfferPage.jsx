@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Container, Row, Col } from "reactstrap"; 
+import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import FindCarForm from "../FindCarForm";
 
@@ -19,6 +19,7 @@ const provinces = [
 export default function TripOfferPage() {
   const [places, setPlaces] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState('');
+  const [matchingPlaces, setMatchingPlaces] = useState([]);
 
   useEffect(() => {
     axios.get('/places').then(response => {
@@ -43,10 +44,10 @@ export default function TripOfferPage() {
       filterAndLogResults(places, selectedProvince, destination);
     }
   };
-  
+
   const filterAndLogResults = (places, selectedProvince, destination) => {
     // Filter places based on selected province and destination
-    const matchingPlaces = places.filter((place) => {
+    const result = places.filter((place) => {
       const normalizedDestination = place.destination.toLowerCase();
       const normalizedInput = destination.toLowerCase();
 
@@ -57,9 +58,10 @@ export default function TripOfferPage() {
     });
 
     // Update your UI with the matching places or display a message
-    if (matchingPlaces.length > 0) {
-      console.log(matchingPlaces);
+    if (result.length > 0) {
+      setMatchingPlaces(result);
     } else {
+      setMatchingPlaces([]);
       console.log("No matching places found.");
     }
   };
@@ -77,31 +79,30 @@ export default function TripOfferPage() {
               </Col>
 
               <Col lg="8" md="8" sm="12">
-              <FindCarForm onSearch={handleSearch} />
-
+                <FindCarForm onSearch={handleSearch} />
               </Col>
               {matchingPlaces.length > 0 && (
-  <div>
-    {matchingPlaces.map((place) => (
-      <Link
-        key={place._id}
-        to={'/place/' + place._id}
-        className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
-        style={{ marginBottom: '16px' }}
-      >
-        <h2 className="font-bold">
-          <span style={{ color: 'orange' }}>pick-up area:</span> {place.province}, {place.from}
-        </h2>
-        <h3 className="text-sm text-gray-500">
-          <span style={{ color: 'orange' }}>Destination:</span> {place.province2}, {place.destination}
-        </h3>
-        <div className="mt-1">
-          <span className="font-bold">R{place.price}</span> per person
-        </div>
-      </Link>
-    ))}
-  </div>
-)}
+                <div>
+                  {matchingPlaces.map((place) => (
+                    <Link
+                      key={place._id}
+                      to={'/place/' + place._id}
+                      className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
+                      style={{ marginBottom: '16px' }}
+                    >
+                      <h2 className="font-bold">
+                        <span style={{ color: 'orange' }}>pick-up area:</span> {place.province}, {place.from}
+                      </h2>
+                      <h3 className="text-sm text-gray-500">
+                        <span style={{ color: 'orange' }}>Destination:</span> {place.province2}, {place.destination}
+                      </h3>
+                      <div className="mt-1">
+                        <span className="font-bold">R{place.price}</span> per person
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </Row>
           </Container>
         </div>
@@ -115,7 +116,7 @@ export default function TripOfferPage() {
           >
             {province} {selectedProvince === province ? '▲' : '▼'}
           </h2>
-          
+
           {selectedProvince === province && places.filter(place => place.province === province).map(place => (
             <Link
               key={place._id}
