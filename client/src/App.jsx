@@ -5,7 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import Layout from "./Layout";
 import RegisterPage from "./pages/RegisterPage";
 import axios from "axios";
-import {UserContextProvider} from "./UserContext";
+import {UserAuthContextProvider} from "./UserAuthContext.jsx"
 import ProfilePage from "./pages/ProfilePage.jsx";
 import PlacesPage from "./pages/PlacesPage";
 import PlacesFormPage from "./pages/PlacesFormPage";
@@ -19,13 +19,14 @@ import RequestOfferPage from './pages/RequestOfferPage';
 import BookingPage2 from './pages/BookingPage2';
 import PageRequest from './pages/PageRequest';
 import MessageViewer from './MessageViewer.jsx';
+import PhoneSignUp from './pages/PhoneSignUp.jsx';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 axios.defaults.withCredentials = true;
 
 function App() {
   return (
-    <UserContextProvider>
+    <UserAuthContextProvider>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<IndexPage />} />
@@ -45,9 +46,10 @@ function App() {
           <Route path="/account/trips" element={<TripOfferPage />} />
           <Route path="/account/requests" element={<RequestOfferPage />} />
           <Route path="/account/notifications" element={<MessageViewer />} />
+          <Route path="/phonesignup" element={<PhoneSignUp />} />
         </Route>
       </Routes>
-    </UserContextProvider>
+      </UserAuthContextProvider>
   )
 }
 

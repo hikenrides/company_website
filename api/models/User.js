@@ -11,7 +11,8 @@ const UserSchema = new Schema({
   driverLicense: String,
   password: String,
   messages: String,
-  balance: Number
+  balance: Number,
+  profilePictureUrl: String
 });
 
 const UserModel = mongoose.model('User', UserSchema);

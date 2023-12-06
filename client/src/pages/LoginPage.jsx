@@ -1,14 +1,16 @@
 import { Link, Navigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import axios from "axios";
-import { UserContext } from "../UserContext.jsx";
+import { Button } from "react-bootstrap";
+import GoogleButton from "react-google-button";
+import { useUserAuth } from "../UserAuthContext.jsx";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [redirect, setRedirect] = useState(false);
-  const { setUser } = useContext(UserContext);
+  const { logIn, googleSignIn } = useUserAuth();
 
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
@@ -17,8 +19,11 @@ export default function LoginPage() {
       setUser(data);
       alert("Login successful");
       setRedirect(true);
+      await logIn(email, password);
+      navigate("/home");
     } catch (e) {
       alert("Login failed");
+      setError(err.message);
     }
   }
 
@@ -26,13 +31,30 @@ export default function LoginPage() {
     return <Navigate to={"/account/trips"} />;
   }
 
+  const handleGoogleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      await googleSignIn();
+      navigate("/");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleFormSubmit = (ev) => {
+    ev.preventDefault();
+    // Call both registerUser and handleSubmit
+    handleLoginSubmit(ev);
+    handleSubmit(ev);
+  };
+
   return (
     <div className="mt-4 grow flex flex-col items-center justify-around">
       <div className="mb-64">
         <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl text-center mb-4">
           Login
         </h1>
-        <form className="max-w-md mx-auto" onSubmit={handleLoginSubmit}>
+        <form className="max-w-md mx-auto" onSubmit={(ev) => handleFormSubmit(ev)}>
           <input
             type="email"
             placeholder="Your Email"
@@ -56,6 +78,20 @@ export default function LoginPage() {
             <label>Show Password</label>
           </div>
           <button className="primary w-full px-4 py-2 mb-2 border rounded-md">Login</button>
+          <div>
+          <GoogleButton
+            className="g-btn"
+            type="dark"
+            onClick={handleGoogleSignIn}
+          />
+        </div>
+        <Link to="/phonesignup">
+          <div className="d-grid gap-2 mt-3">
+            <Button variant="success" type="Submit">
+              Sign in with Phone
+            </Button>
+          </div>
+        </Link>
           <div className="text-center py-2 text-gray-500">
             Don't have an account yet?{" "}
             <Link className="underline text-black" to={"/register"}>

@@ -1,6 +1,9 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
 import axios from "axios";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Form, Alert } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import { useUserAuth } from "../UserAuthContext";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -16,9 +19,23 @@ export default function RegisterPage() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
+  const [error, setError] = useState("");
+  const { signUp } = useUserAuth();
+  let navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    try {
+      await signUp(email, password);
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   const isDriverValue = isDriver === 'Yes';
@@ -67,12 +84,18 @@ export default function RegisterPage() {
       console.log("Registration failed. Please try again later");
     }
   }
+  const handleFormSubmit = (ev) => {
+    ev.preventDefault();
+    // Call both registerUser and handleSubmit
+    registerUser(ev);
+    handleSubmit(ev);
+  };
 
   return (
     <div className="mt-4 grow flex items-center justify-around">
       <div className="mb-64">
         <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl text-center mb-4">Register</h1>
-        <form className="max-w-md mx-auto" onSubmit={registerUser}>
+        <form className="max-w-md mx-auto" onSubmit={(ev) => handleFormSubmit(ev)}>
           <input
             type="text"
             placeholder="Names and Surname"
@@ -114,7 +137,7 @@ export default function RegisterPage() {
           
           <input
             type="email"
-            placeholder="your@email.com"
+            placeholder="Email address"
             value={email}
             onChange={(ev) => setEmail(ev.target.value)}
           />
@@ -171,7 +194,7 @@ export default function RegisterPage() {
           </div>
           
 
-          <button className="primary">Register</button>
+          <Button className="primary" type="submit">Sign up</Button>
           <div className="text-center py-2 text-gray-500">
             Already a member? <Link className="underline text-black" to={"/login"}>Login</Link>
           </div>
