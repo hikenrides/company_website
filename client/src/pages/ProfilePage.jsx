@@ -36,7 +36,7 @@ export default function ProfilePage() {
     return <Navigate to={redirect} />;
   }
   return (
-    <div>
+    <div className="mb-64">
       <AccountNav />
       {subpage === 'profile' && (
         <div className="text-center max-w-lg mx-auto text-white">

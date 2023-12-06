@@ -4,12 +4,10 @@ import fb from './assets/fbimg.png';
 import twitter from './assets/twitterimg.png';
 import linkedin from './assets/linkedinimg.png';
 import insta from './assets/instaimg.png';
-import whatsapp from './assets/whatsapp.png';
-import gmail from './assets/gmail.png'
 
 const Footer= () =>{
     return (
-        <div className="footer">
+        <div className="footer mb-0">
             <div className="sb__footer section__padding">
                 <div className="sb__footer-links">
                     
