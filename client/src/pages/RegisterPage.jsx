@@ -15,6 +15,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [profilePicture, setProfilePicture] = useState(null);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -42,6 +43,13 @@ export default function RegisterPage() {
       return;
     }
     try {
+      // You should implement the logic for handling the profile picture upload here
+      const formData = new FormData();
+      formData.append("profilePicture", profilePicture);
+      
+      // This is just a placeholder URL, replace it with your actual API endpoint for file upload
+      const fileUploadResponse = await axios.post("/upload-profile-picture", formData);
+
       await axios.post("/register", {
         name,
         gender,
@@ -51,7 +59,9 @@ export default function RegisterPage() {
         isDriver: isDriverValue,
         driverLicense: isDriver === "Yes" ? driverLicense : "",
         password,
+        profilePictureUrl: fileUploadResponse.data.url, // Assuming your server returns the URL of the uploaded image
       });
+
       alert("Registration successful. Now you can log in");
     } catch (e) {
       console.log("Registration failed. Please try again later");
@@ -69,6 +79,17 @@ export default function RegisterPage() {
             value={name}
             onChange={(ev) => setName(ev.target.value)}
           />
+          <div className="flex mb-4">
+            <label htmlFor="profilePicture" className="block text-sm font-medium text-gray-700">
+              Profile Picture
+            </label>
+            <input
+              type="file"
+              id="profilePicture"
+              accept="image/*"
+              onChange={(e) => setProfilePicture(e.target.files[0])}
+            />
+          </div>
           <select
             value={gender}
             onChange={(ev) => setGender(ev.target.value)}
@@ -90,6 +111,7 @@ export default function RegisterPage() {
             value={age}
             onChange={(ev) => setAge(ev.target.value.slice(0, 3))}
           />
+          
           <input
             type="email"
             placeholder="your@email.com"
@@ -147,6 +169,7 @@ export default function RegisterPage() {
               I agree to the <Link to="/terms" target="_blank">Terms and Conditions</Link>
             </label>
           </div>
+          
 
           <button className="primary">Register</button>
           <div className="text-center py-2 text-gray-500">

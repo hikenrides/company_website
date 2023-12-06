@@ -29,22 +29,24 @@ export default function LoginPage() {
   return (
     <div className="mt-4 grow flex flex-col items-center justify-around">
       <div className="mb-64">
-        <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl text-center mb-4">
+        <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl text-center mb-4">
           Login
         </h1>
         <form className="max-w-md mx-auto" onSubmit={handleLoginSubmit}>
           <input
             type="email"
-            placeholder="your@email.com"
+            placeholder="Your Email"
             value={email}
             onChange={(ev) => setEmail(ev.target.value)}
+            className="w-full px-4 py-2 mb-2 border rounded-md"
           />
           <div className="password-input">
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="password"
+              placeholder="Password"
               value={password}
               onChange={(ev) => setPassword(ev.target.value)}
+              className="w-full px-4 py-2 mb-2 border rounded-md"
             />
             <input
               type="checkbox"
@@ -53,7 +55,7 @@ export default function LoginPage() {
             />
             <label>Show Password</label>
           </div>
-          <button className="primary">Login</button>
+          <button className="primary w-full px-4 py-2 mb-2 border rounded-md">Login</button>
           <div className="text-center py-2 text-gray-500">
             Don't have an account yet?{" "}
             <Link className="underline text-black" to={"/register"}>
