@@ -40,7 +40,7 @@ export default function Header() {
 
         <Link
           to={user ? "/account" : "/login"}
-          className="flex items-center gap-2 border border-gray-300 rounded-full py-2 px-2"
+          className="user-container flex items-center gap-2 border border-gray-300 rounded-full py-1 px-2" // Adjusted padding here
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +74,7 @@ export default function Header() {
         </Link>
       </header>
 
-      <div className="tab-container flex gap-2 border border-gray-300 rounded-full py-1 px-2 shadow-md shadow-gray-300">
+      <div className="tab-container flex gap-1 border border-gray-300 rounded-full py-1 px-2 shadow-md shadow-gray-300"> {/* Adjusted padding here */}
         <Link to={"/account/trips"}>
           <div
             className={`flex text-white cursor-pointer ${
