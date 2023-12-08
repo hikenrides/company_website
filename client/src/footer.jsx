@@ -17,7 +17,7 @@ const Footer= () =>{
                             <p>Resource Center</p>
                         </a>
                         <a href="/resource">
-                            <p>testimonials</p>
+                            <p>Testimonials</p>
                         </a>
                         <a href="/resource">
                             <p>STV</p>
@@ -35,7 +35,7 @@ const Footer= () =>{
                             <p>About Us</p>
                         </a>
                         <a href="/press">
-                            <p>trips</p>
+                            <p>Trips</p>
                         </a>
                         <a href="/career">
                             <p>Requests</p>
