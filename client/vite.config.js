@@ -6,8 +6,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     rollupOptions: {
-      external: ['react-google-button'],
-      external: ['firebase']
+      external: ['react-google-button', 'firebase/auth']
     },
   },
 })
