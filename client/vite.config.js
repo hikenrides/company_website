@@ -7,6 +7,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       external: ['react-google-button'],
+      external: ['firebase']
     },
   },
 })
