@@ -2,7 +2,7 @@ import { Link, Navigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { Button } from "react-bootstrap";
-import GoogleButton from '/client/node_modules/react-google-button';
+import GoogleButton from 'react-google-button';
 import { useUserAuth } from "../UserAuthContext.jsx";
 
 export default function LoginPage() {
