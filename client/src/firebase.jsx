@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp } from "/opt/build/repo/client/node_modules/firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
