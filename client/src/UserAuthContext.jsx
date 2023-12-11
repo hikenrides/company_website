@@ -8,7 +8,7 @@ import {
   signInWithPopup,
   RecaptchaVerifier,
   signInWithPhoneNumber,
-} from "firebase/auth";
+} from "/opt/build/repo/client/node_modules/firebase/auth";
 import { auth } from "./firebase";
 import axios from "axios";
 import {data} from "autoprefixer";
