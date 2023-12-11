@@ -1,5 +1,5 @@
 import { initializeApp } from "/opt/build/repo/client/node_modules/firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth } from "/opt/build/repo/client/node_modules/firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyChUX83xYQt_LUumxsZNqo2qTWsWHNk3ko",
