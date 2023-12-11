@@ -78,20 +78,20 @@ export default function LoginPage() {
             <label>Show Password</label>
           </div>
           <button className="primary w-full px-4 py-2 mb-2 border rounded-md">Login</button>
-          <div>
-          <GoogleButton
-            className="g-btn"
-            type="dark"
-            onClick={handleGoogleSignIn}
-          />
-        </div>
-        <Link to="/phonesignup">
-          <div className="d-grid gap-2 mt-3">
-            <Button variant="success" type="Submit">
-              Sign in with Phone
-            </Button>
+          <div className="d-flex justify-center mb-2">
+            <GoogleButton
+              className="g-btn"
+              type="dark"
+              onClick={handleGoogleSignIn}
+            />
           </div>
-        </Link>
+          <Link to="/phonesignup">
+            <div className="d-grid gap-2 mt-3">
+              <Button variant="success" type="Submit">
+                Sign in with Phone
+              </Button>
+            </div>
+          </Link>
           <div className="text-center py-2 text-gray-500">
             Don't have an account yet?{" "}
             <Link className="underline text-black" to={"/register"}>
