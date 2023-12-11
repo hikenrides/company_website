@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Form, Alert } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import "/opt/build/repo/client/node_modules/react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
+import PhoneInput from "/opt/build/repo/client/node_modules/react-phone-number-input";
 import { useUserAuth } from "../UserAuthContext";
 
 const PhoneSignUp = () => {
