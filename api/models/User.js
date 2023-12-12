@@ -12,7 +12,6 @@ const UserSchema = new Schema({
   password: String,
   messages: String,
   balance: Number,
-  profilePictureUrl: String
 });
 
 const UserModel = mongoose.model('User', UserSchema);
