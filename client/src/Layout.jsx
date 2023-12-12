@@ -8,6 +8,7 @@ const Layout = () => {
     display: "flex",
     flexDirection: "column",
     minHeight: "100vh", // Ensure at least viewport height
+    background: "linear-gradient(135deg, #FFE53B 0%, #FF2525 74%)",
   };
 
   const contentStyle = {
