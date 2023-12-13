@@ -16,7 +16,6 @@ import {data} from "autoprefixer";
 
 export const UserContext = createContext({});
 
-const userAuthContext = createContext();
 
 export function UserAuthContextProvider({ children }) {
   const [user, setUser] = useState({});
@@ -64,7 +63,7 @@ export function UserAuthContextProvider({ children }) {
   
         
   return (
-    <userAuthContext.Provider
+    <UserContext.Provider
       value={{
         user,
         logIn,
@@ -77,11 +76,11 @@ export function UserAuthContextProvider({ children }) {
       }}
     >
       {children}
-    </userAuthContext.Provider>
+    </UserContext.Provider>
   );
   
 }
 
 export function useUserAuth() {
-  return useContext(userAuthContext);
+  return useContext(UserContext);
 }
