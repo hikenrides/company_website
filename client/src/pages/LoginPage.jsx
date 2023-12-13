@@ -35,6 +35,17 @@ export default function LoginPage() {
     return <Navigate to={"/account/trips"} />;
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    try {
+      await logIn(email, password);
+      navigate("/home");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   const handleGoogleSignIn = async (e) => {
     e.preventDefault();
     try {
