@@ -36,6 +36,8 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       await googleSignIn();
+      const { data } = await axios.post("/login", { email, password });
+      setUser(data);
       alert("Google sign-in successful");
       navigate("/account/trips");
     } catch (error) {
