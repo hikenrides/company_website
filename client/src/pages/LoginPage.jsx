@@ -11,6 +11,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const { logIn, googleSignIn } = useUserAuth();
+  const navigate = useNavigate();
+
 
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
@@ -20,7 +22,7 @@ export default function LoginPage() {
       alert("Login successful");
       setRedirect(true);
       await logIn(email, password);
-      navigate("/home");
+      navigate("/account/trips");
     } catch (e) {
       alert("Login failed");
       setError(err.message);
@@ -28,6 +30,7 @@ export default function LoginPage() {
   }
 
   if (redirect) {
+  
     return <Navigate to={"/account/trips"} />;
   }
 
@@ -35,7 +38,7 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       await googleSignIn();
-      navigate("/");
+      navigate("/account/trips");
     } catch (error) {
       console.log(error.message);
     }
@@ -61,6 +64,7 @@ export default function LoginPage() {
             value={email}
             onChange={(ev) => setEmail(ev.target.value)}
             className="w-full px-4 py-2 mb-2 border rounded-md"
+            controlId="formBasicEmail"
           />
           <div className="password-input">
             <input
@@ -69,6 +73,7 @@ export default function LoginPage() {
               value={password}
               onChange={(ev) => setPassword(ev.target.value)}
               className="w-full px-4 py-2 mb-2 border rounded-md"
+              controlId="formBasicPassword"
             />
             <input
               type="checkbox"
