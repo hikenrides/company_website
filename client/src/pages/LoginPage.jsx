@@ -23,14 +23,13 @@ export default function LoginPage() {
       const { data } = await axios.post("/login", { email, password });
       setUser(data);
       alert("Login successful");
-      setRedirect(true);
-      await logIn(email, password);
       navigate("/account/trips");
     } catch (e) {
       alert("Login failed");
-      setError(err.message);
+      setError(e.message);
     }
   }
+  
 
   if (redirect) {
     navigate("/account/trips");
@@ -44,8 +43,9 @@ export default function LoginPage() {
     try {
       await logIn(email, password);
       navigate("/account/trips");
-    } catch (err) {
-      setError(err.message);
+    } catch (e) {
+      alert("Login failed");
+      setError(e.message);
     }
   };
 

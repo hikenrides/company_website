@@ -13,6 +13,7 @@ import { auth } from "./firebase";
 import axios from "axios";
 import {data} from "autoprefixer";
 
+
 export const UserContext = createContext({});
 
 const userAuthContext = createContext();
@@ -51,15 +52,16 @@ export function UserAuthContextProvider({ children }) {
       setUser(currentuser);
     });
     if (!user) {
-        axios.get('/profile').then(({data}) => {
-            setUser(data);
-          setReady(true);
-        });
-      }
+      axios.get('/profile').then(({ data }) => {
+        setUser(data);
+        setReady(true);
+      });
+    }
     return () => {
       unsubscribe();
     };
   }, []);
+  
         
   return (
     <userAuthContext.Provider
