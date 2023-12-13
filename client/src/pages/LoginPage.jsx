@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { Button } from "react-bootstrap";
@@ -23,17 +23,14 @@ export default function LoginPage() {
       const { data } = await axios.post("/login", { email, password });
       setUser(data);
       alert("Login successful");
-      navigate("/account/trips");
+      setRedirect(true);
     } catch (e) {
       alert("Login failed");
-      setError(e.message);
     }
   }
-  
 
   if (redirect) {
-    navigate("/account/trips");
-    return null;
+    return <Navigate to={"/account/trips"} />;
   }
   
 
@@ -63,7 +60,6 @@ export default function LoginPage() {
 
   const handleFormSubmit = (ev) => {
     ev.preventDefault();
-    // Call both registerUser and handleSubmit
     handleLoginSubmit(ev);
     handleSubmit(ev);
   };
