@@ -34,17 +34,33 @@ export default function LoginPage() {
 
   const handleGoogleSignIn = async (e) => {
     e.preventDefault();
+  
     try {
       await googleSignIn();
-      const { data } = await axios.post("/login", { email, password });
-      setUser(data);
-      alert("Google sign-in successful");
-      navigate("/account/trips");
+  
+      const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          try {
+            // Fetch additional user data from the database
+            const { data } = await axios.get(`/profile`);
+            // Update the user information in the context
+            setUser(data);
+            alert("Google sign-in successful");
+            navigate("/account/trips");
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+          }
+        }
+      });
+  
+      // Unsubscribe from onAuthStateChanged to avoid memory leaks
+      return unsubscribe;
     } catch (error) {
       alert("Google sign-in failed");
-      console.log(error.message);
+      console.error("Google sign-in error:", error.message);
     }
   };
+  
 
 
 

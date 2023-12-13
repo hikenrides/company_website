@@ -151,23 +151,28 @@ app.post('/login', async (req,res) => {
 });
 
 app.get('/profile', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  if (token) {
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-      if (err) throw err;
+  try {
+    const { token } = req.cookies;
+
+    if (token) {
+      const userData = jwt.verify(token, jwtSecret, {});
       const user = await User.findById(userData.id);
+
       if (user) {
         const { name, email, _id } = user;
         res.json({ name, email, _id });
       } else {
         res.json(null);
       }
-    });
-  } else {
-    res.json(null);
+    } else {
+      res.json(null);
+    }
+  } catch (error) {
+    console.error("Error in /profile route:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 
 app.post('/logout', (req,res) => {
