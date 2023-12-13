@@ -4,7 +4,7 @@ import axios from "axios";
 import { Button } from "react-bootstrap";
 import GoogleButton from '/opt/build/repo/client/node_modules/react-google-button';
 import { useUserAuth, UserContext } from "../UserAuthContext.jsx";
-import { onAuthStateChanged } from '/opt/build/repo/client/node_modules/firebase/auth';
+import { onAuthStateChanged, auth } from '/opt/build/repo/client/node_modules/firebase/auth';
 
 
 export default function LoginPage() {
