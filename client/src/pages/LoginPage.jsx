@@ -5,7 +5,7 @@ import { Button } from "react-bootstrap";
 import GoogleButton from '/opt/build/repo/client/node_modules/react-google-button';
 import { useUserAuth, UserContext } from "../UserAuthContext.jsx";
 import { onAuthStateChanged } from '/opt/build/repo/client/node_modules/firebase/auth';
-import auth from "firebase";
+import auth from "../firebase.jsx";
 
 
 
