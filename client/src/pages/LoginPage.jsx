@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import { Button } from "react-bootstrap";
 import GoogleButton from '/opt/build/repo/client/node_modules/react-google-button';
-import { useUserAuth } from "../UserAuthContext.jsx";
+import { useUserAuth, UserContext } from "../UserAuthContext.jsx";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -12,12 +12,13 @@ export default function LoginPage() {
   const [redirect, setRedirect] = useState(false);
   const { logIn, googleSignIn } = useUserAuth();
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const { setUser } = useContext(UserContext);
 
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
     try {
       const { data } = await axios.post("/login", { email, password });
+      setUser(data);
       alert("Login successful");
       setRedirect(true);
     } catch (e) {

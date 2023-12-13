@@ -71,6 +71,7 @@ export default function RegisterPage() {
       });
 
       alert("Registration successful. Now you can log in");
+      navigate("/login");
     } catch (e) {
       console.log("Registration failed. Please try again later");
     }
