@@ -24,7 +24,9 @@ export function UserAuthContextProvider({ children }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
       console.log("Auth", currentuser);
-      setUser(currentuser);
+      if (currentuser) {
+        setUser(currentuser);
+      }
     });
   
     // Move axios call outside the if condition

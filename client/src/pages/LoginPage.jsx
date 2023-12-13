@@ -31,14 +31,15 @@ export default function LoginPage() {
   const handleGoogleSignIn = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.get(`/profile`);
-      await googleSignIn();
-      setUser(data);
-      alert("Login successful");
+      const { user } = await googleSignIn();
+      setUser(user);
+      navigate("/account/trips");
+      alert("Google SignIn successful");
     } catch (error) {
       console.log(error.message);
     }
   };
+  
 
   if (redirect) {
     return <Navigate to={"/account/trips"} />;
