@@ -4,8 +4,6 @@ import axios from "axios";
 import { Button } from "react-bootstrap";
 import GoogleButton from '/opt/build/repo/client/node_modules/react-google-button';
 import { useUserAuth, UserContext } from "../UserAuthContext.jsx";
-import { onAuthStateChanged } from 'firebase/auth';
-import auth from "../firebase.jsx";
 
 
 
@@ -15,7 +13,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const { logIn, googleSignIn } = useUserAuth();
-  const navigate = useNavigate();
+
   const { setUser } = useContext(UserContext);
 
   async function handleLoginSubmit(ev) {
@@ -29,45 +27,22 @@ export default function LoginPage() {
       alert("Login failed");
     }
   }
-  
+
+  const handleGoogleSignIn = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.get(`/profile`);
+      await googleSignIn();
+      setUser(data);
+      alert("Login successful");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   if (redirect) {
     return <Navigate to={"/account/trips"} />;
   }
-  
-
-  const handleGoogleSignIn = async (e) => {
-    e.preventDefault();
-  
-    try {
-      await googleSignIn();
-  
-      const unsubscribe = onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          try {
-            // Fetch additional user data from the database
-            const { data } = await axios.get(`/profile`);
-            // Update the user information in the context
-            setUser(data);
-            alert("Google sign-in successful");
-            navigate("/account/trips");
-          } catch (error) {
-            console.error("Error fetching user data:", error);
-          }
-        }
-      });
-  
-      // Unsubscribe from onAuthStateChanged to avoid memory leaks
-      return unsubscribe;
-    } catch (error) {
-      alert("Google sign-in failed");
-      console.error("Google sign-in error:", error.message);
-    }
-  };
-  
-
-
-
   return (
     <div className="mt-4 grow flex flex-col items-center justify-around">
       <div className="mb-64">
