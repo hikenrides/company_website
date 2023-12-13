@@ -32,14 +32,26 @@ export default function LoginPage() {
   const handleGoogleSignIn = async (e) => {
     e.preventDefault();
     try {
+      // Sign in with Google
       const { user } = await googleSignIn();
-      setUser(user);
+  
+      // Fetch additional user data from the database
+      const { data: userData } = await axios.get(`/profile`);
+  
+      // Update the user information in the context
+      setUser(userData);
+  
+      // Navigate to the desired page
       navigate("/account/trips");
+  
+      // Display a success message
       alert("Google SignIn successful");
     } catch (error) {
       console.log(error.message);
+      alert("Google sign-in failed");
     }
   };
+  
   
 
   if (redirect) {
