@@ -21,6 +21,22 @@ export function UserAuthContextProvider({ children }) {
   const [user, setUser] = useState({});
   const [ready,setReady] = useState(false);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
+      console.log("Auth", currentuser);
+      setUser(currentuser);
+    });
+    if (!user) {
+      axios.get('/profile').then(({ data }) => {
+        setUser(data);
+        setReady(true);
+      });
+    }
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   function logIn(email, password) {
     return signInWithEmailAndPassword(auth, email, password);
   }
@@ -45,23 +61,6 @@ export function UserAuthContextProvider({ children }) {
     return signInWithPhoneNumber(auth, number, recaptchaVerifier);
   }
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
-      console.log("Auth", currentuser);
-      setUser(() => currentuser); // Functional update to avoid dependency warning
-    });
-  
-    if (!user) {
-      axios.get('/profile').then(({ data }) => {
-        setUser(() => data); // Functional update
-        setReady(true);
-      });
-    }
-  
-    return () => {
-      unsubscribe();
-    };
-  }, [user]); // Add user to the dependency array
   
   
         
