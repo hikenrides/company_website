@@ -13,6 +13,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const { logIn, googleSignIn } = useUserAuth();
+  const navigate = useNavigate(); 
 
   const { setUser } = useContext(UserContext);
 
