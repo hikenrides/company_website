@@ -14,20 +14,17 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
-
-
-
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
     try {
       const { data } = await axios.post("/login", { email, password });
-      setUser(data);
       alert("Login successful");
       setRedirect(true);
     } catch (e) {
       alert("Login failed");
     }
   }
+  
 
   if (redirect) {
     return <Navigate to={"/account/trips"} />;
@@ -61,7 +58,6 @@ export default function LoginPage() {
             value={email}
             onChange={(ev) => setEmail(ev.target.value)}
             className="w-full px-4 py-2 mb-2 border rounded-md"
-            controlId="formBasicEmail"
           />
           <div className="password-input">
             <input
@@ -70,7 +66,6 @@ export default function LoginPage() {
               value={password}
               onChange={(ev) => setPassword(ev.target.value)}
               className="w-full px-4 py-2 mb-2 border rounded-md"
-              controlId="formBasicPassword"
             />
             <input
               type="checkbox"

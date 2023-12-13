@@ -26,16 +26,18 @@ export function UserAuthContextProvider({ children }) {
       console.log("Auth", currentuser);
       setUser(currentuser);
     });
-    if (!user) {
-      axios.get('/profile').then(({ data }) => {
-        setUser(data);
-        setReady(true);
-      });
-    }
+  
+    // Move axios call outside the if condition
+    axios.get('/profile').then(({ data }) => {
+      setUser(data);
+      setReady(true);
+    });
+  
     return () => {
       unsubscribe();
     };
   }, []);
+  
 
   function logIn(email, password) {
     return signInWithEmailAndPassword(auth, email, password);
