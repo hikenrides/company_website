@@ -13,7 +13,7 @@ export default function LoginPage() {
   const { logIn, googleSignIn } = useUserAuth();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [error, setError] = useState("");
+
 
 
 
@@ -34,18 +34,6 @@ export default function LoginPage() {
   }
   
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    try {
-      await logIn(email, password);
-      navigate("/account/trips");
-    } catch (e) {
-      alert("Login failed");
-      setError(e.message);
-    }
-  };
-
   const handleGoogleSignIn = async (e) => {
     e.preventDefault();
     try {
@@ -58,11 +46,7 @@ export default function LoginPage() {
     }
   };
 
-  const handleFormSubmit = (ev) => {
-    ev.preventDefault();
-    handleLoginSubmit(ev);
-    handleSubmit(ev);
-  };
+
 
   return (
     <div className="mt-4 grow flex flex-col items-center justify-around">
@@ -70,7 +54,7 @@ export default function LoginPage() {
         <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl text-center mb-4">
           Login
         </h1>
-        <form className="max-w-md mx-auto" onSubmit={(ev) => handleFormSubmit(ev)}>
+        <form className="max-w-md mx-auto" onSubmit={handleLoginSubmit}>
           <input
             type="email"
             placeholder="Your Email"
