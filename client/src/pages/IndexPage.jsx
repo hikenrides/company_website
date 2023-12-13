@@ -1,12 +1,11 @@
 import '../App.scss';
-import {FaBehance, FaDribbble} from 'react-icons/fa';
 import {IoMailOutline, IoChevronForwardCircle, IoStar} from 'react-icons/io5';
 import {IconContext} from "react-icons";
 import Card from '../Card.jsx';
 import {motion} from 'framer-motion';
 import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
-import { UserContext } from "../UserContext.jsx";
+import { UserContext } from "../UserAuthContext.jsx";
 
 
 
