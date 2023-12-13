@@ -13,6 +13,8 @@ export default function LoginPage() {
   const { logIn, googleSignIn } = useUserAuth();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [error, setError] = useState("");
+
 
 
   async function handleLoginSubmit(ev) {
@@ -31,16 +33,17 @@ export default function LoginPage() {
   }
 
   if (redirect) {
-  
-    return <Navigate to={"/account/trips"} />;
+    navigate("/account/trips");
+    return null;
   }
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
       await logIn(email, password);
-      navigate("/home");
+      navigate("/account/trips");
     } catch (err) {
       setError(err.message);
     }
