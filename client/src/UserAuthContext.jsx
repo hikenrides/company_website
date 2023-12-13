@@ -48,18 +48,21 @@ export function UserAuthContextProvider({ children }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
       console.log("Auth", currentuser);
-      setUser(currentuser);
+      setUser(() => currentuser); // Functional update to avoid dependency warning
     });
+  
     if (!user) {
       axios.get('/profile').then(({ data }) => {
-        setUser(data);
+        setUser(() => data); // Functional update
         setReady(true);
       });
     }
+  
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [user]); // Add user to the dependency array
+  
   
         
   return (
