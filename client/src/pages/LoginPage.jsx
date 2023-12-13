@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [redirect, setRedirect] = useState(false);
   const { logIn, googleSignIn } = useUserAuth();
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
 
   async function handleLoginSubmit(ev) {
@@ -38,8 +39,10 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       await googleSignIn();
+      alert("Google sign-in successful");
       navigate("/account/trips");
     } catch (error) {
+      alert("Google sign-in failed");
       console.log(error.message);
     }
   };
