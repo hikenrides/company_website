@@ -50,7 +50,7 @@ const PhoneSignUp = () => {
         <Form onSubmit={getOtp} style={{ display: !flag ? "block" : "none" }}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <PhoneInput
-              defaultCountry="IN"
+              defaultCountry="SA"
               value={number}
               onChange={setNumber}
               placeholder="Enter Phone Number"
