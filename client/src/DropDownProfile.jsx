@@ -1,5 +1,6 @@
-import React from "react";
+import { useContext, useState } from "react";
 import {Link, useLocation} from "react-router-dom";
+const { user } = useContext(UserContext);
 
 const DropDownProfile = () => {
     const {pathname} = useLocation();
