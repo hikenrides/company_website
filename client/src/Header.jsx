@@ -60,9 +60,7 @@ export default function Header() {
           </div>
           {!!user && <div className="text-white">{user.name}</div>}
         </Link>
-        <Link
-          to={user ? "/account" : "/login"} 
-        className="flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" onClick={() => setOpenProfile((prev) => !prev)}>
+        <div className="flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" onClick={() => setOpenProfile((prev) => !prev)}>
         <div className="bg-gray-500 text-white rounded-full border border-gray-500 overflow-hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +75,7 @@ export default function Header() {
               />
             </svg>
           </div>
-          </Link>
+        </div>
         {
                openProfile && <DropDownProfile />
         }
