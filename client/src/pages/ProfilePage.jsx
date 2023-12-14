@@ -37,7 +37,9 @@ export default function ProfilePage() {
   }
   return (
     <div className="mb-64">
-      <AccountNav />
+      <div className="hidden md:block">
+        <AccountNav />
+      </div>
       {subpage === 'profile' && (
         <div className="text-center max-w-lg mx-auto text-white">
           Logged in as {user.name} ({user.email})<br />
