@@ -12,17 +12,17 @@ const DropDownProfile = () => {
       <ul className="flex flex-col gap-4">
         <Link
           to={user ? "/account" : "/login"}
-          className="user-container flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1"
+          className="user-container flex items-center gap-2 "
         >
           Profile
         </Link>
-        <Link className="user-container flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" to={"/account/bookings"}>
+        <Link className="user-container flex items-center gap-2 " to={"/account/bookings"}>
           My Bookings
         </Link>
-        <Link className="user-container flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" to={"/account/places"}>
+        <Link className="user-container flex items-center gap-2 " to={"/account/places"}>
           My trip offers
         </Link>
-        <Link className="user-container flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" to={"/account/Myrequests"}>
+        <Link className="user-container flex items-center gap-2" to={"/account/Myrequests"}>
           My trip Requests
         </Link>
       </ul>
