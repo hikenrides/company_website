@@ -13,21 +13,26 @@ export default function Header() {
   let menuRef = useRef();
 
   useEffect(() => {
-    let handler = (e)=>{
-      if(!menuRef.current.contains(e.target)){
-        setOpen(false);
-        console.log(menuRef.current);
-      }      
+    const handleClickOutside = (event) => {
+      // Close the dropdown if the click is outside of the dropdown and user-container2
+      if (
+        openProfile &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        event.target.closest('.user-container2') === null
+      ) {
+        setOpenProfile(false);
+      }
     };
 
-    document.addEventListener("mousedown", handler);
-    
+    // Add event listener when the component mounts
+    document.addEventListener('click', handleClickOutside);
 
-    return() =>{
-      document.removeEventListener("mousedown", handler);
-    }
-
-  });
+    // Remove event listener when the component unmounts
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [openProfile, setOpenProfile, menuRef]);
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
@@ -86,7 +91,7 @@ export default function Header() {
         </Link>
 
         {/* user-container2: Visible on smartphones */}
-        <div ref={menuRef} className="user-container2 md:hidden flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" onClick={() => setOpenProfile((prev) => !prev)}>
+        <div  className="user-container2 md:hidden flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" onClick={() => setOpenProfile((prev) => !prev)} ref={menuRef}>
           <div className="bg-gray-500 text-white rounded-full border border-gray-500 overflow-hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"

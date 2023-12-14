@@ -9,21 +9,19 @@ const DropDownProfile = () => {
   let menuRef = useRef();
 
   useEffect(() => {
-    let handler = (e)=>{
-      if(!menuRef.current.contains(e.target)){
+    let handler = (e) => {
+      if (!menuRef.current.contains(e.target)) {
         setOpen(false);
-        console.log(menuRef.current);
-      }      
+      }
     };
-
+  
     document.addEventListener("mousedown", handler);
-    
-
-    return() =>{
+  
+    return () => {
       document.removeEventListener("mousedown", handler);
-    }
-
-  });
+    };
+  }, [open, menuRef]);
+  
 
   return (
     <div className={`flex flex-col dropDownProfile ${open? 'active' : 'inactive'}`}>
