@@ -1,12 +1,32 @@
-import React, { useContext } from "react";
+import { useContext,useState, useEffect, useRef} from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "./UserAuthContext";
 
 const DropDownProfile = () => {
   const { user } = useContext(UserContext);
+  const [open, setOpen] = useState(false);
+
+  let menuRef = useRef();
+
+  useEffect(() => {
+    let handler = (e)=>{
+      if(!menuRef.current.contains(e.target)){
+        setOpen(false);
+        console.log(menuRef.current);
+      }      
+    };
+
+    document.addEventListener("mousedown", handler);
+    
+
+    return() =>{
+      document.removeEventListener("mousedown", handler);
+    }
+
+  });
 
   return (
-    <div className="flex flex-col dropDownProfile">
+    <div className={`flex flex-col dropDownProfile ${open? 'active' : 'inactive'}`}>
       <ul className="flex flex-col gap-4">
         <Link
           to={user ? "/account" : "/login"}

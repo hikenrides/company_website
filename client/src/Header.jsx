@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { UserContext } from "./UserAuthContext";
 import { motion } from "framer-motion";
 import DropDownProfile from "./DropDownProfile";
@@ -9,9 +9,31 @@ export default function Header() {
   const [activeTab, setActiveTab] = useState("");
   const [openProfile, setOpenProfile] = useState(false);
 
+  const [open, setOpen] = useState(false);
+  let menuRef = useRef();
+
+  useEffect(() => {
+    let handler = (e)=>{
+      if(!menuRef.current.contains(e.target)){
+        setOpen(false);
+        console.log(menuRef.current);
+      }      
+    };
+
+    document.addEventListener("mousedown", handler);
+    
+
+    return() =>{
+      document.removeEventListener("mousedown", handler);
+    }
+
+  });
+
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
   };
+
+  
 
   let easeing = [0.6, -0.05, 0.01, 0.99];
 
@@ -64,7 +86,7 @@ export default function Header() {
         </Link>
 
         {/* user-container2: Visible on smartphones */}
-        <div className="user-container2 md:hidden flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" onClick={() => setOpenProfile((prev) => !prev)}>
+        <div ref={menuRef} className="user-container2 md:hidden flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" onClick={()=>{setOpen(!open)}}>
           <div className="bg-gray-500 text-white rounded-full border border-gray-500 overflow-hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
