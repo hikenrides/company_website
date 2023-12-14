@@ -34,15 +34,15 @@ const DropDownProfile = () => {
   };
 
   return (
-    <div className="relative inline-block">
+    <div className="relative inline-block" ref={dropdownRef}>
       <div
         className="cursor-pointer user-container flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1"
         onClick={handleToggleDropdown}
       >
-        Profile
+        {user ? "Profile" : "Login"}
       </div>
       {isOpen && (
-        <div ref={dropdownRef} className="dropDownProfile">
+        <div className="dropDownProfile">
           <ul className="flex flex-col gap-4">
             <Link
               to={user ? "/account" : "/login"}
