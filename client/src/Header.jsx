@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "./UserAuthContext";
 import { motion } from "framer-motion";
 import DropDownProfile from "./DropDownProfile";
@@ -12,20 +12,6 @@ export default function Header() {
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
   };
-
-  const closeProfileDropdown = () => {
-    setOpenProfile(false);
-  };
-
-  useEffect(() => {
-    // Add event listener when component mounts
-    document.addEventListener("click", closeProfileDropdown);
-
-    // Remove event listener when component unmounts
-    return () => {
-      document.removeEventListener("click", closeProfileDropdown);
-    };
-  }, []); // Empty dependency array ensures the effect runs once on mount
 
   let easeing = [0.6, -0.05, 0.01, 0.99];
 
@@ -44,6 +30,7 @@ export default function Header() {
       },
     },
   };
+  
 
   return (
     <div className="flex flex-col items-center">
@@ -77,10 +64,7 @@ export default function Header() {
         </Link>
 
         {/* user-container2: Visible on smartphones */}
-        <div
-          className="user-container2 md:hidden flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1"
-          onClick={() => setOpenProfile((prev) => !prev)}
-        >
+        <div className="user-container2 md:hidden flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" onClick={() => setOpenProfile((prev) => !prev)}>
           <div className="bg-gray-500 text-white rounded-full border border-gray-500 overflow-hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -110,16 +94,11 @@ export default function Header() {
             Trips
           </div>
         </Link>
-        <div
-          className="border-l border-gray-300"
-          style={{ height: "20px", width: "3px" }}
-        ></div>
+        <div className="border-l border-gray-300" style={{ height: '20px', width: '3px' }}></div>
         <Link to={"/account/requests"}>
           <div
             className={`flex text-white cursor-pointer ${
-              activeTab === "requestedTrips"
-                ? "shadow-md shadow-gray-300"
-                : ""
+              activeTab === "requestedTrips" ? "shadow-md shadow-gray-300" : ""
             }`}
             onClick={() => handleTabClick("requestedTrips")}
           >

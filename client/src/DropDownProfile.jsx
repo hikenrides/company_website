@@ -1,16 +1,9 @@
 import React, { useContext } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { UserContext } from "./UserAuthContext";
 
 const DropDownProfile = () => {
   const { user } = useContext(UserContext);
-  const { pathname } = useLocation();
-
-  let subpage = pathname.split("/")?.[2];
-  if (subpage === undefined) {
-    subpage = "profile";
-  }
-
 
   return (
     <div className="flex flex-col dropDownProfile">
