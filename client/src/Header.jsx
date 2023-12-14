@@ -3,11 +3,23 @@ import { useContext, useState } from "react";
 import { UserContext } from "./UserAuthContext";
 import { motion } from "framer-motion";
 import DropDownProfile from "./DropDownProfile";
+import { DropdownMenuProvider, DropdownMenuContext } from "./DropdownMenuContext";
 
 export default function Header() {
   const { user } = useContext(UserContext);
   const [activeTab, setActiveTab] = useState("");
   const [openProfile, setOpenProfile] = useState(false);
+  const { isOpen, setIsOpen } = useContext(DropdownMenuContext);
+
+  const handleDocumentClick = (e) => {
+    if (e.target.closest(".DropDownProfile")) return;
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleDocumentClick);
+    return () => document.removeEventListener("click", handleDocumentClick);
+  }, [isOpen]);
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
@@ -30,6 +42,7 @@ export default function Header() {
       },
     },
   };
+  
 
   return (
     <div className="flex flex-col items-center">
@@ -79,7 +92,7 @@ export default function Header() {
             </svg>
           </div>
         </div>
-        {openProfile && <DropDownProfile />}
+        {openProfile && <DropDownProfile isOpen={isOpen}/>}
       </header>
 
       <div className="tab-container flex gap-1 border border-gray-300 rounded-full py-1 px-2 shadow-md shadow-gray-300">
