@@ -94,13 +94,6 @@ export default function LoginPage() {
               onClick={handleGoogleSignIn}
             />
           </div>
-          <Link to="/phonesignup">
-            <div className="d-grid gap-2 mt-3">
-              <Button variant="success" type="Submit">
-                Sign in with Phone
-              </Button>
-            </div>
-          </Link>
           <div className="text-center py-2 text-gray-500">
             Don't have an account yet?{" "}
             <Link className="underline text-black" to={"/register"}>

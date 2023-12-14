@@ -13,7 +13,6 @@ const Layout = () => {
 
   const contentStyle = {
     flex: 1, // Allow content to take remaining space
-    background: "linear-gradient(135deg, #FFE53B 0%, #FF2525 74%)",
     padding: "1rem", // Adjust the padding as needed
   };
 
