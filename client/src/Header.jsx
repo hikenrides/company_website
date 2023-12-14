@@ -40,9 +40,10 @@ export default function Header() {
           </motion.div>
         </Link>
 
+        {/* user-container: Visible on larger screens */}
         <Link
           to={user ? "/account" : "/login"}
-          className="user-container flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1"
+          className="user-container hidden md:flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1"
         >
           <div className="bg-gray-500 text-white rounded-full border border-gray-500 overflow-hidden">
             <svg
@@ -60,8 +61,10 @@ export default function Header() {
           </div>
           {!!user && <div className="text-white">{user.name}</div>}
         </Link>
-        <div className="flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" onClick={() => setOpenProfile((prev) => !prev)}>
-        <div className="bg-gray-500 text-white rounded-full border border-gray-500 overflow-hidden">
+
+        {/* user-container2: Visible on smartphones */}
+        <div className="user-container2 md:hidden flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" onClick={() => setOpenProfile((prev) => !prev)}>
+          <div className="bg-gray-500 text-white rounded-full border border-gray-500 overflow-hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -76,13 +79,10 @@ export default function Header() {
             </svg>
           </div>
         </div>
-        {
-               openProfile && <DropDownProfile />
-        }
-        
+        {openProfile && <DropDownProfile />}
       </header>
 
-      <div className="tab-container flex gap-1 border border-gray-300 rounded-full py-1 px-2 shadow-md shadow-gray-300"> {/* Adjusted padding here */}
+      <div className="tab-container flex gap-1 border border-gray-300 rounded-full py-1 px-2 shadow-md shadow-gray-300">
         <Link to={"/account/trips"}>
           <div
             className={`flex text-white cursor-pointer ${
@@ -94,7 +94,6 @@ export default function Header() {
           </div>
         </Link>
         <div className="border-l border-gray-300" style={{ height: '20px', width: '3px' }}></div>
-
         <Link to={"/account/requests"}>
           <div
             className={`flex text-white cursor-pointer ${
