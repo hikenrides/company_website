@@ -5,22 +5,6 @@ import { UserContext } from "./UserAuthContext";
 const DropDownProfile = () => {
   const { user } = useContext(UserContext);
   const [open, setOpen] = useState(false);
-
-  let menuRef = useRef();
-
-  useEffect(() => {
-    let handler = (e) => {
-      if (!menuRef.current.contains(e.target)) {
-        setOpen(false);
-      }
-    };
-  
-    document.addEventListener("mousedown", handler);
-  
-    return () => {
-      document.removeEventListener("mousedown", handler);
-    };
-  }, [open, menuRef]);
   
 
   return (
