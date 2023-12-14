@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { UserContext } from "./UserAuthContext";
 import { motion } from "framer-motion";
+import DropDownProfile from "./DropDownProfile";
 
 export default function Header() {
   const { user } = useContext(UserContext);
@@ -58,6 +59,7 @@ export default function Header() {
           </div>
           {!!user && <div className="text-white">{user.name}</div>}
         </Link>
+        <DropDownProfile />
       </header>
 
       <div className="tab-container flex gap-1 border border-gray-300 rounded-full py-1 px-2 shadow-md shadow-gray-300"> {/* Adjusted padding here */}
