@@ -7,6 +7,7 @@ import DropDownProfile from "./DropDownProfile";
 export default function Header() {
   const { user } = useContext(UserContext);
   const [activeTab, setActiveTab] = useState("");
+  const [openProfile, setOpenProfile] = useState(false);
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
@@ -41,7 +42,7 @@ export default function Header() {
 
         <Link
           to={user ? "/account" : "/login"}
-          className="user-container flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" // Adjusted padding here
+          className="user-container flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1"
         >
           <div className="bg-gray-500 text-white rounded-full border border-gray-500 overflow-hidden">
             <svg
@@ -59,7 +60,11 @@ export default function Header() {
           </div>
           {!!user && <div className="text-white">{user.name}</div>}
         </Link>
-        <DropDownProfile />
+        <div className="flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" onClick={() => setOpenProfile((prev) => !prev)}>menu</div>
+        {
+               openProfile && <DropDownProfile />
+        }
+        
       </header>
 
       <div className="tab-container flex gap-1 border border-gray-300 rounded-full py-1 px-2 shadow-md shadow-gray-300"> {/* Adjusted padding here */}
