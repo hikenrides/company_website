@@ -86,7 +86,7 @@ export default function Header() {
         </Link>
 
         {/* user-container2: Visible on smartphones */}
-        <div ref={menuRef} className="user-container2 md:hidden flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" onClick={()=>{setOpen(!open)}}>
+        <div ref={menuRef} className="user-container2 md:hidden flex items-center gap-2 border border-gray-300 rounded-full py-1 px-1" onClick={() => setOpenProfile((prev) => !prev)}>
           <div className="bg-gray-500 text-white rounded-full border border-gray-500 overflow-hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
