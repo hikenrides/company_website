@@ -13,7 +13,7 @@ export default function BookingsPage() {
     });
   }, []);
   return (
-    <div>
+    <div className="hidden md:block">
       <AccountNav />
       <div>
         {bookings?.length > 0 && bookings.map(booking => (

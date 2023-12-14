@@ -11,7 +11,9 @@ export default function RequestsPage() {
   }, []);
   return (
     <div>
+      <div className="hidden md:block">
       <AccountNav />
+      </div>
         <div className="text-center">
           <Link className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full" to={'/account/Myrequests/new'}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
