@@ -11,7 +11,7 @@ export default function BookingsPage() {
 
   useEffect(() => {
     if (user) {
-      axios.get('/bookings').then(response => {
+      axios.get('/bookings', { withCredentials: true }).then(response => {
         setBookings(response.data);
       });
     }
