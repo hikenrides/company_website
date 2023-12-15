@@ -16,8 +16,9 @@ export default function BookingsPage() {
     <div className="hidden md:block">
       <AccountNav />
       <div>
-        {bookings?.length > 0 && bookings.map(booking => (
-          <Link to={`/account/bookings/${booking._id}`} className="flex gap-4 bg-gray-300 rounded-2xl overflow-hidden mt-6">
+      {bookings?.length > 0 ? (
+          bookings.map(booking => (
+            <Link key={booking._id} to={`/account/bookings/${booking._id}`} className="flex gap-4 bg-gray-300 rounded-2xl overflow-hidden mt-6">
             <div className="py-3 pr-3 grow">
               <AddressLink className="my-2 block">
               <span style={{color: '#FF8C00'}}>pick-up area:  </span>{booking.place.from}
@@ -39,7 +40,9 @@ export default function BookingsPage() {
             </div>
             <h1>Tap for more info</h1>
           </Link>
-        ))}
+        ))): (
+          <p>You currently have no bookings.</p>
+        )}
       </div>
     </div>
   );
