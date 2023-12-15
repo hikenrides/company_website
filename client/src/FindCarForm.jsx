@@ -27,7 +27,6 @@ const FindCarForm = ({ onSearch }) => {
     <Form className="form">
       <div className="d-flex align-items-center justify-content-between flex">
         <FormGroup className="form__group">
-          {/* Use a dropdown for "From location" */}
           <select
             value={selectedProvince}
             onChange={(e) => setSelectedProvince(e.target.value)}

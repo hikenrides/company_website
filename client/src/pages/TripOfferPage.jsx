@@ -62,7 +62,7 @@ export default function TripOfferPage() {
       setMatchingPlaces(result);
     } else {
       setMatchingPlaces([]);
-      console.log("No matching places found.");
+      console.log("No matching Trips found.");
     }
   };
 
@@ -81,7 +81,7 @@ export default function TripOfferPage() {
               <Col lg="8" md="8" sm="12">
                 <FindCarForm onSearch={handleSearch} />
               </Col>
-              {matchingPlaces.length > 0 && (
+              {matchingPlaces.length > 0 ? (
                 <div>
                   {matchingPlaces.map((place) => (
                     <Link
@@ -99,9 +99,14 @@ export default function TripOfferPage() {
                       <div className="mt-1">
                         <span className="font-bold">R{place.price}</span> per person
                       </div>
-                    </Link>
+                      </Link>
                   ))}
                 </div>
+              ) : (
+                // Display "No matching Trips found" message with styling
+                <p className="text-red-500 mt-4">
+                  No matching Trips found. Please refine your search criteria.
+                </p>
               )}
             </Row>
           </Container>
