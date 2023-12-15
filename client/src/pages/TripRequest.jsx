@@ -116,7 +116,9 @@ export default function TripRequest() {
 
   return (
     <div>
+      <div className="hidden md:block">
       <AccountNav />
+      </div>
       <form onSubmit={saveRequest}>
       {formError && (
         <p style={{ color: 'red' }}>Please fill out all the required information!</p>
