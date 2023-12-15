@@ -214,7 +214,7 @@ function IndexPage() {
           <motion.img src={'/images/hikenrides.png'} alt="bg" initial={{x:200, opacity:0}} animate={{x:0, opacity:1}} transition={{duration:.5, delay:0.8}}/>
         </motion.div>
           <motion.div className="review_container" variants={stagger}>
-            <motion.p className="total_review" variants={star}>64+ Reviews</motion.p>
+            <motion.p className="total_review" variants={star}>Reviews</motion.p>
             <IconContext.Provider value={{color:"#fff", size:"18px"}}>
                 <motion.span variants={star} whileHover={{scale:1.2, rotate:180,borderRadius:'100%',cursor:'pointer'}}><IoStar/></motion.span>
                 <motion.span variants={star} whileHover={{scale:1.2, rotate:180,borderRadius:'100%',cursor:'pointer'}}><IoStar/></motion.span>
