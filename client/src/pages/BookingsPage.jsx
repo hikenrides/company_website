@@ -1,30 +1,23 @@
 import AccountNav from "../AccountNav";
-import { useEffect, useState, useContext } from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import AddressLink from "../AddressLink";
-import { UserContext } from "../UserAuthContext";
+
 
 export default function BookingsPage() {
-  const { user } = useContext(UserContext);
-  const [bookings, setBookings] = useState([]);
-
+  const [bookings,setBookings] = useState([]);
   useEffect(() => {
-    if (user) {
-      axios.get('/bookings', { withCredentials: true }).then(response => {
-        setBookings(response.data);
-      });
-    }
-  }, [user]);
-
+    axios.get('/bookings').then(response => {
+      setBookings(response.data);
+    });
+  }, []);
   return (
     <div className="hidden md:block">
       <AccountNav />
       <div>
-        {user ? (
-          bookings?.length > 0 ? (
-            bookings.map((booking) => (
-              <Link key={booking._id} to={`/account/bookings/${booking._id}`} className="flex gap-4 bg-gray-300 rounded-2xl overflow-hidden mt-6">
+        {bookings?.length > 0 && bookings.map(booking => (
+          <Link to={`/account/bookings/${booking._id}`} className="flex gap-4 bg-gray-300 rounded-2xl overflow-hidden mt-6">
             <div className="py-3 pr-3 grow">
               <AddressLink className="my-2 block">
               <span style={{color: '#FF8C00'}}>pick-up area:  </span>{booking.place.from}
@@ -45,15 +38,10 @@ export default function BookingsPage() {
               </div>
             </div>
             <h1>Tap for more info</h1>
-            </Link>
-            ))
-          ) : (
-            <p>You currently have no bookings.</p>
-          )
-        ) : (
-          <p>You are not signed in.</p>
-        )}
+          </Link>
+        ))}
       </div>
     </div>
   );
 }
+
