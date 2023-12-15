@@ -20,6 +20,7 @@ export default function TripOfferPage() {
   const [places, setPlaces] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState('');
   const [matchingPlaces, setMatchingPlaces] = useState([]);
+  const [searchPerformed, setSearchPerformed] = useState(false);
 
   useEffect(() => {
     axios.get('/places').then(response => {
@@ -43,6 +44,9 @@ export default function TripOfferPage() {
       // Places data is available, proceed to filter and log results
       filterAndLogResults(places, selectedProvince, destination);
     }
+
+    // Set the searchPerformed state to true
+    setSearchPerformed(true);
   };
 
   const filterAndLogResults = (places, selectedProvince, destination) => {
@@ -81,6 +85,12 @@ export default function TripOfferPage() {
               <Col lg="8" md="8" sm="12">
                 <FindCarForm onSearch={handleSearch} />
               </Col>
+              {searchPerformed && matchingPlaces.length === 0 && (
+                // Display "No matching Trips found" message with styling
+                <p className="text-red-500 mt-4">
+                  No matching Trips found. Please refine your search criteria.
+                </p>
+              )}
               {matchingPlaces.length > 0 ? (
                 <div>
                   {matchingPlaces.map((place) => (
@@ -96,21 +106,16 @@ export default function TripOfferPage() {
                       <h3 className="text-sm text-gray-500">
                         <span style={{ color: 'orange' }}>Destination:</span> {place.province2}, {place.destination}
                       </h3>
-                      <div className="mt-1">
-                <span className="font-bold">Date:</span> {place.date}
-              </div>
+                      <h3 className="text-sm text-gray-500">
+                        <span style={{ color: 'orange' }}>Date:</span> {place.date}
+                      </h3>
                       <div className="mt-1">
                         <span className="font-bold">R{place.price}</span> per person
                       </div>
-                      </Link>
+                    </Link>
                   ))}
                 </div>
-              ) : (
-                // Display "No matching Trips found" message with styling
-                <p className="text-red-500 mt-4">
-                  No matching Trips found. Please refine your search criteria.
-                </p>
-              )}
+              ) : null}
             </Row>
           </Container>
         </div>
