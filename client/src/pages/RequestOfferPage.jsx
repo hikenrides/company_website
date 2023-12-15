@@ -94,11 +94,14 @@ export default function RequestOfferPage() {
                      style={{ marginBottom: '16px' }}
                    >
                      <h2 className="font-bold">
-                       <span style={{ color: 'orange' }}>pick-up area:</span> {request.destination}
+                       <span style={{ color: 'orange' }}>pick-up area:</span> {request.province}, {request.from}
                      </h2>
                      <h3 className="text-sm text-gray-500">
-                       <span style={{ color: 'orange' }}>Destination:</span> {request.from}
+                       <span style={{ color: 'orange' }}>Destination:</span> {request.province2}, {request.destination}
                      </h3>
+                     <h3 className="text-sm text-gray-500">
+                <span style={{ color: 'orange' }}>Date:</span> {request.date}
+              </h3>
                      <div className="mt-1">
                        <span className="font-bold">R{request.price}</span> per person
                      </div>
@@ -127,10 +130,13 @@ export default function RequestOfferPage() {
               style={{ marginBottom: '16px' }}
             >
               <h2 className="font-bold">
-                <span style={{ color: 'orange' }}>pick-up area:</span> {request.destination}
+                <span style={{ color: 'orange' }}>pick-up area:</span> {request.province}, {request.from}
               </h2>
               <h3 className="text-sm text-gray-500">
-                <span style={{ color: 'orange' }}>Destination:</span> {request.from}
+                <span style={{ color: 'orange' }}>Destination:</span> {request.province2}, {request.destination}
+              </h3>
+              <h3 className="text-sm text-gray-500">
+                <span style={{ color: 'orange' }}>Date:</span> {request.date}
               </h3>
               <div className="mt-1">
                 <span className="font-bold">R{request.price}</span> per person

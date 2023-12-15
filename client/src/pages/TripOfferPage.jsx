@@ -97,6 +97,9 @@ export default function TripOfferPage() {
                         <span style={{ color: 'orange' }}>Destination:</span> {place.province2}, {place.destination}
                       </h3>
                       <div className="mt-1">
+                <span className="font-bold">Date:</span> {place.date}
+              </div>
+                      <div className="mt-1">
                         <span className="font-bold">R{place.price}</span> per person
                       </div>
                       </Link>
@@ -135,9 +138,9 @@ export default function TripOfferPage() {
               <h3 className="text-sm text-gray-500">
                 <span style={{ color: 'orange' }}>Destination:</span> {place.province2}, {place.destination}
               </h3>
-              <div className="mt-1">
-                <span className="font-bold">Date:</span> {place.date}
-              </div>
+              <h3 className="text-sm text-gray-500">
+                <span style={{ color: 'orange' }}>Date:</span> {place.date}
+              </h3>
               <div className="mt-1">
                 <span className="font-bold">R{place.price}</span> per person
               </div>
