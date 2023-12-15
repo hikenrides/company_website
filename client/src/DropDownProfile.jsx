@@ -7,6 +7,7 @@ const DropDownProfile = () => {
   const [open, setOpen] = useState(false);
 
   return (
+    <div className="dropdown-profile">
     <div className={`flex flex-col dropDownProfile ${open ? 'active' : 'inactive'}`}>
       <ul className="flex flex-col gap-4">
         <Link
@@ -42,6 +43,7 @@ const DropDownProfile = () => {
           My trip Requests
         </Link>
       </ul>
+    </div>
     </div>
   );
 };

@@ -9,7 +9,6 @@ export default function Header() {
   const [activeTab, setActiveTab] = useState("");
   const [openProfile, setOpenProfile] = useState(false);
 
-  const [open, setOpen] = useState(false);
   let menuRef = useRef();
 
   useEffect(() => {
