@@ -34,7 +34,7 @@ const FindCarForm = ({ onSearch }) => {
             required
           >
             <option value="" disabled>
-              Select From location
+              Select Province
             </option>
             {provinces.map((province) => (
               <option key={province} value={province}>
@@ -47,7 +47,7 @@ const FindCarForm = ({ onSearch }) => {
         <FormGroup className="form__group flex">
           <input
             type="text"
-            placeholder="Destination"
+            placeholder="City, Town"
             value={destination}
             onChange={(e) => setDestination(e.target.value)}
             required
