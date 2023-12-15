@@ -87,7 +87,7 @@ export default function TripOfferPage() {
               </Col>
               {searchPerformed && matchingPlaces.length === 0 && (
                 // Display "No matching Trips found" message with styling
-                <p className="text-red-500 mt-4">
+                <p className="text-red-300">
                   No matching Trips found. Please refine your search criteria.
                 </p>
               )}
