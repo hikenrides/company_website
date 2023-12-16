@@ -1,6 +1,7 @@
 import { Link, Navigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import axios from "axios";
+import { GoogleLogin } from "@react-oauth/google";
 import { UserContext } from "../UserContext.jsx";
 
 export default function LoginPage() {
@@ -21,6 +22,19 @@ export default function LoginPage() {
       alert("Login failed");
     }
   }
+
+  const handleGoogleLogin = async (googleData) => {
+    try {
+      const { data } = await axios.post("/google-login", {
+        tokenId: googleData.tokenId,
+      });
+      setUser(data);
+      alert("Google Login successful");
+      setRedirect(true);
+    } catch (e) {
+      alert("Google Login failed");
+    }
+  };
 
   if (redirect) {
     return <Navigate to={"/account/trips"} />;
@@ -61,6 +75,13 @@ export default function LoginPage() {
             </Link>
           </div>
         </form>
+        {/* Google Sign-In Button */}
+        <GoogleLogin
+          onSuccess={handleGoogleLogin}
+          onFailure={(err) => console.error(err)}
+          clientId="YOUR_GOOGLE_CLIENT_ID"
+          buttonText="Sign in with Google"
+        />
       </div>
     </div>
   );

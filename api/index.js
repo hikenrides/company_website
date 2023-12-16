@@ -100,6 +100,43 @@ app.post('/messages', async (req, res) => {
   });
 });
 
+// Add this endpoint to your server code
+app.post('/google-login', async (req, res) => {
+  const { tokenId } = req.body;
+
+  try {
+    // Verify the Google token
+    const ticket = await client.verifyIdToken({
+      idToken: tokenId,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const { email, sub } = ticket.getPayload();
+
+    // Check if the user with the given email exists in your database
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // If the user doesn't exist, create a new user in your database
+      user = await User.create({
+        name: email, // You might want to use a different approach to set the user's name
+        email,
+        // other user properties
+      });
+    }
+
+    // Generate a JWT token for the user
+    const token = jwt.sign({ email: user.email, id: user._id }, jwtSecret, {});
+
+    // Set the token in the response cookie
+    res.cookie('token', token).json(user);
+  } catch (error) {
+    console.error('Google Sign-In failed:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 // Add this endpoint to your existing code
 
 app.get('/messages/:receiverId', async (req, res) => {
