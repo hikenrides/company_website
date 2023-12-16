@@ -1,8 +1,6 @@
+import { Link } from "react-router-dom";
+import { useState } from "react";
 import axios from "axios";
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Button } from "react-bootstrap";
-import { useUserAuth } from "../UserAuthContext";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -17,23 +15,9 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [error, setError] = useState("");
-  const { signUp } = useUserAuth();
-  let navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    try {
-      await signUp(email, password);
-      navigate("/");
-    } catch (err) {
-      setError(err.message);
-    }
   };
 
   const isDriverValue = isDriver === 'Yes';
@@ -58,7 +42,6 @@ export default function RegisterPage() {
       return;
     }
     try {
-
       await axios.post("/register", {
         name,
         gender,
@@ -69,25 +52,17 @@ export default function RegisterPage() {
         driverLicense: isDriver === "Yes" ? driverLicense : "",
         password,
       });
-
       alert("Registration successful. Now you can log in");
-      navigate("/login");
     } catch (e) {
       console.log("Registration failed. Please try again later");
     }
   }
-  const handleFormSubmit = (ev) => {
-    ev.preventDefault();
-    // Call both registerUser and handleSubmit
-    registerUser(ev);
-    handleSubmit(ev);
-  };
 
   return (
     <div className="mt-4 grow flex items-center justify-around">
       <div className="mb-64">
         <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl text-center mb-4">Register</h1>
-        <form className="max-w-md mx-auto" onSubmit={(ev) => handleFormSubmit(ev)}>
+        <form className="max-w-md mx-auto" onSubmit={registerUser}>
           <input
             type="text"
             placeholder="Names and Surname"
@@ -115,10 +90,9 @@ export default function RegisterPage() {
             value={age}
             onChange={(ev) => setAge(ev.target.value.slice(0, 3))}
           />
-          
           <input
             type="email"
-            placeholder="Email address"
+            placeholder="your@email.com"
             value={email}
             onChange={(ev) => setEmail(ev.target.value)}
           />
@@ -173,9 +147,8 @@ export default function RegisterPage() {
               I agree to the <Link to="/terms" target="_blank">Terms and Conditions</Link>
             </label>
           </div>
-          
 
-          <Button className="primary" type="submit">Sign up</Button>
+          <button className="primary">Register</button>
           <div className="text-center py-2 text-gray-500">
             Already a member? <Link className="underline text-black" to={"/login"}>Login</Link>
           </div>

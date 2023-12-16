@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
-import { UserContext } from "./UserAuthContext";
+import { UserContext } from "./UserContext";
 import { motion } from "framer-motion";
 import DropDownProfile from "./DropDownProfile";
 

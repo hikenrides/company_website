@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {Navigate} from "react-router-dom";
-import {UserContext} from "./UserAuthContext";
+import {UserContext} from "./UserContext";
 
 export default function BookingWidget({place}) {
   const [passengers,setPassengers] = useState(1);

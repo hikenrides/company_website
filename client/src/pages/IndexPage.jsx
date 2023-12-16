@@ -5,7 +5,7 @@ import Card from '../Card.jsx';
 import {motion} from 'framer-motion';
 import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
-import { UserContext } from "../UserAuthContext.jsx";
+import { UserContext } from "../UserContext.jsx";
 
 
 

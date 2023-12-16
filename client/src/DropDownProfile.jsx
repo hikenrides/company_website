@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { UserContext } from "./UserAuthContext";
+import { UserContext } from "./UserContext";
 
 const DropDownProfile = () => {
   const { user } = useContext(UserContext);

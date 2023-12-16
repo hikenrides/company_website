@@ -5,7 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import Layout from "./Layout";
 import RegisterPage from "./pages/RegisterPage";
 import axios from "axios";
-import {UserAuthContextProvider} from "./UserAuthContext.jsx"
+import {UserContextProvider} from "./UserContext.jsx"
 import ProfilePage from "./pages/ProfilePage.jsx";
 import PlacesPage from "./pages/PlacesPage";
 import PlacesFormPage from "./pages/PlacesFormPage";
@@ -24,7 +24,7 @@ axios.defaults.withCredentials = true;
 
 function App() {
   return (
-    <UserAuthContextProvider>
+    <UserContextProvider>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<IndexPage />} />
@@ -45,7 +45,7 @@ function App() {
           <Route path="/account/requests" element={<RequestOfferPage />} />
         </Route>
       </Routes>
-      </UserAuthContextProvider>
+      </UserContextProvider>
   )
 }
 
