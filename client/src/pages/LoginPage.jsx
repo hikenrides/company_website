@@ -22,6 +22,7 @@ export default function LoginPage() {
       alert("Login failed");
     }
   }
+  
 
   const handleGoogleLogin = async (googleData) => {
     try {
