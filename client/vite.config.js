@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     rollupOptions: {
-      external: ['react-google-button', 'firebase/auth', 'react-phone-number-input/style.css', 'react-phone-number-input', 'firebase/app', 'react-dom/client']
+      external: []
     },
   },
 })
