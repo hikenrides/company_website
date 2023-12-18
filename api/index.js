@@ -18,19 +18,13 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const allowCors = fn => async (req, res) => {
   res.setHeader('Access-Control-Allow-Credentials', true)
   res.setHeader('Access-Control-Allow-Origin', 'https://hikenrides.com')
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS') // Add other methods as needed
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type') // Add other headers as needed
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type') 
   if (req.method === 'OPTIONS') {
     res.status(200).end()
     return
   }
   return await fn(req, res)
-}
-
-
-const handler = (req, res) => {
-  const d = new Date()
-  res.end(d.toString())
 }
 
 require('dotenv').config();
@@ -197,26 +191,6 @@ app.post('/login', async (req,res) => {
     res.json('not found');
   }
 });
-
-app.get('/profile', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  if (token) {
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-      if (err) throw err;
-      const user = await User.findById(userData.id);
-      if (user) {
-        const { name, email, _id } = user;
-        res.json({ name, email, _id });
-      } else {
-        res.json(null);
-      }
-    });
-  } else {
-    res.json(null);
-  }
-});
-
 
 app.post('/logout', (req,res) => {
   res.cookie('token', '').json(true);
