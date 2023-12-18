@@ -26,9 +26,12 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async (googleData) => {
     try {
+      // Send the Google token to the server for verification
       const { data } = await axios.post("/google-login", {
         tokenId: googleData.tokenId,
       });
+
+      // Update user context and set redirect state
       setUser(data);
       alert("Google Login successful");
       setRedirect(true);
@@ -80,7 +83,7 @@ export default function LoginPage() {
         <GoogleLogin
           onSuccess={handleGoogleLogin}
           onFailure={(err) => console.error(err)}
-          clientId="YOUR_GOOGLE_CLIENT_ID"
+          clientId="422449315657-5j14kdrc469jn276gioblbirmu2n65tu.apps.googleusercontent.com"
           buttonText="Sign in with Google"
           className="primary"
         />

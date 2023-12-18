@@ -10,8 +10,10 @@ const Booking = require('./models/Booking.js');
 const Booking2 = require('./models/Booking2.js')
 const Request = require('./models/requests.js');
 const Message = require('./models/message.js');
+const { OAuth2Client } = require('google-auth-library');
 
 const cookieParser = require('cookie-parser');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const allowCors = require('./allowCors');
 
@@ -111,7 +113,8 @@ app.post('/google-login', async (req, res) => {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
-    const { email, sub } = ticket.getPayload();
+    // Get user information from the token payload
+    const { email } = ticket.getPayload();
 
     // Check if the user with the given email exists in your database
     let user = await User.findOne({ email });
@@ -119,8 +122,8 @@ app.post('/google-login', async (req, res) => {
     if (!user) {
       // If the user doesn't exist, create a new user in your database
       user = await User.create({
-        name: email, // You might want to use a different approach to set the user's name
         email,
+        password: '', // You can set an empty password or a placeholder
         // other user properties
       });
     }
@@ -135,7 +138,6 @@ app.post('/google-login', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 
 // Add this endpoint to your existing code
 
