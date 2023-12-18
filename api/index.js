@@ -28,12 +28,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(allowCors);
 app.use('/uploads', express.static(__dirname+'/uploads'));
-app.use(cors({
-  credentials: true,
-  origin: 'https://hikenrides.com',
-}));
-
-
 
 
 function getUserDataFromReq(req) {
@@ -103,7 +97,7 @@ app.post('/messages', async (req, res) => {
   });
 });
 
-// Add this endpoint to your server code
+
 app.post('/google-login', async (req, res) => {
   const { tokenId } = req.body;
 
@@ -125,11 +119,9 @@ app.post('/google-login', async (req, res) => {
       user = await User.create({
         email,
         password: '', // You can set an empty password or a placeholder
-        // other user properties
       });
     }
 
-    // Generate a JWT token for the user
     const token = jwt.sign({ email: user.email, id: user._id }, jwtSecret, {});
 
     // Set the token in the response cookie
