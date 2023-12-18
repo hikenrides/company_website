@@ -15,7 +15,23 @@ const { OAuth2Client } = require('google-auth-library');
 const cookieParser = require('cookie-parser');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-const allowCors = require('./allowCors');
+const allowCors = fn => async (req, res) => {
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', 'https://hikenrides.com')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS') // Add other methods as needed
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type') // Add other headers as needed
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
+  }
+  return await fn(req, res)
+}
+
+
+const handler = (req, res) => {
+  const d = new Date()
+  res.end(d.toString())
+}
 
 require('dotenv').config();
 const app = express();
@@ -118,7 +134,7 @@ app.post('/google-login', async (req, res) => {
       // If the user doesn't exist, create a new user in your database
       user = await User.create({
         email,
-        password: '', // You can set an empty password or a placeholder
+        password: '',
       });
     }
 
