@@ -82,6 +82,7 @@ export default function LoginPage() {
           onFailure={(err) => console.error(err)}
           clientId="YOUR_GOOGLE_CLIENT_ID"
           buttonText="Sign in with Google"
+          className="primary"
         />
       </div>
     </div>
