@@ -1,7 +1,7 @@
 import { Link, Navigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import axios from "axios";
-import { GoogleLogin } from "@react-oauth/google";
+//import { GoogleLogin } from "@react-oauth/google";
 import { UserContext } from "../UserContext.jsx";
 
 export default function LoginPage() {
@@ -24,21 +24,21 @@ export default function LoginPage() {
   }
   
 
-  const handleGoogleLogin = async (googleData) => {
-    try {
-      // Send the Google token to the server for verification
-      const { data } = await axios.post("/google-login", {
-        tokenId: googleData.tokenId,
-      });
+  //const handleGoogleLogin = async (googleData) => {
+  //  try {
+   //   // Send the Google token to the server for verification
+   //   const { data } = await axios.post("/google-login", {
+   //     tokenId: googleData.tokenId,
+   //   });
 
       // Update user context and set redirect state
-      setUser(data);
-      alert("Google Login successful");
-      setRedirect(true);
-    } catch (e) {
-      alert("Google Login failed");
-    }
-  };
+   //   setUser(data);
+   //   alert("Google Login successful");
+   //   setRedirect(true);
+   // } catch (e) {
+   //   alert("Google Login failed");
+   // }
+ // };
 
   if (redirect) {
     return <Navigate to={"/account/trips"} />;
@@ -73,21 +73,13 @@ export default function LoginPage() {
           </div>
           <button className="primary">Login</button>
           <div className="text-center py-2 text-gray-500">
-          <GoogleLogin
-          onSuccess={handleGoogleLogin}
-          onFailure={(err) => console.error(err)}
-          clientId="422449315657-5j14kdrc469jn276gioblbirmu2n65tu.apps.googleusercontent.com"
-          buttonText="Sign in with Google"
-          className="primary"
-        />
+         
             Don't have an account yet?{" "}
             <Link className="underline text-black" to={"/register"}>
               Register now
             </Link>
           </div>
         </form>
-        {/* Google Sign-In Button */}
-        
       </div>
     </div>
   );
