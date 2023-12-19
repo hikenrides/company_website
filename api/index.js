@@ -10,10 +10,8 @@ const Booking = require('./models/Booking.js');
 const Booking2 = require('./models/Booking2.js')
 const Request = require('./models/requests.js');
 const Message = require('./models/message.js');
-const { OAuth2Client } = require('google-auth-library');
 
 const cookieParser = require('cookie-parser');
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const allowCors = require('./allowCors');
 
 require('dotenv').config();

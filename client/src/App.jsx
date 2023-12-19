@@ -25,7 +25,6 @@ axios.defaults.withCredentials = true;
 
 function App() {
   return (
-    <GoogleOAuthProvider clientId="422449315657-5j14kdrc469jn276gioblbirmu2n65tu.apps.googleusercontent.com">
     <UserContextProvider>
       <Routes>
         <Route path="/" element={<Layout />}>
@@ -48,7 +47,6 @@ function App() {
         </Route>
       </Routes>
     </UserContextProvider>
-    </GoogleOAuthProvider>
   )
 }
 
