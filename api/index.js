@@ -14,18 +14,7 @@ const { OAuth2Client } = require('google-auth-library');
 
 const cookieParser = require('cookie-parser');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-const allowCors = fn => async (req, res) => {
-  res.setHeader('Access-Control-Allow-Credentials', true)
-  res.setHeader('Access-Control-Allow-Origin', 'https://hikenrides.com')
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type') 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end()
-    return
-  }
-  return await fn(req, res)
-}
+const allowCors = require('./allowCors');
 
 require('dotenv').config();
 const app = express();
@@ -34,9 +23,13 @@ const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
 const bucket = 'hikenrides-booking-app';
 
+app.use(allowCors)
 app.use(express.json());
 app.use(cookieParser());
-app.use(allowCors);
+app.use(cors({
+  credentials: true,
+  origin: 'https://hikenrides.com',
+}));
 app.use('/uploads', express.static(__dirname+'/uploads'));
 
 
