@@ -144,11 +144,9 @@ export default function RegisterPage() {
               checked={agreeTerms}
               onChange={() => setAgreeTerms(!agreeTerms)}
             />
-            <div className="back-link2">
-            <label>
+            <label className="back-link2">
               I agree to the <Link to="/Terms and Conditions" target="_blank">Terms and Conditions</Link>
             </label>
-            </div>
           </div>
 
           <button className="primary">Register</button>
