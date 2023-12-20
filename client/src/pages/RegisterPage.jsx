@@ -144,7 +144,7 @@ export default function RegisterPage() {
               onChange={() => setAgreeTerms(!agreeTerms)}
             />
             <label>
-              I agree to the <Link to="/terms" target="_blank">Terms and Conditions</Link>
+              I agree to the <Link to="/Terms and Conditions" target="_blank">Terms and Conditions</Link>
             </label>
           </div>
 
