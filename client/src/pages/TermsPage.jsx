@@ -9,7 +9,7 @@ const TermsAndConditions = () => {
       <div className="terms-content">
         <p>
           <strong>1. Acceptance of Terms</strong><br />
-          By accessing or using [Your Company/App] ("the Service"), you agree to comply with and be bound by these terms and conditions.
+          By accessing or using https://hikenrides.com website, you agree to comply with and be bound by these terms and conditions.
           If you do not agree to these terms, please do not use the Service.
         </p>
 
@@ -45,7 +45,7 @@ const TermsAndConditions = () => {
 
         <p>
           <strong>8. Governing Law</strong><br />
-          These terms and conditions are governed by and construed in accordance with the laws of [Your Country/State].
+          These terms and conditions are governed by and construed in accordance with the laws of South Africa.
         </p>
       </div>
       <div className="back-link">
