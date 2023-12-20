@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import './TermsAndConditions.css'; 
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -144,7 +145,7 @@ export default function RegisterPage() {
               onChange={() => setAgreeTerms(!agreeTerms)}
             />
             <label>
-              I agree to the <Link to="/Terms and Conditions" target="_blank">Terms and Conditions</Link>
+              I agree to the <Link to="/Terms and Conditions" target="_blank" className="back-link">Terms and Conditions</Link>
             </label>
           </div>
 
