@@ -138,7 +138,7 @@ export default function RegisterPage() {
             <label>Show Password</label>
           </div>
 
-          <div className="terms-checkbox">
+          <div className="terms-checkbox flex">
             <input
               type="checkbox"
               checked={agreeTerms}
