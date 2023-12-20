@@ -31,6 +31,6 @@
   }
   
   .back-link a:hover {
+    color: red; /* Change the color to red on hover */
     text-decoration: underline;
   }
-  
