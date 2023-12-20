@@ -34,3 +34,18 @@
     color: red; /* Change the color to red on hover */
     text-decoration: underline;
   }
+
+  .back-link2 {
+    margin-top: 20px;
+  }
+  
+  .back-link2 a {
+    text-decoration: none;
+    color: #007bff;
+    cursor: pointer;
+  }
+  
+  .back-link2 a:hover {
+    color: red; /* Change the color to red on hover */
+    text-decoration: underline;
+  }

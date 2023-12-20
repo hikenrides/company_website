@@ -138,13 +138,13 @@ export default function RegisterPage() {
             <label>Show Password</label>
           </div>
 
-          <div className="terms-checkbox flex">
+          <div className="terms-checkbox">
             <input
               type="checkbox"
               checked={agreeTerms}
               onChange={() => setAgreeTerms(!agreeTerms)}
             />
-            <div className="back-link">
+            <div className="back-link2">
             <label>
               I agree to the <Link to="/Terms and Conditions" target="_blank">Terms and Conditions</Link>
             </label>
