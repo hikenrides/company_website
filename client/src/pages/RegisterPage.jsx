@@ -116,27 +116,23 @@ export default function RegisterPage() {
             </>
           )}
 
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            value={password}
-            onChange={(ev) => setPassword(ev.target.value)}
-          />
+<div className="password-field">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(ev) => setPassword(ev.target.value)}
+            />
+            <button className="eye-icon" onClick={togglePasswordVisibility}>
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(ev) => setConfirmPassword(ev.target.value)}
           />
-          {passwordError && <p>Passwords do not match</p>}
-          <div>
-            <input
-              type="checkbox"
-              checked={showPassword}
-              onChange={togglePasswordVisibility}
-            />
-            <label>Show Password</label>
-          </div>
 
           <div className="terms-checkbox">
             <input
