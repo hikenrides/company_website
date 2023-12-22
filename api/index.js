@@ -10,9 +10,16 @@ const Booking = require('./models/Booking.js');
 const Booking2 = require('./models/Booking2.js')
 const Request = require('./models/requests.js');
 const Message = require('./models/message.js');
+const twilio = require('twilio');
 
 const cookieParser = require('cookie-parser');
 const allowCors = require('./allowCors');
+
+const accountSid = 'ACd5bb965fa354cca20f5398d7b3b301da';
+const authToken = '79e6682789afcaf28c447631741b4fe7';
+const twilioPhoneNumber = '+13856267146';
+
+const client = twilio(accountSid, authToken);
 
 require('dotenv').config();
 const app = express();
@@ -45,12 +52,14 @@ app.get('/api/database', (req,res) => {
   res.json('test ok');
 });
 
-app.post('/register', async (req,res) => {
+app.post('/register', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const {name,gender,phone_number,age,email,isDriver,driverLicense,password,messages,balance} = req.body;
+  const {
+    name, gender, phone_number, age, email, isDriver, driverLicense, password, messages, balance,
+  } = req.body;
 
   try {
-    console.log('Received registration request:', {name, email});
+    console.log('Received registration request:', { name, email });
     const userDoc = await User.create({
       name,
       gender,
@@ -63,6 +72,15 @@ app.post('/register', async (req,res) => {
       messages,
       balance,
     });
+
+    // Send welcome message
+    const welcomeMessage = `Welcome to HikenRides! We are Thrilled to have you on board for affordable ride-sharing and carpooling services. Enjoy the journey with us!`;
+    await client.messages.create({
+      body: welcomeMessage,
+      from: twilioPhoneNumber,
+      to: phone_number,
+    });
+
     console.log('User registered:', userDoc);
     res.json(userDoc);
   } catch (e) {
