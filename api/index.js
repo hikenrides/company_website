@@ -16,7 +16,7 @@ const cookieParser = require('cookie-parser');
 const allowCors = require('./allowCors');
 
 const accountSid = 'ACd5bb965fa354cca20f5398d7b3b301da';
-const authToken = '79e6682789afcaf28c447631741b4fe7';
+const authToken = process.env.AUTH_TOKEN;
 const twilioPhoneNumber = '+13856267146';
 
 const client = twilio(accountSid, authToken);
