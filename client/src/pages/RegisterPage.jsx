@@ -137,7 +137,7 @@ export default function RegisterPage() {
             </button>
           </div>
           <input
-            type="text"
+            type={showPassword ? "text" : "password"}
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(ev) => setConfirmPassword(ev.target.value)}
