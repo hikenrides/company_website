@@ -81,11 +81,12 @@ app.post('/register', async (req, res) => {
     });
 
     console.log('User registered:', userDoc);
+    console.log('Twilio Message SID:', message.sid);
     res.json(userDoc);
   } catch (e) {
     console.error('Registration failed:', e);
     res.status(422).json(e);
-  }
+  } 
 });
 
 app.post('/messages', async (req, res) => {
