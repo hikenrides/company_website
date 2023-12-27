@@ -187,10 +187,6 @@ app.post('/logout', (req,res) => {
   res.cookie('token', '').json(true);
 });
 
-app.post('/logout', (req,res) => {
-  res.cookie('token', '').json(true);
-});
-
 
 app.post('/places', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
