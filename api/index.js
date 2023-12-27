@@ -7,46 +7,37 @@ const jwt = require('jsonwebtoken');
 const User = require('./models/User.js');
 const Place = require('./models/Place.js');
 const Booking = require('./models/Booking.js');
-const Booking2 = require('./models/Booking2.js')
-const Request = require('./models/requests.js');
-const Message = require('./models/message.js');
-const twilio = require('twilio');
-
 const cookieParser = require('cookie-parser');
-const allowCors = require('./allowCors');
+const multer = require('multer');
+const mime = require('mime-types');
 
 require('dotenv').config();
 const app = express();
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
-const bucket = 'hikenrides-booking-app';
-const accountSid = 'ACd5bb965fa354cca20f5398d7b3b301da';
-const authToken = process.env.AUTH_TOKEN;
-const twilioPhoneNumber = '+13856267146';
+const bucket = 'dawid-booking-app';
 
-const client = twilio(accountSid, authToken);
-
-app.use(allowCors)
 app.use(express.json());
 app.use(cookieParser());
+app.use('/uploads', express.static(__dirname+'/uploads'));
 app.use(cors({
   credentials: true,
-  origin: 'https://hikenrides.com',
+  origin: 'http://localhost:5173',
 }));
-app.use('/uploads', express.static(__dirname+'/uploads'));
+
 
 
 function getUserDataFromReq(req) {
   return new Promise((resolve, reject) => {
-    jwt.verify(req.cookies.token, jwtSecret, {}, async (err, userData) => {
+    jwt.verify(req.cookies.token, jwtSecret, {}, async (err, userDatae4) => {
       if (err) throw err;
       resolve(userData);
     });
   });
 }
 
-app.get('/api/database', (req,res) => {
+app.get('/api/test', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   res.json('test ok');
 });
@@ -76,62 +67,6 @@ app.post('/register', async (req,res) => {
   }
 });
 
-app.post('/messages', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
-
-    const { sender, receiver, content } = req.body;
-
-    try {
-      if (userData.id !== sender) {
-        return res.status(403).json({ error: 'Forbidden' });
-      }
-
-      const messageDoc = await Message.create({
-        sender,
-        receiver,
-        content,
-      });
-
-      res.json(messageDoc);
-    } catch (error) {
-      console.error('Error creating message:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-});
-
-
-
-// Add this endpoint to your existing code
-
-app.get('/messages/:receiverId', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
-
-    const { receiverId } = req.params;
-
-    try {
-      // Check if the authenticated user is the recipient of the messages
-      if (userData.id !== receiverId) {
-        return res.status(403).json({ error: 'Forbidden' });
-      }
-
-      // Fetch messages for the given receiverId
-      const messages = await Message.find({ receiver: receiverId });
-
-      res.json(messages);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-});
-
 
 app.post('/login', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
@@ -155,7 +90,6 @@ app.post('/login', async (req,res) => {
   }
 });
 
-
 app.get('/profile', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {token} = req.cookies;
@@ -174,40 +108,32 @@ app.post('/logout', (req,res) => {
   res.cookie('token', '').json(true);
 });
 
+const photosMiddleware = multer({dest:'/tmp'});
+app.post('/upload', photosMiddleware.array('photos', 100), async (req,res) => {
+  const uploadedFiles = [];
+  for (let i = 0; i < req.files.length; i++) {
+    const {path,originalname,mimetype} = req.files[i];
+    const url = await uploadToS3(path, originalname, mimetype);
+    uploadedFiles.push(url);
+  }
+  res.json(uploadedFiles);
+});
 
 app.post('/places', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {token} = req.cookies;
   const {
-    province,from,province2,destination,color,brand,type,seats,price
-    ,extraInfo,date,maxGuests,
+    title,address,addedPhotos,description,price,
+    perks,extraInfo,checkIn,checkOut,maxGuests,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const placeDoc = await Place.create({
       owner:userData.id,price,
-      province,from,province2,destination,color,brand,type,seats
-      ,extraInfo,date,maxGuests,
+      title,address,photos:addedPhotos,description,
+      perks,extraInfo,checkIn,checkOut,maxGuests,
     });
     res.json(placeDoc);
-  });
-});
-
-app.post('/requests', (req,res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const {token} = req.cookies;
-  const {
-    province,from,province2,destination,price
-    ,extraInfo,date,NumOfPassengers,
-  } = req.body;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
-    const RequestDoc = await Request.create({
-      owner:userData.id,price,
-      province,from,province2,destination,
-      extraInfo,date,NumOfPassengers,
-    });
-    res.json(RequestDoc);
   });
 });
 
@@ -217,15 +143,6 @@ app.get('/user-places', (req,res) => {
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     const {id} = userData;
     res.json( await Place.find({owner:id}) );
-  });
-});
-
-app.get('/requested-trips', (req,res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const {token} = req.cookies;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    const {id} = userData;
-    res.json( await Request.find({owner:id}) );
   });
 });
 
@@ -239,16 +156,16 @@ app.put('/places', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {token} = req.cookies;
   const {
-    id, province,from,province2,destination,color,brand,type,seats,
-    extraInfo,date,maxGuests,price,
+    id, title,address,addedPhotos,description,
+    perks,extraInfo,checkIn,checkOut,maxGuests,price,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const placeDoc = await Place.findById(id);
     if (userData.id === placeDoc.owner.toString()) {
       placeDoc.set({
-        province,from,province2,destination,color,brand,type,seats,
-        extraInfo,date,maxGuests,price,
+        title,address,photos:addedPhotos,description,
+        perks,extraInfo,checkIn,checkOut,maxGuests,price,
       });
       await placeDoc.save();
       res.json('ok');
@@ -261,47 +178,14 @@ app.get('/places', async (req,res) => {
   res.json( await Place.find() );
 });
 
-app.get('/requests/:id', async (req,res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const {id} = req.params;
-  res.json(await Request.findById(id));
-});
-
-app.put('/requests', async (req,res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const {token} = req.cookies;
-  const {
-    id, province,from,province2,destination,
-    extraInfo,date,NumOfPassengers,price,
-  } = req.body;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
-    const RequestDoc = await Request.findById(id);
-    if (userData.id === RequestDoc.owner.toString()) {
-      RequestDoc.set({
-        province,from,province2,destination,
-        extraInfo,date,NumOfPassengers,price,
-      });
-      await RequestDoc.save();
-      res.json('ok');
-    }
-  });
-});
-
-app.get('/requests', async (req,res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  res.json( await Request.find() );
-});
-
-
 app.post('/bookings', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
   const {
-    place,passengers,name,phone,price,
+    place,checkIn,checkOut,numberOfGuests,name,phone,price,
   } = req.body;
   Booking.create({
-    place,passengers,name,phone,price,
+    place,checkIn,checkOut,numberOfGuests,name,phone,price,
     user:userData.id,
   }).then((doc) => {
     res.json(doc);
@@ -310,33 +194,12 @@ app.post('/bookings', async (req, res) => {
   });
 });
 
-app.post('/bookings2', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const userData = await getUserDataFromReq(req);
-  const {
-    request,passengers,name,phone,price,
-  } = req.body;
-  Booking2.create({
-    request,passengers,name,phone,price,
-    user:userData.id,
-  }).then((doc) => {
-    res.json(doc);
-  }).catch((err) => {
-    throw err;
-  });
-});
 
 
 app.get('/bookings', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
   res.json( await Booking.find({user:userData.id}).populate('place') );
-});
-
-app.get('/bookings2', async (req,res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const userData = await getUserDataFromReq(req);
-  res.json( await Booking2.find({user:userData.id}).populate('request') );
 });
 
 app.listen(port, () => {
