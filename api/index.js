@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use('/uploads', express.static(__dirname+'/uploads'));
 app.use(cors({
   credentials: true,
-  origin: 'http://localhost:5173',
+  origin: 'https://hikenrides.com',
 }));
 
 
@@ -189,7 +189,7 @@ app.post('/bookings', async (req, res) => {
     user:userData.id,
   }).then((doc) => {
     res.json(doc);
-  }).catch((err) => {
+  }).catch((err) => {s
     throw err;
   });
 });
