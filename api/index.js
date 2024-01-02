@@ -51,12 +51,14 @@ app.get('/api/database', (req,res) => {
   res.json('test ok');
 });
 
-app.post('/register', async (req,res) => {
+app.post('/register', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const {name,gender,phone_number,age,email,isDriver,driverLicense,password,messages} = req.body;
+  const {
+    name, gender, phone_number, age, email, isDriver, driverLicense, password, messages, balance,
+  } = req.body;
 
   try {
-    console.log('Received registration request:', {name, email});
+    console.log('Received registration request:', { name, email });
     const userDoc = await User.create({
       name,
       gender,
@@ -67,70 +69,26 @@ app.post('/register', async (req,res) => {
       driverLicense,
       password: bcrypt.hashSync(password, bcryptSalt),
       messages,
+      balance,
     });
+
+    // Send welcome message
+    const welcomeMessage = `Welcome to HikenRides! We are Thrilled to have you on board for affordable ride-sharing and carpooling services. Enjoy the journey with us!`;
+    await client.messages.create({
+      body: welcomeMessage,
+      from: twilioPhoneNumber,
+      to: phone_number,
+    });
+
     console.log('User registered:', userDoc);
+    console.log('Twilio Message SID:', message.sid);
     res.json(userDoc);
   } catch (e) {
     console.error('Registration failed:', e);
     res.status(422).json(e);
-  }
+  } 
 });
 
-app.post('/messages', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
-
-    const { sender, receiver, content } = req.body;
-
-    try {
-      if (userData.id !== sender) {
-        return res.status(403).json({ error: 'Forbidden' });
-      }
-
-      const messageDoc = await Message.create({
-        sender,
-        receiver,
-        content,
-      });
-
-      res.json(messageDoc);
-    } catch (error) {
-      console.error('Error creating message:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-});
-
-
-
-// Add this endpoint to your existing code
-
-app.get('/messages/:receiverId', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
-
-    const { receiverId } = req.params;
-
-    try {
-      // Check if the authenticated user is the recipient of the messages
-      if (userData.id !== receiverId) {
-        return res.status(403).json({ error: 'Forbidden' });
-      }
-
-      // Fetch messages for the given receiverId
-      const messages = await Message.find({ receiver: receiverId });
-
-      res.json(messages);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-});
 
 
 app.post('/login', async (req,res) => {
