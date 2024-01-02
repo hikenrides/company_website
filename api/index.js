@@ -12,6 +12,7 @@ const Request = require('./models/requests.js');
 const Message = require('./models/message.js');
 
 const cookieParser = require('cookie-parser');
+
 const allowCors = require('./allowCors');
 
 require('dotenv').config();
@@ -21,14 +22,15 @@ const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
 const bucket = 'hikenrides-booking-app';
 
-app.use(allowCors)
 app.use(express.json());
 app.use(cookieParser());
+app.use('/uploads', express.static(__dirname+'/uploads'));
 app.use(cors({
   credentials: true,
   origin: 'https://hikenrides.com',
 }));
-app.use('/uploads', express.static(__dirname+'/uploads'));
+
+
 
 
 function getUserDataFromReq(req) {
@@ -98,8 +100,6 @@ app.post('/messages', async (req, res) => {
   });
 });
 
-
-
 // Add this endpoint to your existing code
 
 app.get('/messages/:receiverId', async (req, res) => {
@@ -168,6 +168,7 @@ app.get('/profile', async (req, res) => {
     res.json(null);
   }
 });
+
 
 app.post('/logout', (req,res) => {
   res.cookie('token', '').json(true);
