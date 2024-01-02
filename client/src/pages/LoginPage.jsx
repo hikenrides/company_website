@@ -60,7 +60,9 @@ export default function LoginPage() {
               Register now
             </Link>
           </div>
-        </form> 
+        </form>
+       
+        
       </div>
     </div>
   );
