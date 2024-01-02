@@ -27,9 +27,9 @@ const twilioPhoneNumber = '+13856267146';
 
 const client = twilio(accountSid, authToken);
 
-app.use(allowCors)
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors())
 
 
 function getUserDataFromReq(req) {
@@ -47,7 +47,7 @@ app.get('/api/database', (req,res) => {
 });
 
 app.post('/register', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
+  mongoose.connect(process.env.MONGO_URL);
   const {
     name, gender, phone_number, age, email, isDriver, driverLicense, password, messages, balance,
   } = req.body;
