@@ -10,7 +10,6 @@ const Booking = require('./models/Booking.js');
 const Booking2 = require('./models/Booking2.js')
 const Request = require('./models/requests.js');
 const Message = require('./models/message.js');
-const twilio = require('twilio');
 
 const cookieParser = require('cookie-parser');
 const allowCors = require('./allowCors');
@@ -21,11 +20,6 @@ const app = express();
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
 const bucket = 'hikenrides-booking-app';
-const accountSid = 'ACd5bb965fa354cca20f5398d7b3b301da';
-const authToken = process.env.AUTH_TOKEN;
-const twilioPhoneNumber = '+13856267146';
-
-const client = twilio(accountSid, authToken);
 
 app.use(allowCors)
 app.use(express.json());
@@ -51,14 +45,12 @@ app.get('/api/database', (req,res) => {
   res.json('test ok');
 });
 
-app.post('/register', async (req, res) => {
+app.post('/register', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const {
-    name, gender, phone_number, age, email, isDriver, driverLicense, password, messages, balance,
-  } = req.body;
+  const {name,gender,phone_number,age,email,isDriver,driverLicense,password,messages,balance} = req.body;
 
   try {
-    console.log('Received registration request:', { name, email });
+    console.log('Received registration request:', {name, email});
     const userDoc = await User.create({
       name,
       gender,
@@ -71,22 +63,12 @@ app.post('/register', async (req, res) => {
       messages,
       balance,
     });
-
-    // Send welcome message
-    const welcomeMessage = `Welcome to HikenRides! We are Thrilled to have you on board for affordable ride-sharing and carpooling services. Enjoy the journey with us!`;
-    await client.messages.create({
-      body: welcomeMessage,
-      from: twilioPhoneNumber,
-      to: phone_number,
-    });
-
     console.log('User registered:', userDoc);
-    console.log('Twilio Message SID:', message.sid);
     res.json(userDoc);
   } catch (e) {
     console.error('Registration failed:', e);
     res.status(422).json(e);
-  } 
+  }
 });
 
 app.post('/messages', async (req, res) => {
@@ -168,15 +150,19 @@ app.post('/login', async (req,res) => {
   }
 });
 
-
-app.get('/profile', (req,res) => {
+app.get('/profile', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const {token} = req.cookies;
+  const { token } = req.cookies;
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) throw err;
-      const {name,email,_id} = await User.findById(userData.id);
-      res.json({name,email,_id});
+      const user = await User.findById(userData.id);
+      if (user) {
+        const { name, email, _id } = user;
+        res.json({ name, email, _id });
+      } else {
+        res.json(null);
+      }
     });
   } else {
     res.json(null);
