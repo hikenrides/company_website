@@ -9,7 +9,8 @@ const Place = require('./models/Place.js');
 const Booking = require('./models/Booking.js');
 const Booking2 = require('./models/Booking2.js')
 const Request = require('./models/requests.js');
-
+const Message = require('./models/message.js');
+const twilio = require('twilio');
 
 const cookieParser = require('cookie-parser');
 const allowCors = require('./allowCors');
@@ -20,15 +21,18 @@ const app = express();
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
 const bucket = 'hikenrides-booking-app';
+const accountSid = 'ACd5bb965fa354cca20f5398d7b3b301da';
+const authToken = process.env.AUTH_TOKEN;
+const twilioPhoneNumber = '+13856267146';
 
-app.use(allowCors)
+const client = twilio(accountSid, authToken);
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
   credentials: true,
   origin: 'https://hikenrides.com',
 }));
-app.use('/uploads', express.static(__dirname+'/uploads'));
 
 
 function getUserDataFromReq(req) {
@@ -45,12 +49,14 @@ app.get('/api/database', (req,res) => {
   res.json('test ok');
 });
 
-app.post('/register', async (req,res) => {
+app.post('/register', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const {name,gender,phone_number,age,email,isDriver,driverLicense,password,messages,balance} = req.body;
+  const {
+    name, gender, phone_number, age, email, isDriver, driverLicense, password, messages, balance,
+  } = req.body;
 
   try {
-    console.log('Received registration request:', {name, email});
+    console.log('Received registration request:', { name, email });
     const userDoc = await User.create({
       name,
       gender,
@@ -63,12 +69,22 @@ app.post('/register', async (req,res) => {
       messages,
       balance,
     });
+
+    // Send welcome message
+    const welcomeMessage = `Welcome to HikenRides! We are Thrilled to have you on board for affordable ride-sharing and carpooling services. Enjoy the journey with us!`;
+    await client.messages.create({
+      body: welcomeMessage,
+      from: twilioPhoneNumber,
+      to: phone_number,
+    });
+
     console.log('User registered:', userDoc);
+    console.log('Twilio Message SID:', message.sid);
     res.json(userDoc);
   } catch (e) {
     console.error('Registration failed:', e);
     res.status(422).json(e);
-  }
+  } 
 });
 
 app.post('/messages', async (req, res) => {
