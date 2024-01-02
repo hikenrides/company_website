@@ -47,7 +47,7 @@ app.get('/api/database', (req,res) => {
 });
 
 app.post('/register', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
+  mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
   const {
     name, gender, phone_number, age, email, isDriver, driverLicense, password, messages, balance,
   } = req.body;
