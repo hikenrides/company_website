@@ -89,6 +89,61 @@ app.post('/register', async (req, res) => {
   } 
 });
 
+app.post('/messages', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { token } = req.cookies;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+
+    const { sender, receiver, content } = req.body;
+
+    try {
+      if (userData.id !== sender) {
+        return res.status(403).json({ error: 'Forbidden' });
+      }
+
+      const messageDoc = await Message.create({
+        sender,
+        receiver,
+        content,
+      });
+
+      res.json(messageDoc);
+    } catch (error) {
+      console.error('Error creating message:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+});
+
+
+
+// Add this endpoint to your existing code
+
+app.get('/messages/:receiverId', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { token } = req.cookies;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+
+    const { receiverId } = req.params;
+
+    try {
+      // Check if the authenticated user is the recipient of the messages
+      if (userData.id !== receiverId) {
+        return res.status(403).json({ error: 'Forbidden' });
+      }
+
+      // Fetch messages for the given receiverId
+      const messages = await Message.find({ receiver: receiverId });
+
+      res.json(messages);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+});
 
 
 app.post('/login', async (req,res) => {
@@ -112,6 +167,7 @@ app.post('/login', async (req,res) => {
     res.json('not found');
   }
 });
+
 
 
 app.get('/profile', (req,res) => {
