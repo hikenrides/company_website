@@ -27,7 +27,7 @@ const twilioPhoneNumber = '+13856267146';
 const client = twilio(accountSid, authToken);
 
 const corsOptions = {
-  origin: 'https://panicky-fish-windbreaker.cyclic.app',
+  origin: 'https://hikenrides.com',
   credentials: true,
 };
 
