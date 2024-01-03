@@ -24,7 +24,7 @@ export default function BookingWidget({place}) {
         phone,
         place: place._id,
         price: passengers * place.price,
-      });
+      }, { withCredentials: true });
   
       const bookingId = response.data._id;
   

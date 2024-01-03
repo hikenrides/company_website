@@ -45,7 +45,7 @@ export default function TripRequest() {
     if (!id) {
       return;
     }
-    axios.get('/requests/'+id).then(response => {
+    axios.get('/requests/'+id, { withCredentials: true }).then(response => {
        const {data} = response;
        setProvince(data.province)
        setFrom(data.from);

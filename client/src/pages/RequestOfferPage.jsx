@@ -23,7 +23,7 @@ export default function RequestOfferPage() {
 
 
   useEffect(() => {
-    axios.get('/requests').then(response => {
+    axios.get('/requests', { withCredentials: true }).then(response => {
       setRequests(response.data);
     }).catch(error => {
       console.error("Error fetching requests: ", error);

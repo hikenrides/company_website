@@ -9,7 +9,7 @@ export default function BookingPage2() {
   const [booking2,setBooking] = useState(null);
   useEffect(() => {
     if (id) {
-      axios.get('/bookings2').then(response => {
+      axios.get('/bookings2', { withCredentials: true }).then(response => {
         const foundBooking = response.data.find(({_id}) => _id === id);
         if (foundBooking) {
           setBooking(foundBooking);

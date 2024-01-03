@@ -23,7 +23,7 @@ export default function TripOfferPage() {
   const [searchPerformed, setSearchPerformed] = useState(false);
 
   useEffect(() => {
-    axios.get('/places').then(response => {
+    axios.get('/places', { withCredentials: true }).then(response => {
       setPlaces(response.data);
     });
   }, []);

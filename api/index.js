@@ -13,7 +13,6 @@ const Message = require('./models/message.js');
 const twilio = require('twilio');
 
 const cookieParser = require('cookie-parser');
-const allowCors = require('./allowCors');
 
 require('dotenv').config();
 const app = express();
@@ -27,9 +26,15 @@ const twilioPhoneNumber = '+13856267146';
 
 const client = twilio(accountSid, authToken);
 
+const corsOptions = {
+  origin: 'https://panicky-fish-windbreaker.cyclic.app',
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors())
 
 
 function getUserDataFromReq(req) {

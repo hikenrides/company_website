@@ -5,7 +5,7 @@ import axios from "axios";
 export default function RequestsPage() {
   const [requests,setRequests] = useState([]);
   useEffect(() => {
-    axios.get('/requested-trips').then(({data}) => {
+    axios.get('/requested-trips', { withCredentials: true }).then(({data}) => {
       setRequests(data);
     });
   }, []);

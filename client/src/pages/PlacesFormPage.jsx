@@ -50,7 +50,7 @@ export default function PlacesFormPage() {
     if (!id) {
       return;
     }
-    axios.get('/places/'+id).then(response => {
+    axios.get('/places/'+id, { withCredentials: true }).then(response => {
        const {data} = response;
        setProvince(data.province)
        setFrom(data.from);

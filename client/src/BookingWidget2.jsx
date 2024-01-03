@@ -21,7 +21,7 @@ export default function BookingWidget2({request}) {
       passengers,name,phone,
       request:request._id,
       price:passengers * request.price,
-    });
+    }, { withCredentials: true });
     const bookingId = response.data._id;
     setRedirect(`/account/bookings../${bookingId}`);
   }

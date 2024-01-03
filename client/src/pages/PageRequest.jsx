@@ -11,7 +11,7 @@ export default function PageRequest() {
     if (!id) {
       return;
     }
-    axios.get(`/requests/${id}`).then(response => {
+    axios.get(`/requests/${id}`, { withCredentials: true }).then(response => {
       setRequest(response.data);
     });
   }, [id]);

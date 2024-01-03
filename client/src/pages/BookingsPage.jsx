@@ -8,7 +8,7 @@ import AddressLink from "../AddressLink";
 export default function BookingsPage() {
   const [bookings,setBookings] = useState([]);
   useEffect(() => {
-    axios.get('/bookings').then(response => {
+    axios.get('/bookings', { withCredentials: true }).then(response => {
       setBookings(response.data);
     });
   }, []);
