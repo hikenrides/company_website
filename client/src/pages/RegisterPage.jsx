@@ -28,12 +28,6 @@ export default function RegisterPage() {
     return emailRegex.test(inputEmail);
   };
 
-  const handlePhoneNumberChange = (ev) => {
-    // Allow only numeric digits and limit the length
-    const newValue = ev.target.value.replace(/\D/g, '').slice(0, 11);
-    setNumber(`+27${newValue}`);
-  };
-
   async function registerUser(ev) {
     ev.preventDefault();
     if (password !== confirmPassword) {
@@ -89,7 +83,7 @@ export default function RegisterPage() {
             type="text"
             placeholder="Phone number"
             value={phone_number}
-            onChange={handlePhoneNumberChange}
+            onChange={(ev) => setNumber(ev.target.value)}
           />
           <input
             type="text"
