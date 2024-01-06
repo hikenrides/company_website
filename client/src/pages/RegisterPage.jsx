@@ -28,30 +28,11 @@ export default function RegisterPage() {
     return emailRegex.test(inputEmail);
   };
 
-  const handlePhoneNumberKeyDown = (event) => {
-    // Prevent the user from removing "+27" prefix
-    if (event.target.selectionStart < 3 && event.key !== "Backspace") {
-      event.preventDefault();
-    }
-
-    // Allow only numeric digits
-    if (!/^\d$/.test(event.key) && event.key !== "Backspace") {
-      event.preventDefault();
-    }
-
-    // Update the phone_number state with the new value
-    setNumber((prevNumber) => {
-      const newValue =
-        event.key === "Backspace"
-          ? prevNumber.slice(0, -1)
-          : prevNumber + event.key;
-
-      // Add "+27" if not present
-      return newValue.startsWith("+27") ? newValue : "+27" + newValue;
-    });
+  const handlePhoneNumberChange = (ev) => {
+    // Allow only numeric digits and limit the length
+    const newValue = ev.target.value.replace(/\D/g, '').slice(0, 11);
+    setNumber(`+27${newValue}`);
   };
-
-
 
   async function registerUser(ev) {
     ev.preventDefault();
