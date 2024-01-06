@@ -55,7 +55,7 @@ export default function RegisterPage() {
         password,
       });
       alert("Registration successful. Now you can log in");
-      navigate("/account/places");
+      navigate("/login");
     } catch (e) {
       console.log("Registration failed. Please try again later");
     }
