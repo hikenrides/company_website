@@ -155,7 +155,7 @@ export default function PlacesFormPage() {
             <option value="">Select Province</option>
             {renderProvinceOptions()}
           </select>
-        <input className="bg-gray-300" type="text" value={destination} onChange={ev => setDestination(ev.target.value)}placeholder="City, Township, or specific address)"/>
+        <input className="bg-gray-300" type="text" value={destination} onChange={(ev) => setDestination(ev.target.value)}placeholder="City, Township, or specific address)"/>
         <div className="vehicle-description">
   {preInput('Vehicle description', 'description of the vehicle')}
   <div className="horizontal-selects">
@@ -190,7 +190,7 @@ export default function PlacesFormPage() {
       <label htmlFor="brandSelect" className="text-white mt-2 -mb-1">
         Brand: 
       </label>
-      <select id="brandSelect" className="bg-gray-300" value={brand} onChange={ev => setBrand(ev.target.value)}>
+      <select id="brandSelect" className="bg-gray-300" value={brand} onChange={(ev) => setBrand(ev.target.value)}>
         <option value="toyota">Toyota</option>
         <option value="honda">Honda</option>
         <option value="ford">Ford</option>
@@ -221,7 +221,7 @@ export default function PlacesFormPage() {
       <label htmlFor="typeSelect" className="text-white mt-2 -mb-1">
         Type: 
       </label>
-      <select id="typeSelect" className="bg-gray-300" value={type} onChange={ev => setType(ev.target.value)}>
+      <select id="typeSelect" className="bg-gray-300" value={type} onChange={(ev) => setType(ev.target.value)}>
         <option value="sedan">Utility vehicle</option>
         <option value="sedan">Hybrid</option>
         <option value="sedan">Family Car</option>
@@ -249,7 +249,7 @@ export default function PlacesFormPage() {
       <label htmlFor="seatsSelect" className="text-white mt-2 -mb-1">
         Number of Seats: 
       </label>
-      <select id="seatsSelect" className="bg-gray-300" value={seats} onChange={ev => setSeats(ev.target.value)}>
+      <select id="seatsSelect" className="bg-gray-300" value={seats} onChange={(ev) => setSeats(ev.target.value)}>
         <option value="2">2</option>
         <option value="4">4</option>
         <option value="5">5</option>
@@ -270,7 +270,7 @@ export default function PlacesFormPage() {
 
 
         {preInput('Extra info(optional)','trip rules, etc')}
-        <textarea className="bg-gray-300" value={extraInfo} onChange={ev => setExtraInfo(ev.target.value)} />
+        <textarea className="bg-gray-300" value={extraInfo} onChange={(ev) => setExtraInfo(ev.target.value)} />
         {preInput('Departure','add departing date, number of passengers and price per person')}
         <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
           <div>
