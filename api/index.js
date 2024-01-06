@@ -51,14 +51,12 @@ app.get('/api/database', (req,res) => {
   res.json('test ok');
 });
 
-app.post('/register', async (req, res) => {
+app.post('/register', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const {
-    name, gender, phone_number, age, email, isDriver, driverLicense, password, messages, balance,
-  } = req.body;
+  const {name,gender,phone_number,age,email,isDriver,driverLicense,password,messages,balance} = req.body;
 
   try {
-    console.log('Received registration request:', { name, email });
+    console.log('Received registration request:', {name, email});
     const userDoc = await User.create({
       name,
       gender,
@@ -71,22 +69,12 @@ app.post('/register', async (req, res) => {
       messages,
       balance,
     });
-
-    // Send welcome message
-    const welcomeMessage = `Welcome to HikenRides! We are Thrilled to have you on board for affordable ride-sharing and carpooling services. Enjoy the journey with us!`;
-    await client.messages.create({
-      body: welcomeMessage,
-      from: twilioPhoneNumber,
-      to: phone_number,
-    });
-
     console.log('User registered:', userDoc);
-    console.log('Twilio Message SID:', message.sid);
     res.json(userDoc);
   } catch (e) {
     console.error('Registration failed:', e);
     res.status(422).json(e);
-  } 
+  }
 });
 
 app.post('/messages', async (req, res) => {
