@@ -1,4 +1,4 @@
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import './TermsAndConditions.css';
@@ -16,7 +16,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -55,7 +55,7 @@ export default function RegisterPage() {
         password,
       });
       alert("Registration successful. Now you can log in");
-      history.push("/account/places");
+      navigate("/account/places");
     } catch (e) {
       console.log("Registration failed. Please try again later");
     }
