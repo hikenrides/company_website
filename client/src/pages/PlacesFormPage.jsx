@@ -128,9 +128,6 @@ export default function PlacesFormPage() {
     <div>
       <AccountNav />
       <form onSubmit={savePlace}>
-      {formError && (
-        <p style={{ color: 'red' }}>Please fill out all the required information!</p>
-      )}
       {preInput('From', 'Please indicate your preferred pick-up location for passengers.')}
 
           <select
@@ -166,12 +163,28 @@ export default function PlacesFormPage() {
       <label htmlFor="colorSelect" className="text-white mt-2 -mb-1">
         Color: 
       </label>
-      <select id="colorSelect" className="bg-gray-300" value={color} onChange={ev => setColor(ev.target.value)}>
-        <option value="red">Red</option>
-        <option value="blue">Blue</option>
-        <option value="black">Black</option>
-        {/* Add more color options here */}
-      </select>
+      <select id="colorSelect" className="bg-gray-300" value={color} onChange={(ev) => setColor(ev.target.value)}>
+  <option value="white">White</option>
+  <option value="black">Black</option>
+  <option value="silver">Silver</option>
+  <option value="gray">Gray</option>
+  <option value="red">Red</option>
+  <option value="blue">Blue</option>
+  <option value="green">Green</option>
+  <option value="yellow">Yellow</option>
+  <option value="orange">Orange</option>
+  <option value="brown">Brown</option>
+  <option value="purple">Purple</option>
+  <option value="pink">Pink</option>
+  <option value="gold">Gold</option>
+  <option value="bronze">Bronze</option>
+  <option value="beige">Beige</option>
+  <option value="burgundy">Burgundy</option>
+  <option value="turquoise">Turquoise</option>
+  <option value="lavender">Lavender</option>
+  <option value="teal">Teal</option>
+</select>
+
     </div>
     <div className="select-container">
       <label htmlFor="brandSelect" className="text-white mt-2 -mb-1">
@@ -209,6 +222,12 @@ export default function PlacesFormPage() {
         Type: 
       </label>
       <select id="typeSelect" className="bg-gray-300" value={type} onChange={ev => setType(ev.target.value)}>
+        <option value="sedan">Utility vehicle</option>
+        <option value="sedan">Hybrid</option>
+        <option value="sedan">Family Car</option>
+        <option value="sedan">Limousine</option>
+        <option value="sedan">Mini MPV</option>
+        <option value="sedan">convertible</option>
         <option value="sedan">Truck</option>
         <option value="suv">Hatchback</option>
         <option value="truck">Sedan</option>
@@ -277,6 +296,9 @@ export default function PlacesFormPage() {
           </div>
         </div>
         <button className="primary my-4">Save</button>
+        {formError && (
+        <p style={{ color: 'red' }}>Please fill out all the required information!</p>
+      )}
       </form>
       
     </div>
