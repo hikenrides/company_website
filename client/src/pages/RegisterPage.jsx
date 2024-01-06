@@ -89,8 +89,7 @@ export default function RegisterPage() {
             type="text"
             placeholder="Phone number"
             value={phone_number}
-            onChange={(ev) => setNumber(ev.target.value)}
-            onKeyDown={handlePhoneNumberKeyDown}
+            onChange={handlePhoneNumberChange}
           />
           <input
             type="text"
