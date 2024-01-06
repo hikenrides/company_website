@@ -28,6 +28,16 @@ export default function RegisterPage() {
     return emailRegex.test(inputEmail);
   };
 
+  const handlePhoneNumberKeyDown = (event) => {
+    if (event.target.selectionStart < 3 && event.key !== "Backspace") {
+      event.preventDefault();
+    }
+    if (!/^\d$/.test(event.key) && event.key !== "Backspace") {
+      event.preventDefault();
+    }
+  };
+
+
   async function registerUser(ev) {
     ev.preventDefault();
     if (password !== confirmPassword) {
@@ -84,6 +94,8 @@ export default function RegisterPage() {
             placeholder="Phone number"
             value={phone_number}
             onChange={(ev) => setNumber(ev.target.value)}
+            onKeyDown={handlePhoneNumberKeyDown}
+            maxLength="12"
           />
           <input
             type="text"
