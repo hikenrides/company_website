@@ -194,26 +194,26 @@ export default function PlacesFormPage() {
         <option value="toyota">Toyota</option>
         <option value="honda">Honda</option>
         <option value="ford">Ford</option>
-        <option value="toyota">Renault</option>
-        <option value="honda">Haval</option>
-        <option value="ford">BMW</option>
-        <option value="toyota">ALFA Romeo</option>
-        <option value="honda">GWM</option>
-        <option value="ford">BAIC</option>
-        <option value="toyota">Volkswagen</option>
-        <option value="honda">Cadillac</option>
-        <option value="ford">Peugeot</option>
-        <option value="toyota">SEAT</option>
-        <option value="honda">Mercedes-Benz</option>
-        <option value="ford">Nissan</option>
-        <option value="toyota">Hyundai</option>
-        <option value="honda">Kia</option>
-        <option value="ford">Suzuki</option>
-        <option value="toyota">Audi</option>
-        <option value="honda">Fiat</option>
-        <option value="ford">Aston Martin</option>
-        <option value="toyota">Opel</option>
-        <option value="honda">Porsche</option>
+        <option value="renault">Renault</option>
+        <option value="haval">Haval</option>
+        <option value="bmw">BMW</option>
+        <option value="alfa romeo">ALFA Romeo</option>
+        <option value="gwm">GWM</option>
+        <option value="baic">BAIC</option>
+        <option value="volkswagen">Volkswagen</option>
+        <option value="cadillac">Cadillac</option>
+        <option value="peugeot">Peugeot</option>
+        <option value="seat">SEAT</option>
+        <option value="mercedes-benz">Mercedes-Benz</option>
+        <option value="nissan">Nissan</option>
+        <option value="hyundai">Hyundai</option>
+        <option value="kia">Kia</option>
+        <option value="suzuki">Suzuki</option>
+        <option value="audi">Audi</option>
+        <option value="fiat">Fiat</option>
+        <option value="aston martin">Aston Martin</option>
+        <option value="opel">Opel</option>
+        <option value="porsche">Porsche</option>
         {/* Add more brand options here */}
       </select>
     </div>
@@ -222,26 +222,26 @@ export default function PlacesFormPage() {
         Type: 
       </label>
       <select id="typeSelect" className="bg-gray-300" value={type} onChange={(ev) => setType(ev.target.value)}>
-        <option value="sedan">Utility vehicle</option>
-        <option value="sedan">Hybrid</option>
-        <option value="sedan">Family Car</option>
-        <option value="sedan">Limousine</option>
-        <option value="sedan">Mini MPV</option>
-        <option value="sedan">convertible</option>
-        <option value="sedan">Truck</option>
-        <option value="suv">Hatchback</option>
-        <option value="truck">Sedan</option>
-        <option value="sedan">Mini-van</option>
-        <option value="suv">Van</option>
-        <option value="truck">Cross-over</option>
-        <option value="sedan">Station Wagon</option>
-        <option value="suv">Coupe</option>
-        <option value="truck">pickup truck</option>
-        <option value="sedan">Sports car</option>
+        <option value="utility vehicle">Utility vehicle</option>
+        <option value="hybrid">Hybrid</option>
+        <option value="family car">Family Car</option>
+        <option value="limousine">Limousine</option>
+        <option value="mini mpv">Mini MPV</option>
+        <option value="convertible">convertible</option>
+        <option value="truck">Truck</option>
+        <option value="hatchback">Hatchback</option>
+        <option value="sedan">Sedan</option>
+        <option value="mini-van">Mini-van</option>
+        <option value="van">Van</option>
+        <option value="cross-over">Cross-over</option>
+        <option value="station wagon">Station Wagon</option>
+        <option value="coupe">Coupe</option>
+        <option value="pickup truck">pickup truck</option>
+        <option value="sports car">Sports car</option>
         <option value="suv">SUV</option>
-        <option value="truck">Electric vehicle</option>
-        <option value="sedan">Compact</option>
-        <option value="suv">Roadster</option>
+        <option value="electric vehicle">Electric vehicle</option>
+        <option value="compact">Compact</option>
+        <option value="roadster">Roadster</option>
       </select>
     </div>
     <div className="select-container">
