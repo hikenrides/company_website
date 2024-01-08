@@ -25,8 +25,8 @@ export default function PlacesFormPage() {
   const [province2,setProvince2] = useState('');
   const [destination,setDestination] = useState('');
   const [color, setColor] = useState('white');
-  const [brand, setBrand] = useState('');
-  const [type, setType] = useState('');
+  const [brand, setBrand] = useState('toyota');
+  const [type, setType] = useState('Mini-Van');
   const [seats, setSeats] = useState('4');
   const [extraInfo,setExtraInfo] = useState('');
   const [date,setDate] = useState('');
@@ -242,7 +242,6 @@ export default function PlacesFormPage() {
         <option value="truck">Electric vehicle</option>
         <option value="sedan">Compact</option>
         <option value="suv">Roadster</option>
-        {/* Add more type options here */}
       </select>
     </div>
     <div className="select-container">
@@ -262,7 +261,6 @@ export default function PlacesFormPage() {
         <option value="12">12</option>
         <option value="13">13</option>
         <option value="14">14</option>
-        {/* Add more seat options here */}
       </select>
     </div>
   </div>
