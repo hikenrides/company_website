@@ -158,30 +158,7 @@ function IndexPage() {
                 <motion.span variants={letter}>d</motion.span>
                 <motion.span variants={letter}>e,</motion.span>
             </motion.span>
-            <motion.span variants={lastName} initial="initial" animate="animate" className='last'>
-                <motion.span variants={letter}>Y</motion.span>
-                <motion.span variants={letter}>o</motion.span>
-                <motion.span variants={letter}>u</motion.span>
-                <motion.span variants={letter}>r</motion.span>
-                <motion.span variants={letter} className="second">w</motion.span>
-                <motion.span variants={letter}>a</motion.span>
-                <motion.span variants={letter}>y,</motion.span>
-                <motion.span variants={letter} className="second">O</motion.span>
-                <motion.span variants={letter}>u</motion.span>
-                <motion.span variants={letter}>r</motion.span>
-                <motion.span variants={letter} className="second">c</motion.span>
-                <motion.span variants={letter}>o</motion.span>
-                <motion.span variants={letter}>n</motion.span>
-                <motion.span variants={letter}>n</motion.span>
-                <motion.span variants={letter}>e</motion.span>
-                <motion.span variants={letter}>c</motion.span>
-                <motion.span variants={letter}>t</motion.span>
-                <motion.span variants={letter}>i</motion.span>
-                <motion.span variants={letter}>o</motion.span>
-                <motion.span variants={letter}>n</motion.span>
-  
-  
-            </motion.span>
+            
           </motion.h2>
 
           <motion.p variants={fadeInUp}>Our innovative ride-sharing platform fosters seamless connections between drivers and passengers, 
