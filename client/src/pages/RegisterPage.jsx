@@ -16,6 +16,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [balance, setBalance] = useState(0);
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -53,6 +54,7 @@ export default function RegisterPage() {
         isDriver: isDriverValue,
         driverLicense: isDriver === "Yes" ? driverLicense : "",
         password,
+        balance
       });
       alert("Registration successful. Now you can log in");
       navigate("/login");
