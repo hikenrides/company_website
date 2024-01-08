@@ -26,7 +26,7 @@ export default function PlacesFormPage() {
   const [destination,setDestination] = useState('');
   const [color, setColor] = useState('white');
   const [brand, setBrand] = useState('toyota');
-  const [type, setType] = useState('Mini-Van');
+  const [type, setType] = useState('Mini-van');
   const [seats, setSeats] = useState('4');
   const [extraInfo,setExtraInfo] = useState('');
   const [date,setDate] = useState('');
