@@ -69,6 +69,12 @@ export default function RequestOfferPage() {
     }
   };
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
+    return formattedDate;
+  };
+
   return (
     <div className="mt-10 mb-20">
       <section className="p-0 mb-10">
@@ -100,7 +106,7 @@ export default function RequestOfferPage() {
                        <span style={{ color: 'orange' }}>Destination:</span> {request.province2}, {request.destination}
                      </h3>
                      <h3 className="text-sm text-gray-500">
-                <span style={{ color: 'orange' }}>Date:</span> {request.date}
+                <span style={{ color: 'orange' }}>Date:</span> {formatDate(request.date)}
               </h3>
                      <div className="mt-1">
                        <span className="font-bold">R{request.price}</span> per person

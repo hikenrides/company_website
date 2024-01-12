@@ -16,7 +16,13 @@ export default function PlacePage() {
     });
   }, [id]);
 
-  if (!place) return '';
+  if (!place) return 'Loading...';
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
+    return formattedDate;
+  };
 
 
 
@@ -30,7 +36,7 @@ export default function PlacePage() {
             <h2 className="font-semibold text-2xl">Vehicle description</h2>
             {place.description}
           </div>
-          Date: {place.date}<br />
+          Date: {formatDate(place.date)}<br />
           Max number of guests: {place.maxGuests}
         </div>
         <div>

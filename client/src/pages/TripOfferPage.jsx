@@ -60,7 +60,6 @@ export default function TripOfferPage() {
         normalizedDestination.includes(normalizedInput)
       );
     });
-
     // Update your UI with the matching places or display a message
     if (result.length > 0) {
       setMatchingPlaces(result);
@@ -68,6 +67,11 @@ export default function TripOfferPage() {
       setMatchingPlaces([]);
       console.log("No matching Trips found.");
     }
+  };
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
+    return formattedDate;
   };
 
   return (
@@ -107,7 +111,7 @@ export default function TripOfferPage() {
                         <span style={{ color: 'orange' }}>Destination:</span> {place.province2}, {place.destination}
                       </h3>
                       <h3 className="text-sm text-gray-500">
-                        <span style={{ color: 'orange' }}>Date:</span> {place.date}
+                        <span style={{ color: 'orange' }}>Date:</span> {formatDate(place.date)}
                       </h3>
                       <div className="mt-1">
                         <span className="font-bold">R{place.price}</span> per person
@@ -144,7 +148,7 @@ export default function TripOfferPage() {
                 <span style={{ color: 'orange' }}>Destination:</span> {place.province2}, {place.destination}
               </h3>
               <h3 className="text-sm text-gray-500">
-                <span style={{ color: 'orange' }}>Date:</span> {place.date}
+                <span style={{ color: 'orange' }}>Date:</span> {formatDate(place.date)}
               </h3>
               <div className="mt-1">
                 <span className="font-bold">R{place.price}</span> per person

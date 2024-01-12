@@ -1,5 +1,3 @@
-// ProfilePage.jsx
-
 import React, { useContext, useState } from 'react';
 import { UserContext } from '../UserContext.jsx';
 import { Link, Navigate, useParams } from 'react-router-dom';
