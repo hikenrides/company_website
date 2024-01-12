@@ -7,6 +7,7 @@ const bookingSchema2 = new mongoose.Schema({
   phone: {type:String, required:true},
   price: Number,
   passengers: Number,
+  reference: {type:String, required:true, unique:true},
 });
 
 const BookingModel2 = mongoose.model('Booking2', bookingSchema2);

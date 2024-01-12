@@ -307,10 +307,10 @@ app.post('/bookings', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
   const {
-    place,passengers,name,phone,price,
+    place,passengers,name,phone,price,reference,
   } = req.body;
   Booking.create({
-    place,passengers,name,phone,price,
+    place,passengers,name,phone,price,reference,
     user:userData.id,
   }).then((doc) => {
     res.json(doc);
@@ -323,10 +323,10 @@ app.post('/bookings2', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
   const {
-    request,passengers,name,phone,price,
+    request,passengers,name,phone,price,reference,
   } = req.body;
   Booking2.create({
-    request,passengers,name,phone,price,
+    request,passengers,name,phone,price,reference,
     user:userData.id,
   }).then((doc) => {
     res.json(doc);
