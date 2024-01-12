@@ -131,6 +131,16 @@ app.get('/messages/:receiverId', async (req, res) => {
   });
 });
 
+app.put('/users/update-balance', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { id, balance } = req.body;
+  const userData = await getUserDataFromReq(req);
+  if (userData.id !== id) {
+      return res.status(403).json({ error: 'Forbidden' });
+  }
+  const userDoc = await User.findByIdAndUpdate(id, { balance }, { new: true });
+  res.json(userDoc);
+});
 
 app.post('/login', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
@@ -258,48 +268,6 @@ app.put('/places', async (req,res) => {
 app.get('/places', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   res.json( await Place.find() );
-});
-
-app.post("/updateBalance", async (req, res) => {
-  try {
-    const { amount } = req.body;
-    const userId = req.user.id; // Assuming the user is authenticated
-
-    // Fetch the user from the database
-    const user = await User.findById(userId);
-
-    // Update the user's balance
-    user.balance -= amount;
-
-    // Save the updated user to the database
-    await user.save();
-
-    res.status(200).json({ message: "User balance updated successfully" });
-  } catch (error) {
-    console.error("Error updating user balance:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-app.post("/updateBalance2", async (req, res) => {
-  try {
-    const { amount } = req.body;
-    const userId = req.user.id; // Assuming the user is authenticated
-
-    // Fetch the user from the database
-    const user = await User.findById(userId);
-
-    // Update the user's balance
-    user.balance -= amount;
-
-    // Save the updated user to the database
-    await user.save();
-
-    res.status(200).json({ message: "User balance updated successfully" });
-  } catch (error) {
-    console.error("Error updating user balance:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
 });
 
 app.get('/requests/:id', async (req,res) => {
