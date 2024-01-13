@@ -1,15 +1,45 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { Link, useNavigate } from "react-router-dom";
 
 const WithdrawForm = () => {
   const [amount, setAmount] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
-  const [accountHolderName, setAccountHolderName] = useState('');
+  const [accountName, setAccountName] = useState('');
   const [bankName, setBankName] = useState('');
-  // ... add other fields as needed (e.g., branch code, ID number, etc.)
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleWithdraw = () => {
-    // Implement withdrawal logic here (e.g., send a request to your backend)
+  const handleWithdraw = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Send a request to the backend to handle withdrawal
+      const response = await axios.post('/withdrawals', {
+        amount,
+        accountNumber,
+        accountName,
+        bankName,
+      });
+
+      // Handle the response as needed
+      console.log('Withdrawal successful:', response.data);
+      navigate("/account");
+
+
+      // Reset the form and error state
+      setAmount('');
+      setAccountNumber('');
+      setAccountName('');
+      setBankName('');
+      setError('');
+    } catch (error) {
+      // Handle errors from the backend
+      console.error('Withdrawal Error:', error.response.data.error);
+      setError('Error processing withdrawal. Please try again.');
+    }
   };
+
 
   return (
     <div className="bg-gray-800 p-4 rounded-lg shadow-md text-white max-w-lg mx-auto">
@@ -62,8 +92,8 @@ htmlFor="accountHolderName" className="block text-sm font-medium text-gray-400">
           <input
             type="text"
             id="accountHolderName"
-            value={accountHolderName}
-            onChange={(e) => setAccountHolderName(e.target.value)}
+            value={accountName}
+            onChange={(e) => setAccountName(e.target.value)}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
