@@ -10,6 +10,7 @@ const Booking = require('./models/Booking.js');
 const Booking2 = require('./models/Booking2.js')
 const Request = require('./models/requests.js');
 const Message = require('./models/message.js');
+const Withdrawals = require('./models/withdrawals.js');
 const twilio = require('twilio');
 
 const cookieParser = require('cookie-parser');
@@ -220,6 +221,39 @@ app.post('/requests', (req,res) => {
   });
 });
 
+app.post('/withdrawals', (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+
+  const { token } = req.cookies;
+  const {
+    amount, accountNumber, accountName, bankName,
+  } = req.body;
+
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) {
+      // Handle JWT verification error
+      console.error('JWT Verification Error:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    try {
+      // Creating a new Withdrawals document
+      const withdrawalsDoc = await Withdrawals.create({
+        owner: userData.id,
+        amount,
+        accountNumber,
+        accountName,
+        bankName,
+      });
+
+      res.json(withdrawalsDoc);
+    } catch (error) {
+      // Handle other errors, e.g., database error
+      console.error('Withdrawals Creation Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+});
 app.get('/user-places', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {token} = req.cookies;
