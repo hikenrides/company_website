@@ -22,6 +22,7 @@ import PageRequest from './pages/PageRequest';
 import TermsAndConditions from "./pages/TermsPage.jsx";
 import DepositPage from "./pages/DepositPage.jsx";
 import WithdrawPage from "./pages/WithdrawPage.jsx";
+import WithdrawForm from "./pages/WithdrawForm.jsx";
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 axios.defaults.withCredentials = true;
@@ -50,6 +51,7 @@ function App() {
           <Route path="/Terms and Conditions" element={<TermsAndConditions />} />
           <Route path="/deposit" element={<DepositPage />} />
           <Route path="/withdraw" element={<WithdrawPage />} />
+          <Route path="/WithdrawalForm" element={<WithdrawForm />} />
         </Route>
       </Routes>
     </UserContextProvider>
