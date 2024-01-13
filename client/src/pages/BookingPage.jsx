@@ -19,7 +19,7 @@ export default function BookingPage() {
   }, [id]);
 
   if (!booking) {
-    return '';
+    return 'Loading...';
   }
 
   return (
@@ -33,7 +33,7 @@ export default function BookingPage() {
             <span style={{ color: '#00008B' }}>pick-up location:</span> {booking.place.from}
           </h2>
           <h2>
-            <span style={{ color: '#00008B' }}>Car-description: </span>{booking.place.description}
+            <span style={{ color: '#00008B' }}>Car-description: </span>{booking.place.color}, {booking.place.brand}, {booking.place.type}, {booking.place.seats} seats
           </h2>
           <h2>
             <span style={{ color: '#00008B' }}>departing-date: </span> {booking.place.date}
@@ -42,7 +42,7 @@ export default function BookingPage() {
             <span style={{ color: '#00008B' }}>time: </span> 
           </h2>
           <h2>
-            <span style={{ color: '#00008B' }}>Reference number: </span> 
+            <span style={{ color: '#00008B' }}>Reference number: </span> {booking.reference}
           </h2>
         </div>
         <div className="bg-primary text-white rounded-2xl">

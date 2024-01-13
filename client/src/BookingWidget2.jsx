@@ -38,24 +38,22 @@ export default function BookingWidget2({ request }) {
     return true;
   };
 
-  const updateUserBalance = async (amount) => {
-    try {
-      await axios.post("/updateBalance2", { amount }, { withCredentials: true });
-      console.log("User balance updated successfully");
-    } catch (error) {
-      console.error("Error updating user balance:", error);
+  function generateReference() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < 7; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
     }
-  };
+    return result;
+  }
 
   async function bookThisPlace() {
     try {
-      // Your existing booking logic here
-  
-      // Update user's balance after successful booking
-      const totalCost = passengers * request.price;
-      await updateUserBalance(-totalCost); // Subtract the charged amount
-  
-      // Redirect or perform other actions as needed
+      if (!validatePassengers() || !validateBalance()) {
+        return;
+      }
+      const reference = generateReference();
+
       const response = await axios.post(
         "/bookings2",
         {
@@ -64,17 +62,30 @@ export default function BookingWidget2({ request }) {
           phone,
           request: request._id,
           price: passengers * request.price,
+          reference
         },
         { withCredentials: true }
       );
+      const updatedBalance = user.balance - (passengers * request.price);
+      await axios.put('/users/update-balance', {
+        id: user._id,
+        balance: updatedBalance
+        }, { withCredentials: true });
       const bookingId = response.data._id;
       setRedirect(`/account/bookings../${bookingId}`);
     } catch (error) {
-      console.error("Error making a booking:", error);
+      console.error("Error accepting request:", error);
     }
   }
 
-  
+  const updateUserBalance = async (amount) => {
+    try {
+      await axios.post("/updateBalance", { amount }, { withCredentials: true });
+      console.log("User balance updated successfully");
+    } catch (error) {
+      console.error("Error updating user balance:", error);
+    }
+  };
 
   if (redirect) {
     return <Navigate to={redirect} />;

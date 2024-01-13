@@ -38,41 +38,59 @@ export default function BookingWidget({ place }) {
     return true;
   };
 
-  const updateUserBalance = async (amount) => {
-    try {
-      await axios.post("/updateBalance", { amount }, { withCredentials: true });
-      console.log("User balance updated successfully");
-    } catch (error) {
-      console.error("Error updating user balance:", error);
+  function generateReference() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < 7; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
     }
-  };
+    return result;
+  }
+  
 
   async function bookThisPlace() {
     try {
-      // Your existing booking logic here
-  
-      // Update user's balance after successful booking
-      const totalCost = passengers * request.price;
-      await updateUserBalance(-totalCost); // Subtract the charged amount
-  
-      // Redirect or perform other actions as needed
+      if (!validatePassengers() || !validateBalance()) {
+        return;
+      }
+      const reference = generateReference();
+
       const response = await axios.post(
         "/bookings",
         {
           passengers,
           name,
           phone,
-          request: request._id,
-          price: passengers * request.price,
+          place: place._id,
+          price: passengers * place.price,
+          reference
         },
         { withCredentials: true }
       );
+
       const bookingId = response.data._id;
-      setRedirect(`/account/bookings../${bookingId}`);
+
+      const updatedBalance = user.balance - (passengers * place.price);
+      await axios.put('/users/update-balance', {
+        id: user._id,
+        balance: updatedBalance
+        }, { withCredentials: true });
+
+
+      // Send a message to the person who posted the offer
+      await axios.post("/messages", {
+        sender: user._id, // Assuming user is the person making the booking
+        receiver: place.owner, // Assuming place.user is the person who posted the offer
+        content: `Booking request for place ${place._id}. Booking ID: ${bookingId}`,
+      });
+
+      setRedirect(`/account/bookings/${bookingId}`);
     } catch (error) {
       console.error("Error making a booking:", error);
     }
   }
+
+  
 
   if (redirect) {
     return <Navigate to={redirect} />;
