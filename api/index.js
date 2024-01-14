@@ -42,18 +42,20 @@ function getUserDataFromReq(req) {
   return new Promise((resolve, reject) => {
     const token = req.cookies.token;
 
-    // Check if the token is not provided
     if (!token) {
-      // Handle the case where JWT is not provided
       return reject(new Error('JWT not provided'));
     }
 
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-      if (err) return reject(err);
+    jwt.verify(token, jwtSecret, {}, (err, userData) => {
+      if (err) {
+        console.error('JWT Verification Error:', err);
+        return reject(new Error('JWT verification failed'));
+      }
       resolve(userData);
     });
   });
 }
+
 
 
 app.get('/api/database', (req,res) => {
