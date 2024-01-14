@@ -134,7 +134,7 @@ export default function TripOfferPage() {
             {province} {selectedProvince === province ? '▲' : '▼'}
           </h2>
 
-          {selectedProvince === province && places.filter(place => place.province === province).map(place => (
+          {selectedProvince === province && places.filter(place => place.province2 === province).map(place => (
             <Link
               key={place._id}
               to={'/place/' + place._id}
