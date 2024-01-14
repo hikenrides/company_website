@@ -40,12 +40,21 @@ app.use(cookieParser());
 
 function getUserDataFromReq(req) {
   return new Promise((resolve, reject) => {
-    jwt.verify(req.cookies.token, jwtSecret, {}, async (err, userData) => {
-      if (err) throw err;
+    const token = req.cookies.token;
+
+    // Check if the token is not provided
+    if (!token) {
+      // Handle the case where JWT is not provided
+      return reject(new Error('JWT not provided'));
+    }
+
+    jwt.verify(token, jwtSecret, {}, (err, userData) => {
+      if (err) return reject(err);
       resolve(userData);
     });
   });
 }
+
 
 app.get('/api/database', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
