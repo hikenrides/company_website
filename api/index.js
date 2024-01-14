@@ -48,7 +48,7 @@ function getUserDataFromReq(req) {
       return reject(new Error('JWT not provided'));
     }
 
-    jwt.verify(token, jwtSecret, {}, (err, userData) => {
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) return reject(err);
       resolve(userData);
     });
