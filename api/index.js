@@ -169,10 +169,16 @@ app.post('/login', async (req, res) => {
           id: userDoc._id,
         },
         jwtSecret,
-        { sameSite: 'None', secure: true }, // Set SameSite and secure attributes
+        {},
         (err, token) => {
           if (err) throw err;
-          res.cookie('token', token, { httpOnly: true }).json(userDoc);
+
+          // Set SameSite attribute here
+          res.cookie('token', token, {
+            httpOnly: true,
+            sameSite: 'None',  // Set SameSite to 'None'
+            secure: true,      // Set secure to true if served over HTTPS
+          }).json(userDoc);
         }
       );
     } else {
@@ -182,6 +188,7 @@ app.post('/login', async (req, res) => {
     res.json('not found');
   }
 });
+
 
 app.get('/profile', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
