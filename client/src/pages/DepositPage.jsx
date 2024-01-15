@@ -45,7 +45,7 @@ const DepositPage = () => {
             Deposit to Capitec Account (1051739098)
           </h1>
           <h2>
-            Note: when making the deposit use your phone number used in your hikenrides account as a reference, the money will reflect in your account within 24 hours
+            Note: when making the deposit use the phone number that you are using in your hikenrides account as a reference, the money will reflect in your account within 24 hours
           </h2>
         </div>
       </div>
