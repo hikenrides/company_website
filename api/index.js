@@ -30,12 +30,12 @@ const client = twilio(accountSid, authToken);
 const corsOptions = {
   origin: ['https://hikenrides.com', 'http://localhost:5173'],
   credentials: true,
+  exposedHeaders: ['set-cookie'],
 };
 
 app.use(cors(corsOptions));
-
-app.use(express.json());
 app.use(cookieParser());
+app.use(express.json());
 
 
 function getUserDataFromReq(req) {
@@ -154,20 +154,27 @@ app.put('/users/update-balance', async (req, res) => {
   res.json(userDoc);
 });
 
-app.post('/login', async (req,res) => {
+app.post('/login', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const {email,password} = req.body;
-  const userDoc = await User.findOne({email});
+  const { email, password } = req.body;
+  const userDoc = await User.findOne({ email });
+
   if (userDoc) {
     const passOk = bcrypt.compareSync(password, userDoc.password);
+
     if (passOk) {
-      jwt.sign({
-        email:userDoc.email,
-        id:userDoc._id
-      }, jwtSecret, {}, (err,token) => {
-        if (err) throw err;
-        res.cookie('token', token).json(userDoc);
-      });
+      jwt.sign(
+        {
+          email: userDoc.email,
+          id: userDoc._id,
+        },
+        jwtSecret,
+        { sameSite: 'None', secure: true }, // Set SameSite and secure attributes
+        (err, token) => {
+          if (err) throw err;
+          res.cookie('token', token, { httpOnly: true }).json(userDoc);
+        }
+      );
     } else {
       res.status(422).json('pass not ok');
     }
@@ -265,14 +272,25 @@ app.post('/withdrawals', (req, res) => {
     }
   });
 });
-app.get('/user-places', (req,res) => {
+app.get('/user-places', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const {token} = req.cookies;
+  const { token } = req.cookies;
+
+  if (!token) {
+    return res.status(401).json({ error: 'JWT Token not provided' });
+  }
+
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    const {id} = userData;
-    res.json( await Place.find({owner:id}) );
+    if (err) {
+      console.error('JWT Verification Error:', err);
+      return res.status(401).json({ error: 'JWT verification failed' });
+    }
+
+    const { id } = userData;
+    res.json(await Place.find({ owner: id }));
   });
 });
+
 
 app.get('/requested-trips', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
