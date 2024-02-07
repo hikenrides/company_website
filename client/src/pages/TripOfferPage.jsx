@@ -100,7 +100,7 @@ export default function TripOfferPage() {
                   {matchingPlaces.map((place) => (
                     <Link
                       key={place._id}
-                      to={'/place/' + place._id}
+                      to={'/trip/' + place._id}
                       className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
                       style={{ marginBottom: '16px' }}
                     >
@@ -137,7 +137,7 @@ export default function TripOfferPage() {
           {selectedProvince === province && places.filter(place => place.province2 === province).map(place => (
             <Link
               key={place._id}
-              to={'/place/' + place._id}
+              to={'/trip/' + place._id}
               className="block cursor-pointer gap-4 bg-gray-100 p-4 rounded-2xl"
               style={{ marginBottom: '16px' }}
             >

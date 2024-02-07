@@ -36,12 +36,12 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/account" element={<ProfilePage />} />
-          <Route path="/account/places" element={<PlacesPage />} />
-          <Route path="/account/places/new" element={<PlacesFormPage />} />
+          <Route path="/account/Mytrips" element={<PlacesPage />} />
+          <Route path="/account/Mytrips/new" element={<PlacesFormPage />} />
           <Route path="/account/Myrequests/new" element={<TripRequest />} />
           <Route path="/account/Myrequests" element={<RequestsPage />} />
-          <Route path="/account/places/:id" element={<PlacesFormPage />} />
-          <Route path="/place/:id" element={<PlacePage />} />
+          <Route path="/account/trips/:id" element={<PlacesFormPage />} />
+          <Route path="/trip/:id" element={<PlacePage />} />
           <Route path="/request/:id" element={<PageRequest />} />
           <Route path="/account/bookings" element={<BookingsPage />} />
           <Route path="/account/bookings/:id" element={<BookingPage />} />

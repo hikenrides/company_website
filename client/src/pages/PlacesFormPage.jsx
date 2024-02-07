@@ -111,7 +111,7 @@ export default function PlacesFormPage() {
   }
 
   if (redirect) {
-    return <Navigate to={'/account/places'} />
+    return <Navigate to={'/account/Mytrips'} />
   }
 
   function renderProvinceOptions() {
