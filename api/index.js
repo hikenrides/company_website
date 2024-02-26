@@ -12,6 +12,8 @@ const Request = require('./models/requests.js');
 const Message = require('./models/message.js');
 const Withdrawals = require('./models/withdrawals.js');
 const twilio = require('twilio');
+const crypto = require("crypto");
+const fetch = require("node-fetch");
 
 const cookieParser = require('cookie-parser');
 
@@ -417,6 +419,68 @@ app.get('/bookings2', async (req,res) => {
   const userData = await getUserDataFromReq(req);
   res.json( await Booking2.find({user:userData.id}).populate('request') );
 });
+
+app.post("/generate-payment-request", (req, res) => {
+  const {
+    siteCode,
+    countryCode,
+    currencyCode,
+    amount,
+    transactionReference,
+    bankReference,
+    cancelUrl,
+    errorUrl,
+    successUrl,
+    notifyUrl,
+    isTest,
+    privateKey,
+  } = req.body;
+
+  const inputString = `${siteCode}${countryCode}${currencyCode}${amount}${transactionReference}${bankReference}${cancelUrl}${errorUrl}${successUrl}${notifyUrl}${isTest}${privateKey}`;
+
+  const calculatedHashResult = generateRequestHashCheck(inputString);
+
+  const data = {
+    countryCode,
+    amount,
+    transactionReference,
+    bankReference,
+    cancelUrl,
+    currencyCode,
+    errorUrl,
+    isTest,
+    notifyUrl,
+    siteCode,
+    successUrl,
+    hashCheck: calculatedHashResult,
+  };
+
+  const options = {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      ApiKey: "qG44drgk2yU0qREN9xf3mJyFFsIZ9WZn ",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  };
+
+  fetch("https://api.ozow.com/postpaymentrequest", options)
+    .then((response) => response.json())
+    .then((data) => res.json(data))
+    .catch((error) => res.status(500).json({ error: error.message }));
+});
+
+function generateRequestHashCheck(inputString) {
+  const stringToHash = inputString.toLowerCase();
+  return getSha512Hash(stringToHash);
+}
+
+function getSha512Hash(stringToHash) {
+  const hash = crypto.createHash("sha512");
+  hash.update(stringToHash);
+  return hash.digest("hex");
+}
 
 app.listen(port, () => {
   console.log(`Server running on PORT ${port}`);
