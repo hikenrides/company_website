@@ -28,7 +28,7 @@ const twilioPhoneNumber = '+13856267146';
 const client = twilio(accountSid, authToken);
 
 const corsOptions = {
-  origin: ['https://hikenrides.com', 'http://localhost:5173'],
+  origin: ['https://hikenrides.com', 'http://localhost:5173', 'http://localhost:5174'],
   credentials: true,
   exposedHeaders: ['set-cookie'],
 };
