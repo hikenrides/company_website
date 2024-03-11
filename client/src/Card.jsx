@@ -50,8 +50,6 @@ const hoverEffect = {
     },
 }
 
-
-
 function Card() {
   return (
     <motion.div className="service_container">
@@ -157,12 +155,12 @@ function Card() {
             </motion.div>
         </motion.div>
 
+        <div className="image_container">
+            <motion.img src={'/images/paystack.jpg'} alt="bg" initial={{x:200, opacity:0}} animate={{x:0, opacity:1}} transition={{duration:.5, delay:0.8}} style={{ margin: 'auto', display: 'block' }} />
+        </div>
+
     </motion.div>
-
-
   )
 }
-
-
 
 export default Card;
