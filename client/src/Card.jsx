@@ -151,7 +151,7 @@ function Card() {
                         4
                     </IconContext.Provider>
                 </motion.span>
-                <h3>The driver will receive payment after getting the reference number <br/>from you at the pickup</h3>
+                <h3>The driver will receive payment after getting the reference number <br/>from you at the pickup location</h3>
             </motion.div>
         </motion.div>
 
