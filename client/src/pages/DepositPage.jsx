@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 const DepositPage = () => {
   const [ozowError, setOzowError] = useState(false);
+  const [paystackError, setPayStackError] = useState(false);
 
   const handleOzowClick = () => {
     // Add your logic to check if the Ozow payment method is available
@@ -9,10 +10,43 @@ const DepositPage = () => {
     setOzowError(true);
   };
 
+  const handlePayStackClick = () => {
+    // Redirect the user to the PayStack payment page
+    window.location.href = "https://paystack.com/pay/jmk8k9skzp";
+    // Set the paystackError state to false (assuming it should be reset after redirection)
+    setPayStackError(false);
+  };
+
+  
+
   return (
-    <div className="text-center max-w-lg mx-auto text-white">
+    <div className="text-center max-w-lg mx-auto text-white mb-30">
       <h2 className="text-xl mb-4">Deposit Options</h2>
       <div className="flex flex-col gap-4 items-center">
+      <button
+          className="bg-blue-300 text-white py-2 px-4 rounded"
+          onClick={handlePayStackClick}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" height="16" width="18" viewBox="0 0 576 512" className="mx-auto">
+            <path d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"/>
+          </svg>
+          Deposit via PayStack Gateway
+        </button>
+
+        {paystackError && (
+          <p className="text-brown-200 flex">
+            <svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="24" width="24" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+ <g transform="translate(0 -1028.4)">
+  <path d="m22 12c0 5.523-4.477 10-10 10-5.5228 0-10-4.477-10-10 0-5.5228 4.4772-10 10-10 5.523 0 10 4.4772 10 10z" transform="translate(0 1029.4)" fill="#c0392b"/>
+  <path d="m22 12c0 5.523-4.477 10-10 10-5.5228 0-10-4.477-10-10 0-5.5228 4.4772-10 10-10 5.523 0 10 4.4772 10 10z" transform="translate(0 1028.4)" fill="#e74c3c"/>
+  <path d="m7.0503 1037.8 3.5357 3.6-3.5357 3.5 1.4142 1.4 3.5355-3.5 3.536 3.5 1.414-1.4-3.536-3.5 3.536-3.6-1.414-1.4-3.536 3.5-3.5355-3.5-1.4142 1.4z" fill="#c0392b"/>
+  <path d="m7.0503 1036.8 3.5357 3.6-3.5357 3.5 1.4142 1.4 3.5355-3.5 3.536 3.5 1.414-1.4-3.536-3.5 3.536-3.6-1.414-1.4-3.536 3.5-3.5355-3.5-1.4142 1.4z" fill="#ecf0f1"/>
+ </g>
+</svg>
+            The selected payment method is currently not available.
+          </p>
+        )}
+
         <button
           className="bg-green-400 text-white py-2 px-4 rounded"
           onClick={handleOzowClick}
