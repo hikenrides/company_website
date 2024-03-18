@@ -48,7 +48,7 @@ export default function BookingsPage() {
             </Link>
           ))
         ) : (
-          <p>You have not yet made any bookings.</p> // Display message when no bookings
+          <p >You have not yet made any bookings.</p> // Display message when no bookings
         )}
       </div>
     </div>
