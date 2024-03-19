@@ -6,7 +6,7 @@ import DropDownProfile from "./DropDownProfile";
 
 export default function Header() {
   const { user } = useContext(UserContext);
-  const [activeTab, setActiveTab] = useState("");
+  const [activeTab, setActiveTab] = useState("tripOffers"); // Initialize active tab
   const [openProfile, setOpenProfile] = useState(false);
 
   let menuRef = useRef();
@@ -37,8 +37,6 @@ export default function Header() {
     setActiveTab(tabName);
   };
 
-  
-
   let easeing = [0.6, -0.05, 0.01, 0.99];
 
   const header = {
@@ -56,7 +54,6 @@ export default function Header() {
       },
     },
   };
-  
 
   return (
     <div className="flex flex-col items-center">
@@ -114,7 +111,7 @@ export default function Header() {
         <Link to={"/account/trips"}>
           <div
             className={`flex text-white cursor-pointer ${
-              activeTab === "tripOffers" ? "shadow-md shadow-gray-300" : ""
+              activeTab === "tripOffers" ? "bg-green-500 rounded-full px-2 py-1" : "" // Add rounded shape and padding to active tab
             }`}
             onClick={() => handleTabClick("tripOffers")}
           >
@@ -125,7 +122,7 @@ export default function Header() {
         <Link to={"/account/requests"}>
           <div
             className={`flex text-white cursor-pointer ${
-              activeTab === "requestedTrips" ? "shadow-md shadow-gray-300" : ""
+              activeTab === "requestedTrips" ? "bg-green-500 rounded-full px-2 py-1" : "" // Add rounded shape and padding to active tab
             }`}
             onClick={() => handleTabClick("requestedTrips")}
           >
