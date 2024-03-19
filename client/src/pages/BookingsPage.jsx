@@ -16,7 +16,7 @@ export default function BookingsPage() {
   }, []);
 
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '60vh' }}>
       <div className="hidden md:block">
         <AccountNav />
       </div>

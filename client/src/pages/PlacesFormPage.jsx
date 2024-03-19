@@ -126,7 +126,9 @@ export default function PlacesFormPage() {
 
   return (
     <div>
+      <div className="hidden md:block">
       <AccountNav />
+      </div>
       <form onSubmit={savePlace}>
       {preInput('From', 'Please indicate your preferred pick-up location for passengers.')}
 
@@ -246,7 +248,7 @@ export default function PlacesFormPage() {
     </div>
     <div className="select-container">
       <label htmlFor="seatsSelect" className="text-white mt-2 -mb-1">
-        Number of Seats: 
+        Seats: 
       </label>
       <select id="seatsSelect" className="bg-gray-300" value={seats} onChange={(ev) => setSeats(ev.target.value)}>
         <option value="2">2</option>
@@ -270,29 +272,29 @@ export default function PlacesFormPage() {
         {preInput('Extra info(optional)','trip rules, etc')}
         <textarea className="bg-gray-300" value={extraInfo} onChange={(ev) => setExtraInfo(ev.target.value)} />
         {preInput('Departure','add departing date, number of passengers and price per person')}
-        <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
-          <div>
-            <h3 className="text-white mt-2 -mb-1">Date</h3>
-          <DatePicker
-            className="bg-gray-300"
-            selected={date}
-            onChange={(date) => setDate(date)} 
-            placeholderText="Select leaving date" 
-            dateFormat="MM/dd/yyyy" 
-          />
-          </div>
-          
-          <div>
-            <h3 className="text-white mt-2 -mb-1">Max number of passengers</h3>
-            <input className="bg-gray-300" type="number" value={maxGuests}
-                   onChange={ev => setMaxGuests(ev.target.value)}/>
-          </div>
-          <div>
-            <h3 className="text-white mt-2 -mb-1">Price per person</h3>
-            <input className="bg-gray-300" type="number" value={price}
-                   onChange={ev => setPrice(ev.target.value)}/>
-          </div>
-        </div>
+        <div className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+  <div>
+    <h3 className="text-white mt-2 -mb-1">Date</h3>
+    <DatePicker
+      className="bg-gray-300"
+      selected={date}
+      onChange={(date) => setDate(date)} 
+      placeholderText="Select leaving date" 
+      dateFormat="MM/dd/yyyy" 
+    />
+  </div>
+  
+  <div>
+    <h3 className="text-white mt-2 -mb-1">Max number of passengers</h3>
+    <input className="bg-gray-300" type="number" value={maxGuests} onChange={ev => setMaxGuests(ev.target.value)}/>
+  </div>
+  
+  <div>
+    <h3 className="text-white mt-2 -mb-1">Price per person</h3>
+    <input className="bg-gray-300" type="number" value={price} onChange={ev => setPrice(ev.target.value)}/>
+  </div>
+</div>
+
         <button className="primary my-4">Save</button>
         {formError && (
         <p style={{ color: 'red' }}>Please fill out all the required information!</p>

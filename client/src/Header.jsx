@@ -6,7 +6,7 @@ import DropDownProfile from "./DropDownProfile";
 
 export default function Header() {
   const { user } = useContext(UserContext);
-  const [activeTab, setActiveTab] = useState("tripOffers"); // Initialize active tab
+  const [activeTab, setActiveTab] = useState(null); // Initialize active tab to null
   const [openProfile, setOpenProfile] = useState(false);
 
   let menuRef = useRef();
@@ -34,7 +34,7 @@ export default function Header() {
   }, [openProfile, setOpenProfile, menuRef]);
 
   const handleTabClick = (tabName) => {
-    setActiveTab(tabName);
+    setActiveTab(tabName === activeTab ? null : tabName); // Toggle active tab
   };
 
   let easeing = [0.6, -0.05, 0.01, 0.99];
@@ -120,7 +120,7 @@ export default function Header() {
         </Link>
         <div className="border-l border-gray-300" style={{ height: '20px', width: '3px' }}></div>
         <Link to={"/account/requests"}>
-          <div
+        <div
             className={`flex text-white cursor-pointer ${
               activeTab === "requestedTrips" ? "bg-green-500 rounded-full px-2 py-1" : "" // Add rounded shape and padding to active tab
             }`}
