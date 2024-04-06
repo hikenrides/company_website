@@ -230,21 +230,24 @@ app.post('/places', (req,res) => {
 
 app.post('/requests', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const {token} = req.cookies;
+  const { token } = req.cookies;
   const {
-    province,from,province2,destination,price
-    ,extraInfo,date,NumOfPassengers,
+    province, from, province2, destination, price,
+    extraInfo, date, NumOfPassengers,
   } = req.body;
+  
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
+    // Assuming user's phone number is available in userData.phone_number
     const RequestDoc = await Request.create({
-      owner:userData.id,price,
-      province,from,province2,destination,
-      extraInfo,date,NumOfPassengers,
+      owner: userData.phone_number, // Assign phone number to owner field
+      price, province, from, province2, destination,
+      extraInfo, date, NumOfPassengers,
     });
     res.json(RequestDoc);
   });
 });
+
 
 app.post('/withdrawals', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);

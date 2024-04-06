@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const RequestSchema = new mongoose.Schema({
-  owner: {type:mongoose.Schema.Types.ObjectId, ref:'User'},
+  owner: String,
   province: String,
   from: String,
   province2: String,
