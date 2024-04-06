@@ -238,7 +238,7 @@ app.post('/requests', (req,res) => {
   
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
-    // Assuming user's phone number is available in userData.phone_number
+    // Use the phone number of the authenticated user as owner
     const RequestDoc = await Request.create({
       owner: userData.phone_number, // Assign phone number to owner field
       price, province, from, province2, destination,
@@ -247,6 +247,8 @@ app.post('/requests', (req,res) => {
     res.json(RequestDoc);
   });
 });
+
+
 
 app.post('/withdrawals', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
