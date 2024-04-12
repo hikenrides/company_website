@@ -1,15 +1,18 @@
 const mongoose = require('mongoose');
 
-const RequestSchema = new mongoose.Schema({
-  owner: String,
+const requestSchema = new mongoose.Schema({
+  owner: {
+    id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    phoneNumber: String,
+  },
   province: String,
   from: String,
   province2: String,
   destination: String,
+  price: Number,
   extraInfo: String,
   date: Date,
   NumOfPassengers: Number,
-  price: Number,
 });
 
 const RequestModel = mongoose.model('Request', RequestSchema);

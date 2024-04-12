@@ -210,25 +210,25 @@ app.post('/logout', (req,res) => {
 });
 
 
-app.post('/places', (req,res) => {
+app.post('/places', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const {token} = req.cookies;
+  const { token } = req.cookies;
   const {
-    province,from,province2,destination,color,brand,type,seats,price
-    ,extraInfo,date,maxGuests,
+    province, from, province2, destination, color, brand, type, seats,
+    extraInfo, date, maxGuests, price,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const placeDoc = await Place.create({
-      owner:userData.id,price,
-      province,from,province2,destination,color,brand,type,seats
-      ,extraInfo,date,maxGuests,
+      owner: { id: userData.id, phoneNumber: userData.phone_number }, // Capture phone number here
+      price, province, from, province2, destination, color, brand, type, seats,
+      extraInfo, date, maxGuests,
     });
     res.json(placeDoc);
   });
 });
 
-app.post('/requests', (req,res) => {
+app.post('/requests', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { token } = req.cookies;
   const {
@@ -238,17 +238,14 @@ app.post('/requests', (req,res) => {
   
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
-    // Use the phone number of the authenticated user as owner
     const RequestDoc = await Request.create({
-      owner: userData.phone_number, // Assign phone number to owner field
+      owner: { id: userData.id, phoneNumber: userData.phone_number },
       price, province, from, province2, destination,
       extraInfo, date, NumOfPassengers,
     });
     res.json(RequestDoc);
   });
 });
-
-
 
 app.post('/withdrawals', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
