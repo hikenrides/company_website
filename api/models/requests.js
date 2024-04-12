@@ -15,6 +15,6 @@ const requestSchema = new mongoose.Schema({
   NumOfPassengers: Number,
 });
 
-const RequestModel = mongoose.model('Request', RequestSchema);
+const RequestModel = mongoose.model('Request', requestSchema);
 
 module.exports = RequestModel;
