@@ -49,10 +49,9 @@ export default function PlacesFormPage() {
   
   useEffect(() => {
     if (!id) {
-      // Fetch user data to get the phone number
       axios.get('/profile', { withCredentials: true }).then(response => {
         const {data} = response;
-        setPhone(data.phone_number); // Set the phone number from the user's data
+        setPhone(data.phone_number);
       });
       return;
     }
@@ -70,7 +69,7 @@ export default function PlacesFormPage() {
       setDate(data.date);
       setMaxGuests(data.maxGuests);
       setPrice(data.price);
-      setPhone(data.owner_number);
+      setPhone(data.phone_number);
     });
   }, [id]);
   

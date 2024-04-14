@@ -234,14 +234,14 @@ app.post('/requests', (req,res) => {
   const {token} = req.cookies;
   const {
     province,from,province2,destination,price
-    ,extraInfo,date,NumOfPassengers,
+    ,extraInfo,owner_number,date,NumOfPassengers,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const RequestDoc = await Request.create({
       owner:userData.id,price,
       province,from,province2,destination,
-      extraInfo,date,NumOfPassengers,
+      extraInfo,owner_number,date,NumOfPassengers,
     });
     res.json(RequestDoc);
   });
@@ -352,7 +352,7 @@ app.put('/requests', async (req,res) => {
   const {token} = req.cookies;
   const {
     id, province,from,province2,destination,
-    extraInfo,date,NumOfPassengers,price,
+    extraInfo,owner_number,date,NumOfPassengers,price,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
@@ -360,7 +360,7 @@ app.put('/requests', async (req,res) => {
     if (userData.id === RequestDoc.owner.toString()) {
       RequestDoc.set({
         province,from,province2,destination,
-        extraInfo,date,NumOfPassengers,price,
+        extraInfo,owner_number,date,NumOfPassengers,price,
       });
       await RequestDoc.save();
       res.json('ok');

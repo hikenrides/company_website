@@ -7,6 +7,7 @@ const RequestSchema = new mongoose.Schema({
   province2: String,
   destination: String,
   extraInfo: String,
+  owner_number: Number,
   date: Date,
   NumOfPassengers: Number,
   price: Number,

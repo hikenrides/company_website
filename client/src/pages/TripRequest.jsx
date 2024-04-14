@@ -25,6 +25,7 @@ export default function TripRequest() {
   const [province2,setProvince2] = useState('');
   const [destination,setDestination] = useState('');
   const [extraInfo,setExtraInfo] = useState('');
+  const [owner_number, setPhone] = useState();
   const [date,setDate] = useState('');
   const [NumOfPassengers,setPassengers] = useState(1);
   const [price,setPrice] = useState(100);
@@ -32,7 +33,7 @@ export default function TripRequest() {
   const [formError, setFormError] = useState(false);
 
   const validateForm = () => {
-    if (province && from && province2 && destination && date && NumOfPassengers && price) {
+    if (province && from && province2 && destination && date && NumOfPassengers && price && owner_number) {
       setFormError(false);
       return true;
     } else {
@@ -43,6 +44,10 @@ export default function TripRequest() {
 
   useEffect(() => {
     if (!id) {
+      axios.get('/profile', { withCredentials: true }).then(response => {
+        const {data} = response;
+        setPhone(data.phone_number);
+      });
       return;
     }
     axios.get('/requests/'+id, { withCredentials: true }).then(response => {
@@ -55,6 +60,7 @@ export default function TripRequest() {
        setDate(data.date);
        setPassengers(data.NumOfPassengers);
        setPrice(data.price);
+       setPhone(data.phone_number)
     });
   }, [id]);
   function inputHeader(text) {
@@ -87,6 +93,7 @@ export default function TripRequest() {
       province2,
       destination,
       extraInfo,
+      owner_number,
       date,
       NumOfPassengers,
       price,
