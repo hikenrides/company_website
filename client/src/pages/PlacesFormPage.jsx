@@ -70,7 +70,7 @@ export default function PlacesFormPage() {
       setDate(data.date);
       setMaxGuests(data.maxGuests);
       setPrice(data.price);
-      setPhone(date.phone_number);
+      setPhone(data.phone_number);
     });
   }, [id]);
   
@@ -101,7 +101,7 @@ export default function PlacesFormPage() {
     }
     const placeData = {
       province, from, province2, destination,
-      color,brand,type,seats, extraInfo,
+      color,brand,type,seats, extraInfo,phone_number,
       date, maxGuests, price,
     };
     if (id) {
