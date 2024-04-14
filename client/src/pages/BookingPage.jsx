@@ -22,6 +22,12 @@ export default function BookingPage() {
     return 'Loading...';
   }
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
+    return formattedDate;
+  };
+
   return (
     <div className="my-8">
       <div className="bg-gray-300 p-6 my-6 rounded-2xl justify-between">
@@ -36,10 +42,7 @@ export default function BookingPage() {
             <span style={{ color: '#00008B' }}>Car-description: </span>{booking.place.color}, {booking.place.brand}, {booking.place.type}, {booking.place.seats} seats
           </h2>
           <h2>
-            <span style={{ color: '#00008B' }}>departing-date: </span> {booking.place.date}
-          </h2>
-          <h2>
-            <span style={{ color: '#00008B' }}>time: </span> 
+            <span style={{ color: '#00008B' }}>departing-date: </span> {formatDate(booking.place.date)}
           </h2>
           <h2>
             <span style={{ color: '#00008B' }}>Reference number: </span> {booking.reference}
