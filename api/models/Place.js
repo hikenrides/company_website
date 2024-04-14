@@ -1,10 +1,7 @@
 const mongoose = require('mongoose');
 
 const placeSchema = new mongoose.Schema({
-  owner: {
-    id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    phoneNumber: Number,
-  },
+  owner: {type:mongoose.Schema.Types.ObjectId, ref:'User'},
   province: String,
   from: String,
   province2: String,
@@ -14,6 +11,7 @@ const placeSchema = new mongoose.Schema({
   type: String,
   seats: String,
   extraInfo: String,
+  phone_number: Number,
   date: Date,
   maxGuests: Number,
   price: Number,

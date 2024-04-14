@@ -32,11 +32,12 @@ export default function PlacesFormPage() {
   const [date,setDate] = useState('');
   const [maxGuests,setMaxGuests] = useState(1);
   const [price,setPrice] = useState(100);
+  const [phone_number, setPhone] = useState();
   const [redirect,setRedirect] = useState(false);
   const [formError, setFormError] = useState(false);
 
   const validateForm = () => {
-    if (province && from && province2 && destination && color && brand && type && seats && date && maxGuests && price) {
+    if (province && from && province2 && destination && color && brand && type && seats && date && maxGuests && price && phone_number) {
       setFormError(false);
       return true;
     } else {
@@ -48,24 +49,31 @@ export default function PlacesFormPage() {
   
   useEffect(() => {
     if (!id) {
+      // Fetch user data to get the phone number
+      axios.get('/profile', { withCredentials: true }).then(response => {
+        const {data} = response;
+        setPhone(data.phone_number); // Set the phone number from the user's data
+      });
       return;
     }
     axios.get('/places/'+id, { withCredentials: true }).then(response => {
-       const {data} = response;
-       setProvince(data.province)
-       setFrom(data.from);
-       setProvince2(data.province2)
-       setDestination(data.address);
-       setColor(data.color);
-       setBrand(data.brand);
-       setType(data.type);
-       setSeats(data.seats);
-       setExtraInfo(data.extraInfo);
-       setDate(data.date);
-       setMaxGuests(data.maxGuests);
-       setPrice(data.price);
+      const {data} = response;
+      setProvince(data.province);
+      setFrom(data.from);
+      setProvince2(data.province2);
+      setDestination(data.address);
+      setColor(data.color);
+      setBrand(data.brand);
+      setType(data.type);
+      setSeats(data.seats);
+      setExtraInfo(data.extraInfo);
+      setDate(data.date);
+      setMaxGuests(data.maxGuests);
+      setPrice(data.price);
+      setPhone(date.phone_number);
     });
   }, [id]);
+  
   function inputHeader(text) {
     return (
       <h2 className="text-white text-2xl mt-4">{text}</h2>
@@ -271,6 +279,7 @@ export default function PlacesFormPage() {
 
         {preInput('Extra info(optional)','trip rules, etc')}
         <textarea className="bg-gray-300" value={extraInfo} onChange={(ev) => setExtraInfo(ev.target.value)} />
+ 
         {preInput('Departure','add departing date, number of passengers and price per person')}
         <div className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
   <div>

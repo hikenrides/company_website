@@ -190,14 +190,14 @@ app.post('/login', async (req, res) => {
 });
 
 
-app.get('/profile', (req,res) => {
+app.get('/profile', async (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {token} = req.cookies;
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) throw err;
-      const {name,email,_id,balance} = await User.findById(userData.id);
-      res.json({name,email,_id,balance});
+      const {name,email,_id,balance,phone_number} = await User.findById(userData.id);
+      res.json({name,email,_id,balance,phone_number}); // Include phone_number in the response
     });
   } else {
     res.json(null);
@@ -205,43 +205,43 @@ app.get('/profile', (req,res) => {
 });
 
 
+
 app.post('/logout', (req,res) => {
   res.cookie('token', '').json(true);
 });
 
 
-app.post('/places', (req, res) => {
+app.post('/places', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
+  const {token} = req.cookies;
   const {
-    province, from, province2, destination, color, brand, type, seats,
-    extraInfo, date, maxGuests, price,
+    province,from,province2,destination,color,brand,type,seats,price
+    ,extraInfo,phone_number,date,maxGuests,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const placeDoc = await Place.create({
-      owner: { id: userData.id, phoneNumber: userData.phone_number }, // Capture phone number here
-      price, province, from, province2, destination, color, brand, type, seats,
-      extraInfo, date, maxGuests,
+      owner:userData.id,price,
+      province,from,province2,destination,color,brand,type,seats
+      ,extraInfo,phone_number,date,maxGuests,
     });
     res.json(placeDoc);
   });
 });
 
-app.post('/requests', (req, res) => {
+app.post('/requests', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
+  const {token} = req.cookies;
   const {
-    province, from, province2, destination, price,
-    extraInfo, date, NumOfPassengers,
+    province,from,province2,destination,price
+    ,extraInfo,date,NumOfPassengers,
   } = req.body;
-  
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const RequestDoc = await Request.create({
-      owner: { id: userData.id, phoneNumber: userData.phone_number },
-      price, province, from, province2, destination,
-      extraInfo, date, NumOfPassengers,
+      owner:userData.id,price,
+      province,from,province2,destination,
+      extraInfo,date,NumOfPassengers,
     });
     res.json(RequestDoc);
   });
@@ -320,7 +320,7 @@ app.put('/places', async (req,res) => {
   const {token} = req.cookies;
   const {
     id, province,from,province2,destination,color,brand,type,seats,
-    extraInfo,date,maxGuests,price,
+    extraInfo,phone_number,date,maxGuests,price,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
@@ -328,7 +328,7 @@ app.put('/places', async (req,res) => {
     if (userData.id === placeDoc.owner.toString()) {
       placeDoc.set({
         province,from,province2,destination,color,brand,type,seats,
-        extraInfo,date,maxGuests,price,
+        extraInfo,phone_number,date,maxGuests,price,
       });
       await placeDoc.save();
       res.json('ok');
