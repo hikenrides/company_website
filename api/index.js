@@ -216,14 +216,14 @@ app.post('/places', (req,res) => {
   const {token} = req.cookies;
   const {
     province,from,province2,destination,color,brand,type,seats,price
-    ,extraInfo,phone_number,date,maxGuests,
+    ,extraInfo,owner_number,date,maxGuests,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const placeDoc = await Place.create({
       owner:userData.id,price,
       province,from,province2,destination,color,brand,type,seats
-      ,extraInfo,phone_number,date,maxGuests,
+      ,extraInfo,owner_number,date,maxGuests,
     });
     res.json(placeDoc);
   });
@@ -320,7 +320,7 @@ app.put('/places', async (req,res) => {
   const {token} = req.cookies;
   const {
     id, province,from,province2,destination,color,brand,type,seats,
-    extraInfo,phone_number,date,maxGuests,price,
+    extraInfo,owner_number,date,maxGuests,price,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
@@ -328,7 +328,7 @@ app.put('/places', async (req,res) => {
     if (userData.id === placeDoc.owner.toString()) {
       placeDoc.set({
         province,from,province2,destination,color,brand,type,seats,
-        extraInfo,phone_number,date,maxGuests,price,
+        extraInfo,owner_number,date,maxGuests,price,
       });
       await placeDoc.save();
       res.json('ok');

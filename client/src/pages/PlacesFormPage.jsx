@@ -32,12 +32,12 @@ export default function PlacesFormPage() {
   const [date,setDate] = useState('');
   const [maxGuests,setMaxGuests] = useState(1);
   const [price,setPrice] = useState(100);
-  const [phone_number, setPhone] = useState();
+  const [owner_number, setPhone] = useState();
   const [redirect,setRedirect] = useState(false);
   const [formError, setFormError] = useState(false);
 
   const validateForm = () => {
-    if (province && from && province2 && destination && color && brand && type && seats && date && maxGuests && price && phone_number) {
+    if (province && from && province2 && destination && color && brand && type && seats && date && maxGuests && price && owner_number) {
       setFormError(false);
       return true;
     } else {
@@ -70,7 +70,7 @@ export default function PlacesFormPage() {
       setDate(data.date);
       setMaxGuests(data.maxGuests);
       setPrice(data.price);
-      setPhone(data.phone_number);
+      setPhone(data.owner_number);
     });
   }, [id]);
   
@@ -101,7 +101,7 @@ export default function PlacesFormPage() {
     }
     const placeData = {
       province, from, province2, destination,
-      color,brand,type,seats, extraInfo,phone_number,
+      color,brand,type,seats, extraInfo, owner_number,
       date, maxGuests, price,
     };
     if (id) {

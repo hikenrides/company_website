@@ -11,7 +11,7 @@ const placeSchema = new mongoose.Schema({
   type: String,
   seats: String,
   extraInfo: String,
-  phone_number: Number,
+  owner_number: Number,
   date: Date,
   maxGuests: Number,
   price: Number,
