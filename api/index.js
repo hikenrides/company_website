@@ -378,28 +378,17 @@ app.post('/bookings', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
   const {
-    place,
-    passengers,
-    name,
-    phone,
-    price,
-    reference,
+    place, passengers, name, phone, price, reference,
   } = req.body;
 
   try {
-    // Retrieve the owner_number associated with the booked place
-    const { owner_number } = await Place.findById(place);
+    // Fetch the place details to get the owner's phone number
+    const placeData = await Place.findById(place);
+    const ownerNumber = placeData.owner_number;
 
-    // Create a new booking document
+    // Create the booking document with the owner's phone number
     const bookingDoc = await Booking.create({
-      place,
-      passengers,
-      name,
-      phone,
-      price,
-      reference,
-      owner_number, // Save the owner's phone number with the booking
-      user: userData.id,
+      place, passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
     });
 
     res.json(bookingDoc);
