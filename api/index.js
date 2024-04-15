@@ -402,16 +402,24 @@ app.post('/bookings2', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
   const {
-    request,passengers,name,phone,price,reference,
+    request, passengers, name, phone, price, reference,
   } = req.body;
-  Booking2.create({
-    request,passengers,name,phone,price,reference,
-    user:userData.id,
-  }).then((doc) => {
-    res.json(doc);
-  }).catch((err) => {
-    throw err;
-  });
+
+  try {
+    // Fetch the request details to get the owner's phone number
+    const requestData = await Request.findById(request);
+    const ownerNumber = requestData.owner_number;
+
+    // Create the booking document with the owner's phone number
+    const bookingDoc = await Booking2.create({
+      request, passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
+    });
+
+    res.json(bookingDoc);
+  } catch (error) {
+    console.error('Error creating booking2:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 

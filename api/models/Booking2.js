@@ -5,6 +5,7 @@ const bookingSchema2 = new mongoose.Schema({
   user: {type:mongoose.Schema.Types.ObjectId, required:true},
   name: {type:String, required:true},
   phone: {type:String, required:true},
+  owner_numer: Number,
   price: Number,
   passengers: Number,
   reference: {type:String, required:true, unique:true},
