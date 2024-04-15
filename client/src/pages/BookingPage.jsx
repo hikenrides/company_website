@@ -45,7 +45,7 @@ export default function BookingPage() {
             <span style={{ color: '#00008B' }}>departing-date: </span> {formatDate(booking.place.date)}
           </h2>
           <h2>
-            <span style={{ color: '#00008B' }}>Driver Phone No: </span> {booking.owner_number}
+            <span style={{ color: '#00008B' }}>Driver Phone No: </span> 0{booking.owner_number}
           </h2>
           <h2>
             <span style={{ color: '#00008B' }}>Reference number: </span> {booking.reference}

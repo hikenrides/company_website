@@ -36,7 +36,7 @@ export default function BookingPage2() {
             <span style={{ color: '#00008B' }}>departing-date: </span> {booking2.request.date}
           </h2>
           <h2>
-            <span style={{ color: '#00008B' }}>Passenger Phone No: </span> {booking2.owner_number}
+            <span style={{ color: '#00008B' }}>Passenger Phone No: </span> 0{booking2.owner_number}
           </h2>
           <h2>
             <span style={{ color: '#00008B' }}>Reference number: </span> {booking2.reference}
