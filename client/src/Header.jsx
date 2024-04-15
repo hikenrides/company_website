@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useContext, useState, useEffect, useRef } from "react";
 import { UserContext } from "./UserContext";
 import { motion } from "framer-motion";
@@ -6,10 +6,22 @@ import DropDownProfile from "./DropDownProfile";
 
 export default function Header() {
   const { user } = useContext(UserContext);
-  const [activeTab, setActiveTab] = useState(null); // Initialize active tab to null
   const [openProfile, setOpenProfile] = useState(false);
+  const [activeTab, setActiveTab] = useState(null); // Initialize active tab to null
+  const location = useLocation();
 
   let menuRef = useRef();
+
+  useEffect(() => {
+    // Update activeTab state based on the current pathname
+    if (location.pathname === "/account/trips") {
+      setActiveTab("tripOffers");
+    } else if (location.pathname === "/account/requests") {
+      setActiveTab("requestedTrips");
+    } else {
+      setActiveTab(null);
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
