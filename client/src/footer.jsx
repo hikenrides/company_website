@@ -7,7 +7,7 @@ import insta from './assets/instaimg.png';
 
 const Footer= () =>{
     return (
-        <div className="footer mt-50">
+        <div className="footer mb-0">
             <div className="sb__footer section__padding">
                 <div className="sb__footer-links">
                     
@@ -50,8 +50,9 @@ const Footer= () =>{
                         <div className="socialmedia">
                             <a href="https://www.facebook.com/profile.php?id=61553868901955"><p><img src={fb} alt=""/></p></a>
                             <p><img src={twitter} alt=""/></p>
-                            <p><img src={linkedin} alt=""/></p>
-                            <p><img src={insta} alt=""/></p>
+                            <a href="https://www.linkedin.com/company/103176597/admin/feed/posts/?feedType=following"><p><img src={linkedin} alt=""/></p></a>
+                            {/*<p><img src={insta} alt=""/></p>*/}
+                           
                         </div>
                     </div>
                 </div>

@@ -12,6 +12,7 @@ const UserSchema = new Schema({
   password: String,
   messages: String,
   balance: Number,
+  registrationDate: {type: Date, default: Date.now},
 });
 
 const UserModel = mongoose.model('User', UserSchema);

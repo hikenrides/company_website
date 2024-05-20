@@ -80,6 +80,7 @@ app.post('/register', async (req,res) => {
       password: bcrypt.hashSync(password, bcryptSalt),
       messages,
       balance,
+      registrationDate: new Date(),
     });
     console.log('User registered:', userDoc);
     res.json(userDoc);
