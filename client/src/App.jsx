@@ -24,7 +24,7 @@ import DepositPage from "./pages/DepositPage.jsx";
 import WithdrawPage from "./pages/WithdrawPage.jsx";
 import WithdrawForm from "./pages/WithdrawForm.jsx";
 
-axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
+axios.defaults.baseURL = import.meta.env.BACKEND_URL;
 axios.defaults.withCredentials = true;
 
 function App() {
