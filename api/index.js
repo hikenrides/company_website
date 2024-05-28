@@ -11,7 +11,6 @@ const Booking2 = require('./models/Booking2.js')
 const Request = require('./models/requests.js');
 const Message = require('./models/message.js');
 const Withdrawals = require('./models/withdrawals.js');
-const twilio = require('twilio');
 
 const cookieParser = require('cookie-parser');
 
@@ -22,10 +21,7 @@ const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
 const bucket = 'hikenrides-booking-app';
 const accountSid = 'ACd5bb965fa354cca20f5398d7b3b301da';
-const authToken = process.env.AUTH_TOKEN;
-const twilioPhoneNumber = '+13856267146';
 
-const client = twilio(accountSid, authToken);
 
 const corsOptions = {
   origin: ['https://hikenrides.com', 'http://localhost:5173', 'http://localhost:5174'],
