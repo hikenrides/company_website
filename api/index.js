@@ -52,7 +52,9 @@ function getUserDataFromReq(req) {
   });
 }
 
-
+app.get('/', (req, res) => {
+  res.send('Hello, this is the root route of the backend!');
+});
 
 app.get('/api/database', (req,res) => {
   mongoose.connect(process.env.MONGO_URL);
