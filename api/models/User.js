@@ -12,6 +12,7 @@ const UserSchema = new Schema({
   password: String,
   messages: String,
   balance: Number,
+  verification: { type: String, default: 'not verified' },
   registrationDate: {type: Date, default: Date.now},
 });
 

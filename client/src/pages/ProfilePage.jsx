@@ -42,6 +42,7 @@ const ProfilePage = () => {
       {subpage === 'profile' && (
         <div className="text-center max-w-lg mx-auto text-white">
           Logged in as {user.name} ({user.email})<br />
+          <h2 className="text-l">Verification Status: {user.verification}</h2>
           <h2 className="text-xl" style={{ color: 'black', marginRight: '8px' }}>Balance: R{user.balance}</h2>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Link to="/deposit" className="bg-gray-400 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Deposit</Link>
