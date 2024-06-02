@@ -13,7 +13,6 @@ const Message = require('./models/message.js');
 const Withdrawals = require('./models/withdrawals.js');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
-const { getUserDataFromReq } = require('./utils');
 
 const upload = multer({ dest: 'uploads/' }); 
 
