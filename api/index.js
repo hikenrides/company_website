@@ -12,31 +12,14 @@ const Request = require('./models/requests.js');
 const Message = require('./models/message.js');
 const Withdrawals = require('./models/withdrawals.js');
 const cookieParser = require('cookie-parser');
-const Grid = require('gridfs-stream');
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' }); 
-
 
 require('dotenv').config();
 const app = express();
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
-
-mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', () => {
-  console.log('Connected to MongoDB');
-});
-
-let gfs;
-
-db.once('open', () => {
-  gfs = Grid(db, mongoose.mongo);
-  gfs.collection('uploads'); // Set collection name
-});
-
+const bucket = 'hikenrides-booking-app';
+const accountSid = 'ACd5bb965fa354cca20f5398d7b3b301da';
 
 const corsOptions = {
   origin: ['https://hikenrides.com', 'http://localhost:5173', 'http://localhost:5174'],
@@ -70,6 +53,11 @@ app.get('/', (req, res) => {
   res.send('Hello, this is the root route of the backend!');
 });
 
+app.get('/api/database', (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  res.json('test ok');
+});
+
 app.post('/register', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { name, gender, phone_number, age, email, isDriver, driverLicense, password, messages, balance } = req.body;
@@ -95,38 +83,6 @@ app.post('/register', async (req, res) => {
   } catch (e) {
     console.error('Registration failed:', e);
     res.status(422).json(e);
-  }
-});
-app.post('/upload-documents', upload.fields([
-  { name: 'idDocument', maxCount: 1 },
-  { name: 'selfieWithDocument', maxCount: 1 }
-]), async (req, res) => {
-  const { id } = await getUserDataFromReq(req);
-
-  const idDocumentFileId = req.files['idDocument'][0].id;
-  const selfieWithDocumentFileId = req.files['selfieWithDocument'][0].id;
-
-  try {
-    await User.findByIdAndUpdate(id, {
-      idDocument: idDocumentFileId,
-      selfieWithDocument: selfieWithDocumentFileId,
-      verificationStatus: 'pending'
-    });
-    res.json({ message: 'Documents uploaded successfully' });
-  } catch (error) {
-    console.error('Error uploading documents:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-app.post('/initiate-verification', async (req, res) => {
-  const { id } = await getUserDataFromReq(req);
-
-  try {
-    await User.findByIdAndUpdate(id, { verificationStatus: 'pending' });
-    res.json({ message: 'Verification process initiated' });
-  } catch (error) {
-    console.error('Error initiating verification process:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -287,7 +243,7 @@ app.post('/withdrawals', (req, res) => {
     amount, accountNumber, accountName, bankName,
   } = req.body;
 
-  jwt.verify(token, jwtSecret, {}, async(err, userData) => {
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) {
       console.error('JWT Verification Error:', err);
       return res.status(500).json({ error: 'Internal Server Error' });
@@ -461,4 +417,3 @@ app.get('/bookings2', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on PORT ${port}`);
 });
-

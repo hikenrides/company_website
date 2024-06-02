@@ -5,13 +5,11 @@ import axios from 'axios';
 import PlacesPage from './PlacesPage';
 import AccountNav from '../AccountNav';
 import RequestsPage from './RequestsPage.jsx';
-import DepositPage from './DepositPage.jsx';
-import WithdrawPage from './WithdrawPage.jsx';
-import VerificationModal from './VerificationModal.jsx';
+import DepositPage from './DepositPage.jsx'; // Added
+import WithdrawPage from './WithdrawPage.jsx'; // Added
 
 const ProfilePage = () => {
   const [redirect, setRedirect] = useState(null);
-  const [showVerificationModal, setShowVerificationModal] = useState(false);
   const { ready, user, setUser } = useContext(UserContext);
   let { subpage } = useParams();
   if (subpage === undefined) {
@@ -22,15 +20,6 @@ const ProfilePage = () => {
     await axios.post('/logout', { withCredentials: true });
     setRedirect('/');
     setUser(null);
-  }
-
-  async function initiateVerification() {
-    try {
-      await axios.post('/initiate-verification', {}, { withCredentials: true });
-      // Update user context or any other relevant UI update
-    } catch (error) {
-      console.error('Error initiating verification:', error);
-    }
   }
 
   if (!ready) {
@@ -45,6 +34,7 @@ const ProfilePage = () => {
     return <Navigate to={redirect} />;
   }
 
+  // Define the style for the verification status value
   const getVerificationValueStyle = (status) => {
     switch (status) {
       case 'not verified':
@@ -72,9 +62,6 @@ const ProfilePage = () => {
             <Link to="/deposit" className="bg-gray-400 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Deposit</Link>
             <Link to="/withdraw" className="bg-gray-400 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Withdraw</Link>
             <button onClick={logout} className="primary max-w-sm mt-10">Logout</button>
-            {user.verification !== 'verified' && (
-              <button onClick={initiateVerification} className="bg-blue-500 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Verify Account</button>
-            )}
           </div>
         </div>
       )}
@@ -90,7 +77,6 @@ const ProfilePage = () => {
       {subpage === 'withdraw' && (
         <WithdrawPage />
       )}
-      {showVerificationModal && <VerificationModal onClose={() => setShowVerificationModal(false)} />}
     </div>
   );
 };
