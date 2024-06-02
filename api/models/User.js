@@ -11,10 +11,10 @@ const UserSchema = new Schema({
   driverLicense: String,
   password: String,
   messages: String,
-  balance: Number,
+  idDocument: String, // Store the ID document file ID
+  verificationStatus: { type: String, default: 'pending' },
+  selfieWithDocument: String,
   verification: { type: String, default: 'not verified' },
-  idDocumentPath: String, // Path to the uploaded ID document
-  photoPath: String, // Path to the uploaded photo
   registrationDate: { type: Date, default: Date.now },
 });
 
