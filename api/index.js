@@ -12,6 +12,10 @@ const Request = require('./models/requests.js');
 const Message = require('./models/message.js');
 const Withdrawals = require('./models/withdrawals.js');
 const cookieParser = require('cookie-parser');
+const multer = require('multer');
+const { getUserDataFromReq } = require('./utils');
+
+const upload = multer({ dest: 'uploads/' }); 
 
 require('dotenv').config();
 const app = express();
@@ -136,6 +140,31 @@ app.get('/messages/:receiverId', async (req, res) => {
   });
 });
 
+app.post('/api/verify', upload.fields([{ name: 'idDocument' }, { name: 'photo' }]), async (req, res) => {
+  const userData = await getUserDataFromReq(req);
+
+  if (!userData) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const idDocument = req.files.idDocument[0];
+  const photo = req.files.photo[0];
+
+  try {
+    // Store the file paths and update verification status in the database
+    await User.findByIdAndUpdate(userData.id, {
+      verification: 'pending',
+      idDocumentPath: idDocument.path,
+      photoPath: photo.path,
+    });
+
+    res.json({ message: 'Verification submitted successfully' });
+  } catch (error) {
+    console.error('Error saving verification data:', error);
+    res.status(500).json({ error: 'Failed to submit verification. Please try again.' });
+  }
+});
+
 app.put('/users/update-balance', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { id, balance } = req.body;
@@ -243,7 +272,7 @@ app.post('/withdrawals', (req, res) => {
     amount, accountNumber, accountName, bankName,
   } = req.body;
 
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+  jwt.verify(token, jwtSecret, {}, async(err, userData) => {
     if (err) {
       console.error('JWT Verification Error:', err);
       return res.status(500).json({ error: 'Internal Server Error' });
@@ -417,3 +446,4 @@ app.get('/bookings2', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on PORT ${port}`);
 });
+

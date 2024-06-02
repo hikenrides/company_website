@@ -7,9 +7,11 @@ import AccountNav from '../AccountNav';
 import RequestsPage from './RequestsPage.jsx';
 import DepositPage from './DepositPage.jsx'; // Added
 import WithdrawPage from './WithdrawPage.jsx'; // Added
+import VerificationModal from './VerificationModal.jsx'; // Add this import
 
 const ProfilePage = () => {
   const [redirect, setRedirect] = useState(null);
+  const [showVerificationModal, setShowVerificationModal] = useState(false); // Add this state
   const { ready, user, setUser } = useContext(UserContext);
   let { subpage } = useParams();
   if (subpage === undefined) {
@@ -62,6 +64,7 @@ const ProfilePage = () => {
             <Link to="/deposit" className="bg-gray-400 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Deposit</Link>
             <Link to="/withdraw" className="bg-gray-400 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Withdraw</Link>
             <button onClick={logout} className="primary max-w-sm mt-10">Logout</button>
+            <button onClick={() => setShowVerificationModal(true)} className="bg-blue-500 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Verify Account</button>
           </div>
         </div>
       )}
@@ -77,9 +80,9 @@ const ProfilePage = () => {
       {subpage === 'withdraw' && (
         <WithdrawPage />
       )}
+      {showVerificationModal && <VerificationModal onClose={() => setShowVerificationModal(false)} />} {/* Add this line */}
     </div>
   );
 };
 
 export default ProfilePage;
-
