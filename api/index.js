@@ -18,8 +18,6 @@ const app = express();
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
-const bucket = 'hikenrides-booking-app';
-const accountSid = 'ACd5bb965fa354cca20f5398d7b3b301da';
 
 const corsOptions = {
   origin: ['https://hikenrides.com', 'http://localhost:5173', 'http://localhost:5174'],
@@ -417,3 +415,4 @@ app.get('/bookings2', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on PORT ${port}`);
 });
+
