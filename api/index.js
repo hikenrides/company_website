@@ -15,6 +15,20 @@ const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 const app = express();
+const multer = require('multer');
+
+// Set up storage configuration for multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Directory to store uploaded files
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`); // File naming convention
+  },
+});
+
+const upload = multer({ storage });
+app.use('/uploads', express.static('uploads'));
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
@@ -80,6 +94,39 @@ app.post('/register', async (req, res) => {
   } catch (e) {
     console.error('Registration failed:', e);
     res.status(422).json(e);
+  }
+});
+// Endpoint for uploading picture and document
+app.post('/upload', upload.fields([{ name: 'picture' }, { name: 'document' }]), async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const userData = await getUserDataFromReq(req);
+  
+  const picture = req.files['picture'] ? req.files['picture'][0].path : null;
+  const document = req.files['document'] ? req.files['document'][0].path : null;
+
+  try {
+    const user = await User.findById(userData.id);
+    if (picture) user.picture = picture;
+    if (document) user.document = document;
+    await user.save();
+    res.json(user);
+  } catch (error) {
+    console.error('Error uploading files:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Endpoint for retrieving user files (if needed)
+app.get('/user/files', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const userData = await getUserDataFromReq(req);
+
+  try {
+    const user = await User.findById(userData.id);
+    res.json({ picture: user.picture, document: user.document });
+  } catch (error) {
+    console.error('Error retrieving files:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
