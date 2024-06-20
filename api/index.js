@@ -24,7 +24,6 @@ const corsOptions = {
   credentials: true,
   exposedHeaders: ['set-cookie'],
 };
-
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
