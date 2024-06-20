@@ -5,12 +5,14 @@ import axios from 'axios';
 import PlacesPage from './PlacesPage';
 import AccountNav from '../AccountNav';
 import RequestsPage from './RequestsPage.jsx';
-import DepositPage from './DepositPage.jsx'; // Added
-import WithdrawPage from './WithdrawPage.jsx'; // Added
+import DepositPage from './DepositPage.jsx';
+import WithdrawPage from './WithdrawPage.jsx';
 
 const ProfilePage = () => {
   const [redirect, setRedirect] = useState(null);
   const { ready, user, setUser } = useContext(UserContext);
+  const [picture, setPicture] = useState(null);
+  const [document, setDocument] = useState(null);
   let { subpage } = useParams();
   if (subpage === undefined) {
     subpage = 'profile';
@@ -20,6 +22,23 @@ const ProfilePage = () => {
     await axios.post('/logout', { withCredentials: true });
     setRedirect('/');
     setUser(null);
+  }
+
+  async function handleFileUpload(e) {
+    e.preventDefault();
+
+    const formData = new FormData();
+    if (picture) formData.append('picture', picture);
+    if (document) formData.append('document', document);
+
+    try {
+      const response = await axios.post('/upload', formData, { withCredentials: true });
+      setUser(response.data); // Update user context with new data
+      alert('Files uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading files:', error);
+      alert('Failed to upload files');
+    }
   }
 
   if (!ready) {
@@ -63,20 +82,31 @@ const ProfilePage = () => {
             <Link to="/withdraw" className="bg-gray-400 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Withdraw</Link>
             <button onClick={logout} className="primary max-w-sm mt-10">Logout</button>
           </div>
+
+          <form onSubmit={handleFileUpload} className="mt-4">
+            <div className="mb-2">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Upload Picture
+              </label>
+              <input type="file" onChange={(e) => setPicture(e.target.files[0])} />
+            </div>
+            <div className="mb-2">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Upload Document
+              </label>
+              <input type="file" onChange={(e) => setDocument(e.target.files[0])} />
+            </div>
+            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+              Upload
+            </button>
+          </form>
+
         </div>
       )}
-      {subpage === 'places' && (
-        <PlacesPage />
-      )}
-      {subpage === 'requests' && (
-        <RequestsPage />
-      )}
-      {subpage === 'deposit' && (
-        <DepositPage />
-      )}
-      {subpage === 'withdraw' && (
-        <WithdrawPage />
-      )}
+      {subpage === 'places' && <PlacesPage />}
+      {subpage === 'requests' && <RequestsPage />}
+      {subpage === 'deposit' && <DepositPage />}
+      {subpage === 'withdraw' && <WithdrawPage />}
     </div>
   );
 };
