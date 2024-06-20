@@ -24,22 +24,32 @@ const ProfilePage = () => {
     setUser(null);
   }
 
-  async function handleFileUpload(e) {
-    e.preventDefault();
+  const handlePictureChange = (e) => {
+    setPicture(e.target.files[0]);
+  };
 
+  const handleDocumentChange = (e) => {
+    setDocument(e.target.files[0]);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const formData = new FormData();
-    if (picture) formData.append('picture', picture);
-    if (document) formData.append('document', document);
+    formData.append('picture', picture);
+    formData.append('document', document);
 
     try {
-      const response = await axios.post('/upload', formData, { withCredentials: true });
-      setUser(response.data); // Update user context with new data
-      alert('Files uploaded successfully');
+      const response = await axios.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        withCredentials: true,
+      });
+      setUser(response.data);
     } catch (error) {
       console.error('Error uploading files:', error);
-      alert('Failed to upload files');
     }
-  }
+  };
 
   if (!ready) {
     return 'Loading...';
@@ -83,24 +93,17 @@ const ProfilePage = () => {
             <button onClick={logout} className="primary max-w-sm mt-10">Logout</button>
           </div>
 
-          <form onSubmit={handleFileUpload} className="mt-4">
-            <div className="mb-2">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Upload Picture
-              </label>
-              <input type="file" onChange={(e) => setPicture(e.target.files[0])} />
-            </div>
-            <div className="mb-2">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Upload Document
-              </label>
-              <input type="file" onChange={(e) => setDocument(e.target.files[0])} />
-            </div>
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-              Upload
-            </button>
-          </form>
-
+          <form onSubmit={handleSubmit} className="mt-4">
+          <div>
+          <label>Upload Picture:</label>
+          <input type="file" onChange={handlePictureChange} />
+        </div>
+        <div>
+          <label>Upload Document:</label>
+          <input type="file" onChange={handleDocumentChange} />
+        </div>
+        <button type="submit">Upload</button>
+      </form>
         </div>
       )}
       {subpage === 'places' && <PlacesPage />}
@@ -112,3 +115,4 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
