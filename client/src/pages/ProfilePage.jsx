@@ -5,14 +5,12 @@ import axios from 'axios';
 import PlacesPage from './PlacesPage';
 import AccountNav from '../AccountNav';
 import RequestsPage from './RequestsPage.jsx';
-import DepositPage from './DepositPage.jsx';
-import WithdrawPage from './WithdrawPage.jsx';
+import DepositPage from './DepositPage.jsx'; // Added
+import WithdrawPage from './WithdrawPage.jsx'; // Added
 
 const ProfilePage = () => {
   const [redirect, setRedirect] = useState(null);
   const { ready, user, setUser } = useContext(UserContext);
-  const [picture, setPicture] = useState(null);
-  const [document, setDocument] = useState(null);
   let { subpage } = useParams();
   if (subpage === undefined) {
     subpage = 'profile';
@@ -23,33 +21,6 @@ const ProfilePage = () => {
     setRedirect('/');
     setUser(null);
   }
-
-  const handlePictureChange = (e) => {
-    setPicture(e.target.files[0]);
-  };
-
-  const handleDocumentChange = (e) => {
-    setDocument(e.target.files[0]);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('picture', picture);
-    formData.append('document', document);
-
-    try {
-      const response = await axios.post('/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        withCredentials: true,
-      });
-      setUser(response.data);
-    } catch (error) {
-      console.error('Error uploading files:', error);
-    }
-  };
 
   if (!ready) {
     return 'Loading...';
@@ -92,27 +63,22 @@ const ProfilePage = () => {
             <Link to="/withdraw" className="bg-gray-400 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Withdraw</Link>
             <button onClick={logout} className="primary max-w-sm mt-10">Logout</button>
           </div>
-
-          <form onSubmit={handleSubmit} className="mt-4">
-          <div>
-          <label>Upload Picture:</label>
-          <input type="file" onChange={handlePictureChange} />
-        </div>
-        <div>
-          <label>Upload Document:</label>
-          <input type="file" onChange={handleDocumentChange} />
-        </div>
-        <button type="submit">Upload</button>
-      </form>
         </div>
       )}
-      {subpage === 'places' && <PlacesPage />}
-      {subpage === 'requests' && <RequestsPage />}
-      {subpage === 'deposit' && <DepositPage />}
-      {subpage === 'withdraw' && <WithdrawPage />}
+      {subpage === 'places' && (
+        <PlacesPage />
+      )}
+      {subpage === 'requests' && (
+        <RequestsPage />
+      )}
+      {subpage === 'deposit' && (
+        <DepositPage />
+      )}
+      {subpage === 'withdraw' && (
+        <WithdrawPage />
+      )}
     </div>
   );
 };
 
 export default ProfilePage;
-
