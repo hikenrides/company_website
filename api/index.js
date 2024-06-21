@@ -16,7 +16,6 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const app = express();
 
-
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
 
@@ -25,6 +24,7 @@ const corsOptions = {
   credentials: true,
   exposedHeaders: ['set-cookie'],
 };
+
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
@@ -83,9 +83,6 @@ app.post('/register', async (req, res) => {
     res.status(422).json(e);
   }
 });
-
-
-
 
 app.post('/messages', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
@@ -418,4 +415,5 @@ app.get('/bookings2', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on PORT ${port}`);
 });
+
 
