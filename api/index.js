@@ -4,21 +4,21 @@ const cors = require('cors');
 const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('./models/User.js');
-const Place = require('./models/Place.js');
-const Booking = require('./models/Booking.js');
-const Booking2 = require('./models/Booking2.js');
-const Request = require('./models/requests.js');
-const Message = require('./models/message.js');
-const Withdrawals = require('./models/withdrawals.js');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
-const router = express.Router();
-const { S3Client } = require('@aws-sdk/client-s3-node');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3-node');
+const User = require('./models/User');
+const Place = require('./models/Place');
+const Booking = require('./models/Booking');
+const Booking2 = require('./models/Booking2');
+const Request = require('./models/requests');
+const Message = require('./models/message');
+const Withdrawals = require('./models/withdrawals');
 
 require('dotenv').config();
-const app = express();
 
+const app = express();
+const router = express.Router();
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
 
@@ -29,7 +29,7 @@ const corsOptions = {
 };
 
 const s3Client = new S3Client({
-  region: 'eu-north-1', // specify your AWS region
+  region: 'eu-north-1',
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
@@ -37,7 +37,7 @@ const s3Client = new S3Client({
 });
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
