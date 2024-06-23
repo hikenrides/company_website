@@ -52,7 +52,7 @@ const VerificationPage = () => {
           </p>
         </div>
         <div className="mb-6">
-          <label className="block mb-2 text-lg font-semibold">Photo of your ID:</label>
+          <label className="block mb-2 text-lg font-semibold">Photo/Copy of your ID:</label>
           <input
             type="file"
             onChange={handleDocumentPhotoChange}
