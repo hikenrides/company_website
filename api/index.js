@@ -18,7 +18,6 @@ const Withdrawals = require('./models/withdrawals');
 require('dotenv').config();
 
 const app = express();
-const router = express.Router();
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
 
@@ -426,7 +425,7 @@ app.get('/bookings2', async (req, res) => {
   res.json(await Booking2.find({ user: userData.id }).populate('request'));
 });
 
-router.post('/upload-verification', upload.fields([{ name: 'idPhoto' }, { name: 'documentPhoto' }]), async (req, res) => {
+app.post('/upload-verification', upload.fields([{ name: 'idPhoto' }, { name: 'documentPhoto' }]), async (req, res) => {
   try {
     const { idPhoto, documentPhoto } = req.files;
 
@@ -460,6 +459,3 @@ router.post('/upload-verification', upload.fields([{ name: 'idPhoto' }, { name: 
 app.listen(port, () => {
   console.log(`Server running on PORT ${port}`);
 });
-
-
-module.exports = router;
