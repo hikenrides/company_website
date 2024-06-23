@@ -5,8 +5,8 @@ import axios from 'axios';
 import PlacesPage from './PlacesPage';
 import AccountNav from '../AccountNav';
 import RequestsPage from './RequestsPage.jsx';
-import DepositPage from './DepositPage.jsx'; // Added
-import WithdrawPage from './WithdrawPage.jsx'; // Added
+import DepositPage from './DepositPage.jsx';
+import WithdrawPage from './WithdrawPage.jsx';
 
 const ProfilePage = () => {
   const [redirect, setRedirect] = useState(null);
@@ -34,7 +34,6 @@ const ProfilePage = () => {
     return <Navigate to={redirect} />;
   }
 
-  // Define the style for the verification status value
   const getVerificationValueStyle = (status) => {
     switch (status) {
       case 'not verified':
@@ -61,6 +60,7 @@ const ProfilePage = () => {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Link to="/deposit" className="bg-gray-400 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Deposit</Link>
             <Link to="/withdraw" className="bg-gray-400 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Withdraw</Link>
+            <Link to="/verification" className="bg-gray-400 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Verify Account</Link>
             <button onClick={logout} className="primary max-w-sm mt-10">Logout</button>
           </div>
         </div>
