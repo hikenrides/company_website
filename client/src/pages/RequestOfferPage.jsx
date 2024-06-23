@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import FindCarForm from "../FindCarForm";
 import { Container, Row, Col } from "reactstrap";
+import { UserContext } from "../UserContext";
 
 const provinces = [
   "Eastern Cape",
@@ -17,10 +18,10 @@ const provinces = [
 ];
 
 export default function RequestOfferPage() {
+  const { user } = useContext(UserContext);
   const [requests, setRequests] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState('');
-  const [matchingRequets, setMatchingRequests] = useState([]);
-
+  const [matchingRequests, setMatchingRequests] = useState([]);
 
   useEffect(() => {
     axios.get('/requests', { withCredentials: true }).then(response => {
@@ -35,21 +36,17 @@ export default function RequestOfferPage() {
   };
 
   const handleSearch = (selectedProvince, destination) => {
-    // Check if places data is available
     if (requests.length === 0) {
-      // Fetch places data again or handle appropriately
       axios.get('/requests').then(response => {
         setRequests(response.data);
         filterAndLogResults(response.data, selectedProvince, destination);
       });
     } else {
-      // Places data is available, proceed to filter and log results
       filterAndLogResults(requests, selectedProvince, destination);
     }
   };
 
   const filterAndLogResults = (requests, selectedProvince, destination) => {
-    // Filter places based on selected province and destination
     const result = requests.filter((request) => {
       const normalizedDestination = request.destination.toLowerCase();
       const normalizedInput = destination.toLowerCase();
@@ -60,7 +57,6 @@ export default function RequestOfferPage() {
       );
     });
 
-    // Update your UI with the matching places or display a message
     if (result.length > 0) {
       setMatchingRequests(result);
     } else {
@@ -86,32 +82,31 @@ export default function RequestOfferPage() {
                   <h2>where are you going?</h2>
                 </div>
               </Col>
-
               <Col lg="8" md="8" sm="12">
                 <FindCarForm onSearch={handleSearch} />
               </Col>
-              {matchingRequets.length > 0 && (
+              {matchingRequests.length > 0 && (
                 <div>
-                  {matchingRequets.map((request) => (
-                     <Link
-                     key={request._id}
-                     to={`/request/${request._id}`}
-                     className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
-                     style={{ marginBottom: '16px' }}
-                   >
-                     <h2 className="font-bold">
-                       <span style={{ color: 'orange' }}>pick-up area:</span> {request.province}, {request.from}
-                     </h2>
-                     <h3 className="text-sm text-gray-500">
-                       <span style={{ color: 'orange' }}>Destination:</span> {request.province2}, {request.destination}
-                     </h3>
-                     <h3 className="text-sm text-gray-500">
-                <span style={{ color: 'orange' }}>Date:</span> {formatDate(request.date)}
-              </h3>
-                     <div className="mt-1">
-                       <span className="font-bold">R{request.price}</span> per person
-                     </div>
-                   </Link>
+                  {matchingRequests.map((request) => (
+                    <Link
+                      key={request._id}
+                      to={`/request/${request._id}`}
+                      className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
+                      style={{ marginBottom: '16px' }}
+                    >
+                      <h2 className="font-bold">
+                        <span style={{ color: 'orange' }}>pick-up area:</span> {request.province}, {request.from}
+                      </h2>
+                      <h3 className="text-sm text-gray-500">
+                        <span style={{ color: 'orange' }}>Destination:</span> {request.province2}, {request.destination}
+                      </h3>
+                      <h3 className="text-sm text-gray-500">
+                        <span style={{ color: 'orange' }}>Date:</span> {formatDate(request.date)}
+                      </h3>
+                      <div className="mt-1">
+                        <span className="font-bold">R{request.price}</span> per person
+                      </div>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -128,27 +123,37 @@ export default function RequestOfferPage() {
           >
             {province} {selectedProvince === province ? '▲' : '▼'}
           </h2>
-          {selectedProvince === province && requests.filter(request => request.province === province).map(request => (
-            <Link
-              key={request._id}
-              to={`/request/${request._id}`}
-              className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
-              style={{ marginBottom: '16px' }}
-            >
-              <h2 className="font-bold">
-                <span style={{ color: 'orange' }}>pick-up area:</span> {request.province}, {request.from}
-              </h2>
-              <h3 className="text-sm text-gray-500">
-                <span style={{ color: 'orange' }}>Destination:</span> {request.province2}, {request.destination}
-              </h3>
-              <h3 className="text-sm text-gray-500">
-                <span style={{ color: 'orange' }}>Date:</span> {request.date}
-              </h3>
-              <div className="mt-1">
-                <span className="font-bold">R{request.price}</span> per person
-              </div>
-            </Link>
-          ))}
+          {selectedProvince === province && (
+            <>
+              {user && user.verification === "not verified" ? (
+                <p className="text-white bg-red-600 p-2 rounded-xl text-center font-semibold text-lg">
+                  Only verified users can view available requests.
+                </p>
+              ) : (
+                requests.filter(request => request.province === province).map(request => (
+                  <Link
+                    key={request._id}
+                    to={`/request/${request._id}`}
+                    className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
+                    style={{ marginBottom: '16px' }}
+                  >
+                    <h2 className="font-bold">
+                      <span style={{ color: 'orange' }}>pick-up area:</span> {request.province}, {request.from}
+                    </h2>
+                    <h3 className="text-sm text-gray-500">
+                      <span style={{ color: 'orange' }}>Destination:</span> {request.province2}, {request.destination}
+                    </h3>
+                    <h3 className="text-sm text-gray-500">
+                      <span style={{ color: 'orange' }}>Date:</span> {formatDate(request.date)}
+                    </h3>
+                    <div className="mt-1">
+                      <span className="font-bold">R{request.price}</span> per person
+                    </div>
+                  </Link>
+                ))
+              )}
+            </>
+          )}
         </div>
       ))}
     </div>

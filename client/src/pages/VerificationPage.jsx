@@ -36,18 +36,35 @@ const VerificationPage = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto text-white">
-      <h2 className="text-xl mb-4">Upload Verification Documents</h2>
+    <div className="max-w-lg mx-auto text-white bg-gray-800 p-8 rounded-lg shadow-lg">
+      <h2 className="text-2xl font-bold mb-6 text-center">Upload Verification Documents</h2>
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block mb-2">Photo holding your ID:</label>
-          <input type="file" onChange={handleIdPhotoChange} required />
+        <div className="mb-6">
+          <label className="block mb-2 text-lg font-semibold">Photo holding your ID:</label>
+          <input
+            type="file"
+            onChange={handleIdPhotoChange}
+            required
+            className="w-full p-2 border border-gray-300 rounded-md bg-gray-700 text-white"
+          />
+          <p className="text-sm text-gray-400 mt-2">
+            Note: This is for safety purposes to ensure that users don't create fake profiles or upload documents that don't belong to them.
+          </p>
         </div>
-        <div className="mb-4">
-          <label className="block mb-2">Photo of your ID:</label>
-          <input type="file" onChange={handleDocumentPhotoChange} required />
+        <div className="mb-6">
+          <label className="block mb-2 text-lg font-semibold">Photo of your ID:</label>
+          <input
+            type="file"
+            onChange={handleDocumentPhotoChange}
+            required
+            className="w-full p-2 border border-gray-300 rounded-md bg-gray-700 text-white"
+          />
         </div>
-        <button type="submit" className="bg-gray-400 text-white py-2 px-6 rounded-full" disabled={uploading}>
+        <button
+          type="submit"
+          className={`w-full py-3 rounded-md text-lg font-semibold transition-colors duration-300 ${uploading ? 'bg-gray-500' : 'bg-green-500 hover:bg-green-600'}`}
+          disabled={uploading}
+        >
           {uploading ? 'Uploading...' : 'Submit'}
         </button>
       </form>

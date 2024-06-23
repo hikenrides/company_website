@@ -1,16 +1,28 @@
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AccountNav from "../AccountNav";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
+import { UserContext } from "../UserContext";
 
 export default function PlacesPage() {
+  const { user } = useContext(UserContext);
   const [places, setPlaces] = useState([]);
+  const [verificationMessage, setVerificationMessage] = useState("");
 
   useEffect(() => {
     axios.get('/user-places', { withCredentials: true }).then(({ data }) => {
       setPlaces(data);
     });
   }, []);
+
+  const handleAddTripClick = (event) => {
+    if (user && user.verification === "not verified") {
+      event.preventDefault(); // Prevents default action of clicking the link
+      setVerificationMessage("Only verified users can create trip offers.");
+    } else {
+      // Proceed to navigate to add trip offer page
+    }
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '60vh' }}>
@@ -21,6 +33,7 @@ export default function PlacesPage() {
         <Link
           className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
           to={'/account/Mytrips/new'}
+          onClick={handleAddTripClick}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -32,6 +45,9 @@ export default function PlacesPage() {
           </svg>
           Add trip offer
         </Link>
+        {verificationMessage && (
+          <p className="text-red-700 mt-2">{verificationMessage}</p>
+        )}
       </div>
       <div className="flex flex-wrap gap-4"> {/* Use flex-wrap for mobile responsiveness */}
         {places.length > 0 &&

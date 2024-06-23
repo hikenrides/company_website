@@ -56,12 +56,14 @@ const ProfilePage = () => {
         <div className="text-center max-w-lg mx-auto text-white">
           Logged in as {user.name} ({user.email})<br />
           <h2 className="text-l">Verification Status: <span style={getVerificationValueStyle(user.verification)}>{user.verification}</span></h2>
-          <h2 className="text-xl" style={{ color: 'black', marginRight: '8px' }}>Balance: R{user.balance}</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {user.verification !== 'verified' && (
+            <Link to="/verification" className="bg-gray-400 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Verify Account</Link>
+          )}
+          <h2 className="text-xl text-black mt-4">Balance: R{user.balance}</h2>
+          <div className="flex flex-col items-center mt-4">
             <Link to="/deposit" className="bg-gray-400 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Deposit</Link>
             <Link to="/withdraw" className="bg-gray-400 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Withdraw</Link>
-            <Link to="/verification" className="bg-gray-400 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Verify Account</Link>
-            <button onClick={logout} className="primary max-w-sm mt-10">Logout</button>
+            <button onClick={logout} className="bg-red-600 text-white py-2 px-6 rounded-full max-w-sm mt-10">Logout</button>
           </div>
         </div>
       )}
