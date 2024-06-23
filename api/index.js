@@ -13,8 +13,8 @@ const Message = require('./models/message.js');
 const Withdrawals = require('./models/withdrawals.js');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
-const AWS = require('aws-sdk');
 const router = express.Router();
+const { S3Client } = require('@aws-sdk/client-s3-node');
 
 require('dotenv').config();
 const app = express();
@@ -28,40 +28,17 @@ const corsOptions = {
   exposedHeaders: ['set-cookie'],
 };
 
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+const s3Client = new S3Client({
+  region: 'eu-north-1', // specify your AWS region
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  },
 });
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-router.post('/upload-verification', upload.fields([{ name: 'idPhoto' }, { name: 'documentPhoto' }]), async (req, res) => {
-  try {
-    const { idPhoto, documentPhoto } = req.files;
-    const uploadToS3 = (file) => {
-      const params = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: `${Date.now()}_${file.originalname}`,
-        Body: file.buffer,
-        ContentType: file.mimetype,
-      };
-      return s3.upload(params).promise();
-    };
-
-    const [idPhotoUpload, documentPhotoUpload] = await Promise.all([uploadToS3(idPhoto[0]), uploadToS3(documentPhoto[0])]);
-
-    res.status(200).json({
-      message: 'Files uploaded successfully',
-      idPhotoUrl: idPhotoUpload.Location,
-      documentPhotoUrl: documentPhotoUpload.Location,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to upload files' });
-  }
-});
-module.exports = router;
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
@@ -449,8 +426,40 @@ app.get('/bookings2', async (req, res) => {
   res.json(await Booking2.find({ user: userData.id }).populate('request'));
 });
 
+router.post('/upload-verification', upload.fields([{ name: 'idPhoto' }, { name: 'documentPhoto' }]), async (req, res) => {
+  try {
+    const { idPhoto, documentPhoto } = req.files;
+
+    const uploadToS3 = async (file) => {
+      const params = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: `${Date.now()}_${file.originalname}`,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+      };
+      const data = await s3Client.send(new PutObjectCommand(params));
+      return data;
+    };
+
+    const [idPhotoUpload, documentPhotoUpload] = await Promise.all([
+      uploadToS3(idPhoto[0]),
+      uploadToS3(documentPhoto[0])
+    ]);
+
+    res.status(200).json({
+      message: 'Files uploaded successfully',
+      idPhotoUrl: idPhotoUpload.Location,
+      documentPhotoUrl: documentPhotoUpload.Location,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to upload files' });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server running on PORT ${port}`);
 });
 
 
+module.exports = router;
