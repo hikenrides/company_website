@@ -199,7 +199,7 @@ app.get('/profile', async (req, res) => {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) throw err;
       const { name, email, _id, balance, phone_number, verification } = await User.findById(userData.id);
-      res.json({ name, email, _id, balance, phone_number, verification }); // Include verification in the response
+      res.json({ name, email, _id, balance, phone_number, verification });
     });
   } else {
     res.json(null);
@@ -426,35 +426,50 @@ app.get('/bookings2', async (req, res) => {
 });
 
 app.post('/upload-verification', upload.fields([{ name: 'idPhoto' }, { name: 'documentPhoto' }]), async (req, res) => {
-  try {
-    const { idPhoto, documentPhoto } = req.files;
+  mongoose.connect(process.env.MONGO_URL);
+  const { idPhoto, documentPhoto } = req.files;
+  const { phoneNumber } = req.body; // Get phone number from request body
 
-    const uploadToS3 = async (file) => {
-      const params = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: `${Date.now()}_${file.originalname}`,
-        Body: file.buffer,
-        ContentType: file.mimetype,
-      };
-      const data = await s3Client.send(new PutObjectCommand(params));
-      return data;
+  const uploadToS3 = async (file, newFileName) => {
+    const params = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: newFileName,
+      Body: file.buffer,
+      ContentType: file.mimetype,
     };
+    const data = await s3Client.send(new PutObjectCommand(params));
+    return `https://${params.Bucket}.s3.amazonaws.com/${params.Key}`;
+  };
 
-    const [idPhotoUpload, documentPhotoUpload] = await Promise.all([
-      uploadToS3(idPhoto[0]),
-      uploadToS3(documentPhoto[0])
+  try {
+    // Generate new file names
+    const idPhotoFileName = `${phoneNumber}_photo.jpg`;
+    const documentPhotoFileName = `${phoneNumber}_identity.pdf`;
+
+    // Upload files to S3
+    const [idPhotoUrl, documentPhotoUrl] = await Promise.all([
+      uploadToS3(idPhoto[0], idPhotoFileName),
+      uploadToS3(documentPhoto[0], documentPhotoFileName)
     ]);
+
+    // Update user's document in MongoDB with the URLs
+    const user = await User.findOneAndUpdate(
+      { phone_number: phoneNumber },
+      { idPhotoUrl, documentPhotoUrl },
+      { new: true }
+    );
 
     res.status(200).json({
       message: 'Files uploaded successfully',
-      idPhotoUrl: idPhotoUpload.Location,
-      documentPhotoUrl: documentPhotoUpload.Location,
+      idPhotoUrl,
+      documentPhotoUrl,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to upload files' });
   }
 });
+
 
 app.listen(port, () => {
   console.log(`Server running on PORT ${port}`);

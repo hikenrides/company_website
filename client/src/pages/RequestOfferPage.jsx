@@ -79,7 +79,7 @@ export default function RequestOfferPage() {
             <Row className="form__row">
               <Col lg="4" md="4">
                 <div className="find__cars-left">
-                  <h2>where are you going?</h2>
+                  <h2>Where are you going?</h2>
                 </div>
               </Col>
               <Col lg="8" md="8" sm="12">
@@ -90,12 +90,18 @@ export default function RequestOfferPage() {
                   {matchingRequests.map((request) => (
                     <Link
                       key={request._id}
-                      to={`/request/${request._id}`}
+                      to={user && user.verification !== "not verified" ? `/request/${request._id}` : '#'}
                       className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
                       style={{ marginBottom: '16px' }}
+                      onClick={(e) => {
+                        if (user && user.verification === "not verified") {
+                          e.preventDefault();
+                          alert("Only verified users can view available requests.");
+                        }
+                      }}
                     >
                       <h2 className="font-bold">
-                        <span style={{ color: 'orange' }}>pick-up area:</span> {request.province}, {request.from}
+                        <span style={{ color: 'orange' }}>Pick-up area:</span> {request.province}, {request.from}
                       </h2>
                       <h3 className="text-sm text-gray-500">
                         <span style={{ color: 'orange' }}>Destination:</span> {request.province2}, {request.destination}
@@ -125,33 +131,33 @@ export default function RequestOfferPage() {
           </h2>
           {selectedProvince === province && (
             <>
-              {user && user.verification === "not verified" ? (
-                <p className="text-white bg-red-600 p-2 rounded-xl text-center font-semibold text-lg">
-                  Only verified users can view available requests.
-                </p>
-              ) : (
-                requests.filter(request => request.province === province).map(request => (
-                  <Link
-                    key={request._id}
-                    to={`/request/${request._id}`}
-                    className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
-                    style={{ marginBottom: '16px' }}
-                  >
-                    <h2 className="font-bold">
-                      <span style={{ color: 'orange' }}>pick-up area:</span> {request.province}, {request.from}
-                    </h2>
-                    <h3 className="text-sm text-gray-500">
-                      <span style={{ color: 'orange' }}>Destination:</span> {request.province2}, {request.destination}
-                    </h3>
-                    <h3 className="text-sm text-gray-500">
-                      <span style={{ color: 'orange' }}>Date:</span> {formatDate(request.date)}
-                    </h3>
-                    <div className="mt-1">
-                      <span className="font-bold">R{request.price}</span> per person
-                    </div>
-                  </Link>
-                ))
-              )}
+              {requests.filter(request => request.province2 === province).map(request => (
+                <Link
+                  key={request._id}
+                  to={user && user.verification !== "not verified" ? `/request/${request._id}` : '#'}
+                  className="block cursor-pointer gap-4 bg-gray-100 p-4 rounded-2xl"
+                  style={{ marginBottom: '16px' }}
+                  onClick={(e) => {
+                    if (user && user.verification === "not verified") {
+                      e.preventDefault();
+                      alert("Only verified users can view available requests.");
+                    }
+                  }}
+                >
+                  <h2 className="font-bold">
+                    <span style={{ color: 'orange' }}>Pick-up area:</span> {request.province}, {request.from}
+                  </h2>
+                  <h3 className="text-sm text-gray-500">
+                    <span style={{ color: 'orange' }}>Destination:</span> {request.province2}, {request.destination}
+                  </h3>
+                  <h3 className="text-sm text-gray-500">
+                    <span style={{ color: 'orange' }}>Date:</span> {formatDate(request.date)}
+                  </h3>
+                  <div className="mt-1">
+                    <span className="font-bold">R{request.price}</span> per person
+                  </div>
+                </Link>
+              ))}
             </>
           )}
         </div>

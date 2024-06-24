@@ -1,10 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const VerificationPage = () => {
   const [idPhoto, setIdPhoto] = useState(null);
   const [documentPhoto, setDocumentPhoto] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState(''); // Add state for phone number
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    // Fetch user profile to get the phone number (assuming you have an endpoint to fetch the profile)
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get('/profile');
+        setPhoneNumber(response.data.phone_number);
+      } catch (error) {
+        console.error('Failed to fetch user profile', error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
 
   const handleIdPhotoChange = (e) => {
     setIdPhoto(e.target.files[0]);
@@ -21,6 +36,7 @@ const VerificationPage = () => {
     const formData = new FormData();
     formData.append('idPhoto', idPhoto);
     formData.append('documentPhoto', documentPhoto);
+    formData.append('phoneNumber', phoneNumber); // Append phone number to form data
 
     try {
       const response = await axios.post('/upload-verification', formData, {

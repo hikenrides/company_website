@@ -14,6 +14,8 @@ const UserSchema = new Schema({
   balance: Number,
   verification: { type: String, default: 'not verified' },
   registrationDate: { type: Date, default: Date.now },
+  idPhotoUrl: String,
+  documentPhotoUrl: String,
 });
 
 const UserModel = mongoose.model('User', UserSchema);
