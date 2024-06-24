@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import axios from 'axios';
 
 const VerificationPage = () => {
   const [idPhoto, setIdPhoto] = useState(null);
   const [documentPhoto, setDocumentPhoto] = useState(null);
-  const [phoneNumber, setPhoneNumber] = useState(''); // Add state for phone number
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [uploading, setUploading] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
-    // Fetch user profile to get the phone number (assuming you have an endpoint to fetch the profile)
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get('/profile');
@@ -36,13 +37,14 @@ const VerificationPage = () => {
     const formData = new FormData();
     formData.append('idPhoto', idPhoto);
     formData.append('documentPhoto', documentPhoto);
-    formData.append('phoneNumber', phoneNumber); // Append phone number to form data
+    formData.append('phoneNumber', phoneNumber);
 
     try {
       const response = await axios.post('/upload-verification', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      alert('Verification documents uploaded successfully!');
+      alert('Verification documents uploaded successfully! We will review and verify the documents within 24 hours.');
+      navigate('/account'); // Redirect to the profile page
     } catch (error) {
       console.error('Error uploading verification documents', error);
       alert('Failed to upload verification documents.');

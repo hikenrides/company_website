@@ -49,9 +49,9 @@ const Footer= () =>{
                         <h4>Social media</h4>
                         <div className="socialmedia">
                             <a href="https://www.facebook.com/profile.php?id=61553868901955"><p><img src={fb} alt=""/></p></a>
-                            <p><img src={twitter} alt=""/></p>
+                            <a href="https://x.com/hikenrides"><p><img src={twitter} alt=""/></p></a>
                             <a href="https://www.linkedin.com/company/103176597/admin/feed/posts/?feedType=following"><p><img src={linkedin} alt=""/></p></a>
-                            {/*<p><img src={insta} alt=""/></p>*/}
+                            <a href="https://www.tiktok.com/@hikenrides?lang=en"><p><img src={insta} alt=""/></p></a>
                            
                         </div>
                     </div>
