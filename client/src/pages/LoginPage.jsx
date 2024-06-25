@@ -1,7 +1,22 @@
-import { Link, Navigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
+import { Link as RouterLink, Navigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../UserContext.jsx";
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Link from '@mui/material/Link';  // Rename Link to avoid conflict
+
+const defaultTheme = createTheme();
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -27,43 +42,82 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="mt-4 grow flex flex-col items-center justify-around">
-      <div className="mb-64">
-        <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl text-center mb-4">
-          Login
-        </h1>
-        <form className="max-w-md mx-auto" onSubmit={handleLoginSubmit}>
-          <input
-            type="email"
-            placeholder="your@email.com"
-            value={email}
-            onChange={(ev) => setEmail(ev.target.value)}
-          />
-          <div className="password-input">
-            <input
+    <ThemeProvider theme={defaultTheme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            marginBottom: 10,  // Add marginBottom to push the footer down
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Login
+          </Typography>
+          <Box component="form" onSubmit={handleLoginSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={email}
+              onChange={(ev) => setEmail(ev.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
               type={showPassword ? "text" : "password"}
-              placeholder="password"
+              id="password"
+              autoComplete="current-password"
               value={password}
               onChange={(ev) => setPassword(ev.target.value)}
             />
-            <input
-              type="checkbox"
-              checked={showPassword}
-              onChange={() => setShowPassword(!showPassword)}
+            <FormControlLabel
+              control={
+                <Checkbox 
+                  checked={showPassword}
+                  onChange={() => setShowPassword(!showPassword)} 
+                  color="primary" 
+                />
+              }
+              label="Show Password"
             />
-            <label>Show Password</label>
-          </div>
-          <button className="primary">Login</button>
-          <div className="text-center py-2 text-gray-500">
-            Don't have an account yet?{" "}
-            <Link className="underline text-black" to={"/register"}>
-              Register now
-            </Link>
-          </div>
-        </form>
-       
-        
-      </div>
-    </div>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Login
+            </Button>
+            <Grid container>
+               {/*<Grid item xs>
+                <Link component={RouterLink} to="/forgot-password" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>*/}
+              <Grid item xs>
+                <Link component={RouterLink} to="/register" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+      </Container>
+    </ThemeProvider>
   );
 }
