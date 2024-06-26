@@ -13,7 +13,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Link from '@mui/material/Link';  // Rename Link to avoid conflict
+import Link from '@mui/material/Link';
 
 const defaultTheme = createTheme();
 
@@ -262,7 +262,7 @@ export default function RegisterPage() {
               Register
             </Button>
             <Grid container justifyContent="flex-end">
-              <Grid item>
+              <Grid item xs>
                 <Link component={RouterLink} to="/login" variant="body2">
                   Already have an account? Sign in
                 </Link>
