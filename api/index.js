@@ -291,8 +291,13 @@ app.get('/user-places', async (req, res) => {
       return res.status(401).json({ error: 'JWT verification failed' });
     }
 
-    const { id } = userData;
-    res.json(await Place.find({ owner: id }));
+    try {
+      const places = await Place.find({ owner: userData.id, status: 'active' });  // Filter by active status
+      res.json(places);
+    } catch (error) {
+      console.error('Error fetching places:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   });
 });
 
