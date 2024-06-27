@@ -21,7 +21,7 @@ export default function BookingsPage() {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" }); // Adjust breakpoint as needed
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '60vh' }}>
+    <div >
       <div className={`hidden md:block ${isMobile ? 'hidden' : ''}`}> {/* Conditionally render AccountNav on larger screens */}
         <AccountNav />
       </div>
@@ -30,7 +30,7 @@ export default function BookingsPage() {
           <p>Loading...</p>
         ) : bookings.length > 0 ? ( // Check if there are bookings
           bookings.map(booking => (
-            <Link key={booking._id} to={`/account/bookings/${booking._id}`} className={`flex gap-4 bg-gray-300 rounded-2xl overflow-hidden mt-6 ${isMobile ? 'flex-col items-center' : ''}`}> {/* Adjust styles for mobile */}
+            <Link key={booking._id} to={`/account/bookings/${booking._id}`} className={`flex gap-4 bg-gray-300 rounded-2xl overflow-hidden mt-6 ${isMobile ? 'flex-col items-center' : ''}`}>
               <div className={`py-3 pr-3 grow ${isMobile ? 'w-full' : ''}`}> {/* Adjust layout and width for mobile */}
                 {booking.place && ( // Add null check for booking.place
                   <AddressLink className="my-2 block">
