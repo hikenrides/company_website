@@ -3,6 +3,8 @@ import AccountNav from "../AccountNav";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { UserContext } from "../UserContext";
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function RequestsPage() {
   const { user } = useContext(UserContext);
@@ -11,7 +13,7 @@ export default function RequestsPage() {
 
   useEffect(() => {
     axios.get('/requested-trips', { withCredentials: true }).then(({ data }) => {
-      setRequests(data.filter(request => request.status !== 'deleted')); // Filter out deleted requests
+      setRequests(data.filter(request => request.status !== 'deleted')); 
     });
   }, []);
 
@@ -33,11 +35,11 @@ export default function RequestsPage() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '60vh' }}>
-      <div className="hidden md:block">
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '60vh' }}>
+      <div className="hidden md:block mb-4">
         <AccountNav />
       </div>
-      <div className="text-center mb-4">
+      <div className="mb-4">
         <Link
           className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
           to={'/account/Myrequests/new'}
@@ -80,9 +82,9 @@ export default function RequestsPage() {
                 </div>
               </Link>
               <button onClick={() => handleDeleteRequest(request._id)} className="ml-4 text-red-500 hover:text-red-700">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <IconButton aria-label="delete">
+                  <DeleteIcon />
+                </IconButton>
               </button>
             </div>
           ))}
