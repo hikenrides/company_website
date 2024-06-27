@@ -336,15 +336,51 @@ app.delete('/places/:id', async (req, res) => {
     }
   });
 });
+app.delete('/requests/:id', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { token } = req.cookies;
+  const requestId = req.params.id;
+
+  if (!token) {
+    return res.status(401).json({ error: 'JWT Token not provided' });
+  }
+
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) {
+      console.error('JWT Verification Error:', err);
+      return res.status(401).json({ error: 'JWT verification failed' });
+    }
+
+    try {
+      const request = await Request.findById(requestId);
+      if (!request) {
+        return res.status(404).json({ error: 'Request not found' });
+      }
+
+      if (request.owner.toString() !== userData.id) {
+        return res.status(403).json({ error: 'Forbidden' });
+      }
+
+      request.status = 'deleted';
+      await request.save();
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error deleting request:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+});
 
 app.get('/requested-trips', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { token } = req.cookies;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     const { id } = userData;
-    res.json(await Request.find({ owner: id }));
+    res.json(await Request.find({ owner: id, status: 'active' })); 
   });
 });
+
 
 app.get('/places/:id', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);

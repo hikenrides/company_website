@@ -11,17 +11,25 @@ export default function RequestsPage() {
 
   useEffect(() => {
     axios.get('/requested-trips', { withCredentials: true }).then(({ data }) => {
-      setRequests(data);
+      setRequests(data.filter(request => request.status !== 'deleted')); // Filter out deleted requests
     });
   }, []);
 
   const handleAddRequestClick = (event) => {
     if (user && user.verification === "not verified") {
-      event.preventDefault(); // Prevents default action of clicking the link
+      event.preventDefault();
       setVerificationMessage("Only verified users can create trip requests.");
     } else {
       // Proceed to navigate to add trip request page
     }
+  };
+
+  const handleDeleteRequest = (requestId) => {
+    axios.delete(`/requests/${requestId}`, { withCredentials: true })
+      .then(() => {
+        setRequests(requests.filter(request => request._id !== requestId));
+      })
+      .catch(err => console.error('Error deleting request:', err));
   };
 
   return (
@@ -29,7 +37,7 @@ export default function RequestsPage() {
       <div className="hidden md:block">
         <AccountNav />
       </div>
-      <div className="text-center mb-4"> {/* Added spacing for mobile view */}
+      <div className="text-center mb-4">
         <Link
           className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
           to={'/account/Myrequests/new'}
@@ -49,16 +57,11 @@ export default function RequestsPage() {
           <p className="text-red-700 mt-2">{verificationMessage}</p>
         )}
       </div>
-      <div className="flex flex-wrap gap-4"> {/* Use flex-wrap for mobile responsiveness */}
+      <div className="flex flex-wrap gap-4">
         {requests.length > 0 &&
           requests.map((request) => (
-            <Link
-              key={request._id}
-              to={`/account/Myrequests/${request._id}`}
-              className="w-full flex cursor-pointer shadow-md rounded-2xl overflow-hidden p-4 mb-4"
-              style={{ backgroundColor: 'white' }}
-            >
-              <div className="grow"> {/* Utilize flex-grow for better content distribution */}
+            <div key={request._id} className="w-full flex cursor-pointer shadow-md rounded-2xl overflow-hidden p-4 mb-4" style={{ backgroundColor: 'white' }}>
+              <Link to={`/account/Myrequests/${request._id}`} className="flex-grow">
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <h2 className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>pick-up area:</h2>
                   <span>{request.from}</span>
@@ -75,8 +78,13 @@ export default function RequestsPage() {
                   <p className="text-sm mt-2" style={{ color: 'orange', marginRight: '8px' }}>date:</p>
                   <span>{new Date(request.date).toLocaleDateString('en-US')}</span>
                 </div>
-              </div>
-            </Link>
+              </Link>
+              <button onClick={() => handleDeleteRequest(request._id)} className="ml-4 text-red-500 hover:text-red-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           ))}
       </div>
     </div>
