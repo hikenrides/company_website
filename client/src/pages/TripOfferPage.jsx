@@ -26,7 +26,8 @@ export default function TripOfferPage() {
 
   useEffect(() => {
     axios.get('/places', { withCredentials: true }).then(response => {
-      setPlaces(response.data);
+      const activePlaces = response.data.filter(place => place.status === "active");
+      setPlaces(activePlaces);
     });
   }, []);
 
@@ -37,8 +38,9 @@ export default function TripOfferPage() {
   const handleSearch = (selectedProvince, destination) => {
     if (places.length === 0) {
       axios.get('/places').then(response => {
-        setPlaces(response.data);
-        filterAndLogResults(response.data, selectedProvince, destination);
+        const activePlaces = response.data.filter(place => place.status === "active");
+        setPlaces(activePlaces);
+        filterAndLogResults(activePlaces, selectedProvince, destination);
       });
     } else {
       filterAndLogResults(places, selectedProvince, destination);

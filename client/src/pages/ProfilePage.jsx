@@ -55,6 +55,9 @@ const ProfilePage = () => {
       {subpage === 'profile' && (
         <div className="text-center max-w-lg mx-auto text-white">
           Logged in as {user.name} ({user.email})<br />
+          <h2 className="text-l">Gender: <span>0{user.gender}</span></h2>
+          <h2 className="text-l">Phone number: <span>0{user.phone_number}</span></h2>
+          <h2 className="text-l">Age: <span>{user.age}</span></h2>
           <h2 className="text-l">Verification Status: <span style={getVerificationValueStyle(user.verification)}>{user.verification}</span></h2>
           {user.verification !== 'verified' && (
             <Link to="/verification" className="bg-gray-400 text-white inline-flex gap-1 py-2 px-6 rounded-full max-w-sm mt-2">Verify Account</Link>

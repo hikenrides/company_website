@@ -25,7 +25,8 @@ export default function RequestOfferPage() {
 
   useEffect(() => {
     axios.get('/requests', { withCredentials: true }).then(response => {
-      setRequests(response.data);
+      const activeRequests = response.data.filter(request => request.status === "active");
+      setRequests(activeRequests);
     }).catch(error => {
       console.error("Error fetching requests: ", error);
     });
@@ -38,8 +39,9 @@ export default function RequestOfferPage() {
   const handleSearch = (selectedProvince, destination) => {
     if (requests.length === 0) {
       axios.get('/requests').then(response => {
-        setRequests(response.data);
-        filterAndLogResults(response.data, selectedProvince, destination);
+        const activeRequests = response.data.filter(request => request.status === "active");
+        setRequests(activeRequests);
+        filterAndLogResults(activeRequests, selectedProvince, destination);
       });
     } else {
       filterAndLogResults(requests, selectedProvince, destination);

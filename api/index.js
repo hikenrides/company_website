@@ -198,8 +198,8 @@ app.get('/profile', async (req, res) => {
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) throw err;
-      const { name, email, _id, balance, phone_number, verification } = await User.findById(userData.id);
-      res.json({ name, email, _id, balance, phone_number, verification });
+      const { name, email, _id, balance, phone_number, verification, age, gender } = await User.findById(userData.id);
+      res.json({ name, email, _id, balance, phone_number, verification, age, gender });
     });
   } else {
     res.json(null);
@@ -215,14 +215,14 @@ app.post('/places', (req, res) => {
   const { token } = req.cookies;
   const {
     province, from, province2, destination, color, brand, type, seats, price,
-    extraInfo, owner_number, date, maxGuests,
+    extraInfo, owner_number, date, maxGuests,status,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const placeDoc = await Place.create({
       owner: userData.id, price,
       province, from, province2, destination, color, brand, type, seats,
-      extraInfo, owner_number, date, maxGuests,
+      extraInfo, owner_number, date, maxGuests,status,
     });
     res.json(placeDoc);
   });
@@ -233,14 +233,14 @@ app.post('/requests', (req, res) => {
   const { token } = req.cookies;
   const {
     province, from, province2, destination, price,
-    extraInfo, owner_number, date, NumOfPassengers,
+    extraInfo, owner_number, date, NumOfPassengers,status
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const RequestDoc = await Request.create({
       owner: userData.id, price,
       province, from, province2, destination,
-      extraInfo, owner_number, date, NumOfPassengers,
+      extraInfo, owner_number, date, NumOfPassengers,status
     });
     res.json(RequestDoc);
   });
@@ -393,7 +393,7 @@ app.put('/places', async (req, res) => {
   const { token } = req.cookies;
   const {
     id, province, from, province2, destination, color, brand, type, seats,
-    extraInfo, owner_number, date, maxGuests, price,
+    extraInfo, owner_number, date, maxGuests, price,status,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
@@ -401,7 +401,7 @@ app.put('/places', async (req, res) => {
     if (userData.id === placeDoc.owner.toString()) {
       placeDoc.set({
         province, from, province2, destination, color, brand, type, seats,
-        extraInfo, owner_number, date, maxGuests, price,
+        extraInfo, owner_number, date, maxGuests, price,status,
       });
       await placeDoc.save();
       res.json('ok');
@@ -425,7 +425,7 @@ app.put('/requests', async (req, res) => {
   const { token } = req.cookies;
   const {
     id, province, from, province2, destination,
-    extraInfo, owner_number, date, NumOfPassengers, price,
+    extraInfo, owner_number, date, NumOfPassengers, price,status,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
@@ -433,7 +433,7 @@ app.put('/requests', async (req, res) => {
     if (userData.id === RequestDoc.owner.toString()) {
       RequestDoc.set({
         province, from, province2, destination,
-        extraInfo, owner_number, date, NumOfPassengers, price,
+        extraInfo, owner_number, date, NumOfPassengers, price,status,
       });
       await RequestDoc.save();
       res.json('ok');
