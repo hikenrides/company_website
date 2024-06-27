@@ -296,6 +296,42 @@ app.get('/user-places', async (req, res) => {
   });
 });
 
+app.delete('/places/:id', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { token } = req.cookies;
+  const placeId = req.params.id;
+
+  if (!token) {
+    return res.status(401).json({ error: 'JWT Token not provided' });
+  }
+
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) {
+      console.error('JWT Verification Error:', err);
+      return res.status(401).json({ error: 'JWT verification failed' });
+    }
+
+    try {
+      const place = await Place.findById(placeId);
+      if (!place) {
+        return res.status(404).json({ error: 'Place not found' });
+      }
+
+      if (place.owner.toString() !== userData.id) {
+        return res.status(403).json({ error: 'Forbidden' });
+      }
+
+      place.status = 'deleted';
+      await place.save();
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error deleting place:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+});
+
 app.get('/requested-trips', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { token } = req.cookies;

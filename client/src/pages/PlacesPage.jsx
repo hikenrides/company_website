@@ -17,11 +17,19 @@ export default function PlacesPage() {
 
   const handleAddTripClick = (event) => {
     if (user && user.verification === "not verified") {
-      event.preventDefault(); // Prevents default action of clicking the link
+      event.preventDefault();
       setVerificationMessage("Only verified users can create trip offers.");
     } else {
       // Proceed to navigate to add trip offer page
     }
+  };
+
+  const handleDeleteTrip = (placeId) => {
+    axios.delete(`/places/${placeId}`, { withCredentials: true })
+      .then(() => {
+        setPlaces(places.filter(place => place._id !== placeId));
+      })
+      .catch(err => console.error('Error deleting place:', err));
   };
 
   return (
@@ -29,7 +37,7 @@ export default function PlacesPage() {
       <div className="hidden md:block">
         <AccountNav />
       </div>
-      <div className="text-center mb-4"> {/* Added spacing for mobile view */}
+      <div className="text-center mb-4">
         <Link
           className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
           to={'/account/Mytrips/new'}
@@ -49,16 +57,11 @@ export default function PlacesPage() {
           <p className="text-red-700 mt-2">{verificationMessage}</p>
         )}
       </div>
-      <div className="flex flex-wrap gap-4"> {/* Use flex-wrap for mobile responsiveness */}
+      <div className="flex flex-wrap gap-4">
         {places.length > 0 &&
           places.map((place) => (
-            <Link
-              key={place._id}
-              to={`/account/places/${place._id}`}
-              className="w-full flex cursor-pointer shadow-md rounded-2xl overflow-hidden p-4 mb-4"
-              style={{ backgroundColor: 'white' }}
-            >
-              <div className="flex-grow"> {/* Utilize flex-grow for better content distribution */}
+            <div key={place._id} className="w-full flex cursor-pointer shadow-md rounded-2xl overflow-hidden p-4 mb-4" style={{ backgroundColor: 'white' }}>
+              <Link to={`/account/places/${place._id}`} className="flex-grow">
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <h2 className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>pick-up area:</h2>
                   <span>{place.province}, {place.from}</span>
@@ -75,8 +78,13 @@ export default function PlacesPage() {
                   <p className="text-sm mt-2" style={{ color: 'orange', marginRight: '8px' }}>date:</p>
                   <span>{new Date(place.date).toLocaleDateString('en-US')}</span>
                 </div>
-              </div>
-            </Link>
+              </Link>
+              <button onClick={() => handleDeleteTrip(place._id)} className="ml-4 text-red-500 hover:text-red-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           ))}
       </div>
     </div>
