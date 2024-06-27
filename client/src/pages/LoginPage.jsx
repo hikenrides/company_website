@@ -29,11 +29,15 @@ export default function LoginPage() {
     ev.preventDefault();
     try {
       const { data } = await axios.post("/login", { email, password }, { withCredentials: true });
-      setUser(data);
-      alert("Login successful");
-      setRedirect(true);
+      if (data && data._id) {
+        setUser(data);
+        alert("Login successful");
+        setRedirect(true);
+      } else {
+        alert("Login failed: Invalid credentials");
+      }
     } catch (e) {
-      alert("Login failed");
+      alert("Login failed: Invalid credentials");
     }
   }
 

@@ -162,33 +162,32 @@ app.post('/login', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { email, password } = req.body;
   const userDoc = await User.findOne({ email });
-
   if (userDoc) {
     const passOk = bcrypt.compareSync(password, userDoc.password);
-
     if (passOk) {
       jwt.sign(
         {
           email: userDoc.email,
           id: userDoc._id,
+          name: userDoc.name,
         },
         jwtSecret,
         {},
         (err, token) => {
           if (err) throw err;
-
-          res.cookie('token', token, {
+          res.cookie("token", token, {
             httpOnly: true,
-            sameSite: 'None',
-            secure: true,
+            secure: true, // Ensure secure flag is set
+            sameSite: "strict", // Adjust as necessary
+            maxAge: 24 * 60 * 60 * 1000, // Set token expiration time
           }).json(userDoc);
         }
       );
     } else {
-      res.status(422).json('pass not ok');
+      res.status(401).json({ error: "Invalid credentials" });
     }
   } else {
-    res.json('not found');
+    res.status(401).json({ error: "Invalid credentials" });
   }
 });
 
