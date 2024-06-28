@@ -99,109 +99,116 @@ app.post('/register', async (req, res) => {
 
 app.post('/messages', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
+  const userData = await getUserDataFromReq(req);
 
-    const { sender, receiver, content } = req.body;
+  const { sender, receiver, content } = req.body;
 
-    try {
-      if (userData.id !== sender) {
-        return res.status(403).json({ error: 'Forbidden' });
-      }
-
-      const messageDoc = await Message.create({
-        sender,
-        receiver,
-        content,
-      });
-
-      res.json(messageDoc);
-    } catch (error) {
-      console.error('Error creating message:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+  try {
+    if (userData.id !== sender) {
+      return res.status(403).json({ error: 'Forbidden' });
     }
-  });
+
+    const messageDoc = await Message.create({
+      sender,
+      receiver,
+      content,
+    });
+
+    res.json(messageDoc);
+  } catch (error) {
+    console.error('Error creating message:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 app.get('/messages/:receiverId', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
+  const userData = await getUserDataFromReq(req);
+  const { receiverId } = req.params;
 
-    const { receiverId } = req.params;
-
-    try {
-      if (userData.id !== receiverId) {
-        return res.status(403).json({ error: 'Forbidden' });
-      }
-
-      const messages = await Message.find({ receiver: receiverId });
-
-      res.json(messages);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+  try {
+    if (userData.id !== receiverId) {
+      return res.status(403).json({ error: 'Forbidden' });
     }
-  });
+
+    const messages = await Message.find({ receiver: receiverId });
+
+    res.json(messages);
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 app.put('/users/update-balance', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { id, balance } = req.body;
   const userData = await getUserDataFromReq(req);
+  
   if (userData.id !== id) {
     return res.status(403).json({ error: 'Forbidden' });
   }
-  const userDoc = await User.findByIdAndUpdate(id, { balance }, { new: true });
-  res.json(userDoc);
+
+  try {
+    const userDoc = await User.findByIdAndUpdate(id, { balance }, { new: true });
+    res.json(userDoc);
+  } catch (error) {
+    console.error('Error updating balance:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 app.post('/login', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { email, password } = req.body;
-  const userDoc = await User.findOne({ email });
-  if (userDoc) {
-    const passOk = bcrypt.compareSync(password, userDoc.password);
-    if (passOk) {
-      jwt.sign(
-        {
-          email: userDoc.email,
-          id: userDoc._id,
-          name: userDoc.name,
-        },
-        jwtSecret,
-        {},
-        (err, token) => {
-          if (err) throw err;
-          res.cookie("token", token, {
-            httpOnly: true,
-            secure: true, // Ensure secure flag is set
-            sameSite: "None", // Adjust as necessary
-            maxAge: 24 * 60 * 60 * 1000, // Set token expiration time
-          }).json(userDoc);
-        }
-      );
+
+  try {
+    const userDoc = await User.findOne({ email });
+
+    if (userDoc) {
+      const passOk = bcrypt.compareSync(password, userDoc.password);
+
+      if (passOk) {
+        jwt.sign(
+          {
+            email: userDoc.email,
+            id: userDoc._id,
+            name: userDoc.name,
+          },
+          jwtSecret,
+          {},
+          (err, token) => {
+            if (err) throw err;
+            res.cookie("token", token, {
+              httpOnly: true,
+              secure: true, // Ensure secure flag is set
+              sameSite: "None", // Adjust as necessary
+              maxAge: 24 * 60 * 60 * 1000, // Set token expiration time
+            }).json(userDoc);
+          }
+        );
+      } else {
+        res.status(401).json({ error: "Invalid credentials" });
+      }
     } else {
       res.status(401).json({ error: "Invalid credentials" });
     }
-  } else {
-    res.status(401).json({ error: "Invalid credentials" });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
 app.get('/profile', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  if (token) {
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-      if (err) throw err;
-      const { name, email, _id, balance, phone_number, verification, age, gender } = await User.findById(userData.id);
-      res.json({ name, email, _id, balance, phone_number, verification, age, gender });
-    });
-  } else {
-    res.json(null);
+  const userData = await getUserDataFromReq(req);
+
+  try {
+    const { name, email, _id, balance, phone_number, verification, age, gender } = await User.findById(userData.id);
+    res.json({ name, email, _id, balance, phone_number, verification, age, gender });
+  } catch (error) {
+    console.error('Profile fetch error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -209,260 +216,221 @@ app.post('/logout', (req, res) => {
   res.cookie('token', '').json(true);
 });
 
-app.post('/places', (req, res) => {
+app.post('/places', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
+  const userData = await getUserDataFromReq(req);
+
   const {
     province, from, province2, destination, color, brand, type, seats, price,
-    extraInfo, owner_number, date, maxGuests,status,
+    extraInfo, owner_number, date, maxGuests, status,
   } = req.body;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
+
+  try {
     const placeDoc = await Place.create({
       owner: userData.id, price,
       province, from, province2, destination, color, brand, type, seats,
-      extraInfo, owner_number, date, maxGuests,status,
+      extraInfo, owner_number, date, maxGuests, status,
     });
     res.json(placeDoc);
-  });
+  } catch (error) {
+    console.error('Error creating place:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
-app.post('/requests', (req, res) => {
+app.post('/requests', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
+  const userData = await getUserDataFromReq(req);
+
   const {
     province, from, province2, destination, price,
-    extraInfo, owner_number, date, NumOfPassengers,status
+    extraInfo, owner_number, date, NumOfPassengers, status
   } = req.body;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
+
+  try {
     const RequestDoc = await Request.create({
       owner: userData.id, price,
       province, from, province2, destination,
-      extraInfo, owner_number, date, NumOfPassengers,status
+      extraInfo, owner_number, date, NumOfPassengers, status
     });
     res.json(RequestDoc);
-  });
+  } catch (error) {
+    console.error('Error creating request:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
-app.post('/withdrawals', (req, res) => {
+app.post('/withdrawals', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
+  const userData = await getUserDataFromReq(req);
 
-  const { token } = req.cookies;
   const {
     amount, accountNumber, accountName, bankName,
   } = req.body;
 
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) {
-      console.error('JWT Verification Error:', err);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
+  try {
+    const withdrawalsDoc = await Withdrawals.create({
+      owner: userData.id,
+      amount,
+      accountNumber,
+      accountName,
+      bankName,
+    });
 
-    try {
-      const withdrawalsDoc = await Withdrawals.create({
-        owner: userData.id,
-        amount,
-        accountNumber,
-        accountName,
-        bankName,
-      });
-
-      res.json(withdrawalsDoc);
-    } catch (error) {
-      console.error('Withdrawals Creation Error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
+    res.json(withdrawalsDoc);
+  } catch (error) {
+    console.error('Withdrawals Creation Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 app.get('/user-places', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
+  const userData = await getUserDataFromReq(req);
 
-  if (!token) {
-    return res.status(401).json({ error: 'JWT Token not provided' });
+  try {
+    const places = await Place.find({ owner: userData.id });
+    res.json(places);
+  } catch (error) {
+    console.error('Fetching User Places Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) {
-      console.error('JWT Verification Error:', err);
-      return res.status(401).json({ error: 'JWT verification failed' });
-    }
-
-    try {
-      const places = await Place.find({ owner: userData.id, status: 'active' });  // Filter by active status
-      res.json(places);
-    } catch (error) {
-      console.error('Error fetching places:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
 });
 
-app.delete('/places/:id', async (req, res) => {
+app.get('/user-requests', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  const placeId = req.params.id;
+  const userData = await getUserDataFromReq(req);
 
-  if (!token) {
-    return res.status(401).json({ error: 'JWT Token not provided' });
+  try {
+    const requests = await Request.find({ owner: userData.id });
+    res.json(requests);
+  } catch (error) {
+    console.error('Fetching User Requests Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) {
-      console.error('JWT Verification Error:', err);
-      return res.status(401).json({ error: 'JWT verification failed' });
-    }
-
-    try {
-      const place = await Place.findById(placeId);
-      if (!place) {
-        return res.status(404).json({ error: 'Place not found' });
-      }
-
-      if (place.owner.toString() !== userData.id) {
-        return res.status(403).json({ error: 'Forbidden' });
-      }
-
-      place.status = 'deleted';
-      await place.save();
-
-      res.json({ success: true });
-    } catch (error) {
-      console.error('Error deleting place:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-});
-app.delete('/requests/:id', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  const requestId = req.params.id;
-
-  if (!token) {
-    return res.status(401).json({ error: 'JWT Token not provided' });
-  }
-
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) {
-      console.error('JWT Verification Error:', err);
-      return res.status(401).json({ error: 'JWT verification failed' });
-    }
-
-    try {
-      const request = await Request.findById(requestId);
-      if (!request) {
-        return res.status(404).json({ error: 'Request not found' });
-      }
-
-      if (request.owner.toString() !== userData.id) {
-        return res.status(403).json({ error: 'Forbidden' });
-      }
-
-      request.status = 'deleted';
-      await request.save();
-
-      res.json({ success: true });
-    } catch (error) {
-      console.error('Error deleting request:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-});
-
-app.get('/requested-trips', (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    const { id } = userData;
-    res.json(await Request.find({ owner: id, status: 'active' })); 
-  });
-});
-
-
-app.get('/places/:id', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { id } = req.params;
-  res.json(await Place.findById(id));
-});
-
-app.put('/places', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  const {
-    id, province, from, province2, destination, color, brand, type, seats,
-    extraInfo, owner_number, date, maxGuests, price,status,
-  } = req.body;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
-    const placeDoc = await Place.findById(id);
-    if (userData.id === placeDoc.owner.toString()) {
-      placeDoc.set({
-        province, from, province2, destination, color, brand, type, seats,
-        extraInfo, owner_number, date, maxGuests, price,status,
-      });
-      await placeDoc.save();
-      res.json('ok');
-    }
-  });
 });
 
 app.get('/places', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  res.json(await Place.find());
+
+  try {
+    const places = await Place.find();
+    res.json(places);
+  } catch (error) {
+    console.error('Fetching Places Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/requests', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+
+  try {
+    const requests = await Request.find();
+    res.json(requests);
+  } catch (error) {
+    console.error('Fetching Requests Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/places/:id', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { id } = req.params;
+
+  try {
+    const place = await Place.findById(id);
+    res.json(place);
+  } catch (error) {
+    console.error('Fetching Place by ID Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 app.get('/requests/:id', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { id } = req.params;
-  res.json(await Request.findById(id));
+
+  try {
+    const request = await Request.findById(id);
+    res.json(request);
+  } catch (error) {
+    console.error('Fetching Request by ID Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.put('/places', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const userData = await getUserDataFromReq(req);
+  const {
+    id, province, from, province2, destination, color, brand, type, seats, price,
+    extraInfo, owner_number, date, maxGuests, status,
+  } = req.body;
+
+  try {
+    const placeDoc = await Place.findById(id);
+
+    if (userData.id !== placeDoc.owner.toString()) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
+
+    placeDoc.set({
+      province, from, province2, destination, color, brand, type, seats, price,
+      extraInfo, owner_number, date, maxGuests, status,
+    });
+
+    await placeDoc.save();
+    res.json('ok');
+  } catch (error) {
+    console.error('Updating Place Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 app.put('/requests', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
+  const userData = await getUserDataFromReq(req);
   const {
-    id, province, from, province2, destination,
-    extraInfo, owner_number, date, NumOfPassengers, price,status,
+    id, province, from, province2, destination, price,
+    extraInfo, owner_number, date, NumOfPassengers, status
   } = req.body;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
-    const RequestDoc = await Request.findById(id);
-    if (userData.id === RequestDoc.owner.toString()) {
-      RequestDoc.set({
-        province, from, province2, destination,
-        extraInfo, owner_number, date, NumOfPassengers, price,status,
-      });
-      await RequestDoc.save();
-      res.json('ok');
-    }
-  });
-});
 
-app.get('/requests', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  res.json(await Request.find());
+  try {
+    const RequestDoc = await Request.findById(id);
+
+    if (userData.id !== RequestDoc.owner.toString()) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
+
+    RequestDoc.set({
+      province, from, province2, destination, price,
+      extraInfo, owner_number, date, NumOfPassengers, status
+    });
+
+    await RequestDoc.save();
+    res.json('ok');
+  } catch (error) {
+    console.error('Updating Request Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 app.post('/bookings', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
+
   const {
-    place, passengers, name, phone, price, reference,
+    place, user, checkIn, checkOut, numberOfGuests, price, name, phone, brand, status
   } = req.body;
 
   try {
-    const placeData = await Place.findById(place);
-    const ownerNumber = placeData.owner_number;
-
     const bookingDoc = await Booking.create({
-      place, passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
+      place, user, checkIn, checkOut, numberOfGuests, price, name, phone, brand, status
     });
-
     res.json(bookingDoc);
   } catch (error) {
-    console.error('Error creating booking:', error);
+    console.error('Creating Booking Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -470,21 +438,18 @@ app.post('/bookings', async (req, res) => {
 app.post('/bookings2', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
+
   const {
-    request, passengers, name, phone, price, reference,
+    request, user, checkIn, checkOut, numberOfGuests, price, name, phone, status
   } = req.body;
 
   try {
-    const requestData = await Request.findById(request);
-    const ownerNumber = requestData.owner_number;
-
     const bookingDoc = await Booking2.create({
-      request, passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
+      request, user, checkIn, checkOut, numberOfGuests, price, name, phone, status
     });
-
     res.json(bookingDoc);
   } catch (error) {
-    console.error('Error creating booking2:', error);
+    console.error('Creating Booking2 Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -492,61 +457,54 @@ app.post('/bookings2', async (req, res) => {
 app.get('/bookings', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
-  res.json(await Booking.find({ user: userData.id }).populate('place'));
+
+  try {
+    const bookings = await Booking.find({ user: userData.id }).populate('place');
+    res.json(bookings);
+  } catch (error) {
+    console.error('Fetching Bookings Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 app.get('/bookings2', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
-  res.json(await Booking2.find({ user: userData.id }).populate('request'));
-});
-
-app.post('/upload-verification', upload.fields([{ name: 'idPhoto' }, { name: 'documentPhoto' }]), async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { idPhoto, documentPhoto } = req.files;
-  const { phoneNumber } = req.body; // Get phone number from request body
-
-  const uploadToS3 = async (file, newFileName) => {
-    const params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: newFileName,
-      Body: file.buffer,
-      ContentType: file.mimetype,
-    };
-    const data = await s3Client.send(new PutObjectCommand(params));
-    return `https://${params.Bucket}.s3.amazonaws.com/${params.Key}`;
-  };
 
   try {
-    // Generate new file names
-    const idPhotoFileName = `${phoneNumber}_photo.jpg`;
-    const documentPhotoFileName = `${phoneNumber}_identity.pdf`;
-
-    // Upload files to S3
-    const [idPhotoUrl, documentPhotoUrl] = await Promise.all([
-      uploadToS3(idPhoto[0], idPhotoFileName),
-      uploadToS3(documentPhoto[0], documentPhotoFileName)
-    ]);
-
-    // Update user's document in MongoDB with the URLs
-    const user = await User.findOneAndUpdate(
-      { phone_number: phoneNumber },
-      { idPhotoUrl, documentPhotoUrl },
-      { new: true }
-    );
-
-    res.status(200).json({
-      message: 'Files uploaded successfully',
-      idPhotoUrl,
-      documentPhotoUrl,
-    });
+    const bookings2 = await Booking2.find({ user: userData.id }).populate('request');
+    res.json(bookings2);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to upload files' });
+    console.error('Fetching Bookings2 Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
+app.post('/uploads', upload.array('photos'), async (req, res) => {
+  try {
+    const uploadPromises = req.files.map(async (file) => {
+      const ext = file.originalname.split('.').pop();
+      const newFilename = `${Date.now()}.${ext}`;
+
+      await s3Client.send(new PutObjectCommand({
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Key: newFilename,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+        ACL: 'public-read',
+      }));
+
+      return `https://${process.env.AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${newFilename}`;
+    });
+
+    const uploadedFiles = await Promise.all(uploadPromises);
+    res.json(uploadedFiles);
+  } catch (error) {
+    console.error('Upload Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 app.listen(port, () => {
-  console.log(`Server running on PORT ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
