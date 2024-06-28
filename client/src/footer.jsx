@@ -26,7 +26,7 @@ const Footer= () =>{
                     <div className="sb__footer-links_div">
                         <h4>Contact Us
                         </h4>
-                        <p>Whatsapp: +27 645388351</p>
+                        <p>Whatsapp: +27824724089</p>
                         <p>Email: info@hikenrides.com</p>
                     </div>
                     <div className="sb__footer-links_div">
