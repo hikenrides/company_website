@@ -209,7 +209,6 @@ app.post('/login', async (req, res) => {
 });
 
 
-
 app.get('/profile', authenticate, async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
 
