@@ -168,38 +168,42 @@ app.put('/users/update-balance', async (req, res) => {
 });
 
 
-// Login route example
 app.post('/login', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { email, password } = req.body;
 
   try {
+    console.log('Connecting to database...');
     const user = await User.findOne({ email });
     if (!user) {
+      console.log('User not found:', email);
       return res.status(400).json({ error: 'Invalid email or password' });
     }
 
     const isPasswordValid = bcrypt.compareSync(password, user.password);
     if (!isPasswordValid) {
+      console.log('Password is invalid for user:', email);
       return res.status(400).json({ error: 'Invalid email or password' });
     }
 
+    console.log('Generating JWT for user:', email);
     const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
     });
 
-    res.json({ message: 'Login successful' });
+    res.json({ message: 'Login successful', _id: user._id });
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 
 app.get('/profile', authenticate, async (req, res) => {

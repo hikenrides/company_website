@@ -14,7 +14,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Link from '@mui/material/Link';  // Rename Link to avoid conflict
+import Link from '@mui/material/Link';
 
 const defaultTheme = createTheme();
 
@@ -28,6 +28,7 @@ export default function LoginPage() {
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
     try {
+      console.log('Sending login request...', email, password);
       const { data } = await axios.post("/login", { email, password }, { withCredentials: true });
       if (data && data._id) {
         setUser(data);
@@ -37,6 +38,7 @@ export default function LoginPage() {
         alert("Login failed: Invalid credentials");
       }
     } catch (e) {
+      console.error('Error during login:', e);
       alert("Login failed: Invalid credentials");
     }
   }
@@ -55,7 +57,7 @@ export default function LoginPage() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            marginBottom: 10,  // Add marginBottom to push the footer down
+            marginBottom: 10,
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -108,11 +110,6 @@ export default function LoginPage() {
               Login
             </Button>
             <Grid container>
-               {/*<Grid item xs>
-                <Link component={RouterLink} to="/forgot-password" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>*/}
               <Grid item xs>
                 <Link component={RouterLink} to="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
