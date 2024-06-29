@@ -167,7 +167,6 @@ app.put('/users/update-balance', async (req, res) => {
   }
 });
 
-const jwt = require('jsonwebtoken');
 
 // Login route example
 app.post('/login', async (req, res) => {
