@@ -42,15 +42,12 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 
-function getUserDataFromReq(req) {
+async function getUserDataFromReq(req) {
+  const token = req.cookies.token;
+  if (!token) throw new Error('JWT not provided');
+
   return new Promise((resolve, reject) => {
-    const token = req.cookies.token;
-
-    if (!token) {
-      return reject(new Error('JWT not provided'));
-    }
-
-    jwt.verify(token, jwtSecret, {}, (err, userData) => {
+    jwt.verify(token, jwtSecret, (err, userData) => {
       if (err) {
         console.error('JWT Verification Error:', err);
         return reject(new Error('JWT verification failed'));
@@ -58,6 +55,17 @@ function getUserDataFromReq(req) {
       resolve(userData);
     });
   });
+}
+
+function authenticate(req, res, next) {
+  getUserDataFromReq(req)
+    .then(userData => {
+      req.userData = userData;
+      next();
+    })
+    .catch(err => {
+      res.status(401).json({ error: err.message });
+    });
 }
 
 app.get('/', (req, res) => {
@@ -96,6 +104,7 @@ app.post('/register', async (req, res) => {
     res.status(422).json(e);
   }
 });
+
 
 app.post('/messages', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
@@ -158,53 +167,47 @@ app.put('/users/update-balance', async (req, res) => {
   }
 });
 
+const jwt = require('jsonwebtoken');
+
+// Login route example
 app.post('/login', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { email, password } = req.body;
 
   try {
-    const userDoc = await User.findOne({ email });
-
-    if (userDoc) {
-      const passOk = bcrypt.compareSync(password, userDoc.password);
-
-      if (passOk) {
-        jwt.sign(
-          {
-            email: userDoc.email,
-            id: userDoc._id,
-            name: userDoc.name,
-          },
-          jwtSecret,
-          {},
-          (err, token) => {
-            if (err) throw err;
-            res.cookie("token", token, {
-              httpOnly: true,
-              secure: true, // Ensure secure flag is set
-              sameSite: "None", // Adjust as necessary
-              maxAge: 24 * 60 * 60 * 1000, // Set token expiration time
-            }).json(userDoc);
-          }
-        );
-      } else {
-        res.status(401).json({ error: "Invalid credentials" });
-      }
-    } else {
-      res.status(401).json({ error: "Invalid credentials" });
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid email or password' });
     }
+
+    const isPasswordValid = bcrypt.compareSync(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ error: 'Invalid email or password' });
+    }
+
+    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+      sameSite: 'strict',
+    });
+
+    res.json({ message: 'Login successful' });
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('Error during login:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-app.get('/profile', async (req, res) => {
+
+app.get('/profile', authenticate, async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const userData = await getUserDataFromReq(req);
 
   try {
-    const { name, email, _id, balance, phone_number, verification, age, gender } = await User.findById(userData.id);
+    const { name, email, _id, balance, phone_number, verification, age, gender } = await User.findById(req.userData.id);
     res.json({ name, email, _id, balance, phone_number, verification, age, gender });
   } catch (error) {
     console.error('Profile fetch error:', error);
@@ -216,10 +219,8 @@ app.post('/logout', (req, res) => {
   res.cookie('token', '').json(true);
 });
 
-app.post('/places', async (req, res) => {
+app.post('/places', authenticate, async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const userData = await getUserDataFromReq(req);
-
   const {
     province, from, province2, destination, color, brand, type, seats, price,
     extraInfo, owner_number, date, maxGuests, status,
@@ -227,7 +228,7 @@ app.post('/places', async (req, res) => {
 
   try {
     const placeDoc = await Place.create({
-      owner: userData.id, price,
+      owner: req.userData.id, price,
       province, from, province2, destination, color, brand, type, seats,
       extraInfo, owner_number, date, maxGuests, status,
     });
@@ -238,10 +239,8 @@ app.post('/places', async (req, res) => {
   }
 });
 
-app.post('/requests', async (req, res) => {
+app.post('/requests', authenticate, async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const userData = await getUserDataFromReq(req);
-
   const {
     province, from, province2, destination, price,
     extraInfo, owner_number, date, NumOfPassengers, status
@@ -249,7 +248,7 @@ app.post('/requests', async (req, res) => {
 
   try {
     const RequestDoc = await Request.create({
-      owner: userData.id, price,
+      owner: req.userData.id, price,
       province, from, province2, destination,
       extraInfo, owner_number, date, NumOfPassengers, status
     });
@@ -260,26 +259,50 @@ app.post('/requests', async (req, res) => {
   }
 });
 
-app.post('/withdrawals', async (req, res) => {
+app.post('/withdrawals', authenticate, async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const userData = await getUserDataFromReq(req);
-
   const {
     amount, accountNumber, accountName, bankName,
   } = req.body;
 
   try {
-    const withdrawalsDoc = await Withdrawals.create({
-      owner: userData.id,
+    const withdrawalDoc = await Withdrawals.create({
+      owner: req.userData.id,
       amount,
       accountNumber,
       accountName,
       bankName,
+      status: 'pending',
     });
-
-    res.json(withdrawalsDoc);
+    res.json(withdrawalDoc);
   } catch (error) {
-    console.error('Withdrawals Creation Error:', error);
+    console.error('Error creating withdrawal:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/withdrawals/:owner', authenticate, async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { owner } = req.params;
+
+  try {
+    const withdrawals = await Withdrawals.find({ owner });
+    res.json(withdrawals);
+  } catch (error) {
+    console.error('Error fetching withdrawals:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/user/:id', authenticate, async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { id } = req.params;
+
+  try {
+    const userDoc = await User.findById(id);
+    res.json(userDoc);
+  } catch (error) {
+    console.error('Error fetching user:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
