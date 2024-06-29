@@ -19,7 +19,8 @@ require('dotenv').config();
 
 const app = express();
 const bcryptSalt = bcrypt.genSaltSync(10);
-const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
+const jwtSecret = process.env.JWT_SECRET || 'fasefraw4r5r3wq45wdfgw34twdfg';
+
 
 const corsOptions = {
   origin: ['https://hikenrides.com', 'http://localhost:5173', 'http://localhost:5174'],
@@ -60,13 +61,16 @@ async function getUserDataFromReq(req) {
 function authenticate(req, res, next) {
   getUserDataFromReq(req)
     .then(userData => {
+      console.log('User Data:', userData);
       req.userData = userData;
       next();
     })
     .catch(err => {
+      console.error('Authentication Error:', err);
       res.status(401).json({ error: err.message });
     });
 }
+
 
 app.get('/', (req, res) => {
   res.send('Hello, this is the root route of the backend!');

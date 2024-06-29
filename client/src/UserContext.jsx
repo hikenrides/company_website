@@ -9,12 +9,15 @@ export function UserContextProvider({ children }) {
 
   useEffect(() => {
     if (!user) {
-      axios.get('/profile').then(({ data }) => {
+      axios.get('/profile', { withCredentials: true }).then(({ data }) => {
         setUser(data);
         setReady(true);
+      }).catch((error) => {
+        console.error('Error fetching profile:', error);
+        setReady(true); // Set ready to true even if there's an error
       });
     }
-  }, []);
+  }, [user]);
 
   return (
     <UserContext.Provider value={{ user, setUser, ready }}>
