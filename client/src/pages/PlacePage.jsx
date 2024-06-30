@@ -1,13 +1,12 @@
-import { Link, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {Link, useParams} from "react-router-dom";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import BookingWidget from "../BookingWidget";
 import AddressLink from "../AddressLink";
 
 export default function PlacePage() {
-  const { id } = useParams();
-  const [place, setPlace] = useState(null);
-
+  const {id} = useParams();
+  const [place,setPlace] = useState(null);
   useEffect(() => {
     if (!id) {
       return;
@@ -24,6 +23,8 @@ export default function PlacePage() {
     const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
     return formattedDate;
   };
+
+
 
   return (
     <div className="mt-4 bg-gray-100 -mx-8 px-8 pt-8">

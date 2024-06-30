@@ -198,8 +198,8 @@ app.get('/profile', async (req, res) => {
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) throw err;
-      const { name, email, _id, balance, phone_number, verification, age, gender } = await User.findById(userData.id);
-      res.json({ name, email, _id, balance, phone_number, verification, age, gender });
+      const { name, email, _id, balance, phone_number, verification } = await User.findById(userData.id);
+      res.json({ name, email, _id, balance, phone_number, verification });
     });
   } else {
     res.json(null);
@@ -215,14 +215,14 @@ app.post('/places', (req, res) => {
   const { token } = req.cookies;
   const {
     province, from, province2, destination, color, brand, type, seats, price,
-    extraInfo, owner_number, date, maxGuests,status,
+    extraInfo, owner_number, date, maxGuests,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const placeDoc = await Place.create({
       owner: userData.id, price,
       province, from, province2, destination, color, brand, type, seats,
-      extraInfo, owner_number, date, maxGuests,status,
+      extraInfo, owner_number, date, maxGuests,
     });
     res.json(placeDoc);
   });
@@ -233,14 +233,14 @@ app.post('/requests', (req, res) => {
   const { token } = req.cookies;
   const {
     province, from, province2, destination, price,
-    extraInfo, owner_number, date, NumOfPassengers,status
+    extraInfo, owner_number, date, NumOfPassengers,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const RequestDoc = await Request.create({
       owner: userData.id, price,
       province, from, province2, destination,
-      extraInfo, owner_number, date, NumOfPassengers,status
+      extraInfo, owner_number, date, NumOfPassengers,
     });
     res.json(RequestDoc);
   });
@@ -291,13 +291,8 @@ app.get('/user-places', async (req, res) => {
       return res.status(401).json({ error: 'JWT verification failed' });
     }
 
-    try {
-      const places = await Place.find({ owner: userData.id, status: 'active' });  // Filter by active status
-      res.json(places);
-    } catch (error) {
-      console.error('Error fetching places:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
+    const { id } = userData;
+    res.json(await Place.find({ owner: id }));
   });
 });
 
@@ -336,51 +331,15 @@ app.delete('/places/:id', async (req, res) => {
     }
   });
 });
-app.delete('/requests/:id', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  const requestId = req.params.id;
-
-  if (!token) {
-    return res.status(401).json({ error: 'JWT Token not provided' });
-  }
-
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) {
-      console.error('JWT Verification Error:', err);
-      return res.status(401).json({ error: 'JWT verification failed' });
-    }
-
-    try {
-      const request = await Request.findById(requestId);
-      if (!request) {
-        return res.status(404).json({ error: 'Request not found' });
-      }
-
-      if (request.owner.toString() !== userData.id) {
-        return res.status(403).json({ error: 'Forbidden' });
-      }
-
-      request.status = 'deleted';
-      await request.save();
-
-      res.json({ success: true });
-    } catch (error) {
-      console.error('Error deleting request:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-});
 
 app.get('/requested-trips', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { token } = req.cookies;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     const { id } = userData;
-    res.json(await Request.find({ owner: id, status: 'active' })); 
+    res.json(await Request.find({ owner: id }));
   });
 });
-
 
 app.get('/places/:id', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
@@ -393,7 +352,7 @@ app.put('/places', async (req, res) => {
   const { token } = req.cookies;
   const {
     id, province, from, province2, destination, color, brand, type, seats,
-    extraInfo, owner_number, date, maxGuests, price,status,
+    extraInfo, owner_number, date, maxGuests, price,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
@@ -401,7 +360,7 @@ app.put('/places', async (req, res) => {
     if (userData.id === placeDoc.owner.toString()) {
       placeDoc.set({
         province, from, province2, destination, color, brand, type, seats,
-        extraInfo, owner_number, date, maxGuests, price,status,
+        extraInfo, owner_number, date, maxGuests, price,
       });
       await placeDoc.save();
       res.json('ok');
@@ -425,7 +384,7 @@ app.put('/requests', async (req, res) => {
   const { token } = req.cookies;
   const {
     id, province, from, province2, destination,
-    extraInfo, owner_number, date, NumOfPassengers, price,status,
+    extraInfo, owner_number, date, NumOfPassengers, price,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
@@ -433,7 +392,7 @@ app.put('/requests', async (req, res) => {
     if (userData.id === RequestDoc.owner.toString()) {
       RequestDoc.set({
         province, from, province2, destination,
-        extraInfo, owner_number, date, NumOfPassengers, price,status,
+        extraInfo, owner_number, date, NumOfPassengers, price,
       });
       await RequestDoc.save();
       res.json('ok');
