@@ -10,7 +10,7 @@ export default function PlacesPage() {
   const { user } = useContext(UserContext);
   const [places, setPlaces] = useState([]);
   const [verificationMessage, setVerificationMessage] = useState("");
-  const [expandedPlaces, setExpandedPlaces] = useState({}); // Object to store expanded place IDs
+  const [expandedPlaces, setExpandedPlaces] = useState({});
 
   useEffect(() => {
     axios.get('/user-places', { withCredentials: true }).then(({ data }) => {
@@ -19,11 +19,14 @@ export default function PlacesPage() {
   }, []);
 
   const handleAddTripClick = (event) => {
-    if (user && user.verification === "not verified") {
-      event.preventDefault();
-      setVerificationMessage("Only verified users can create trip offers.");
-    } else {
-      // Proceed to navigate to add trip offer page
+    if (user) {
+      if (user.verification === "not verified") {
+        event.preventDefault();
+        setVerificationMessage("Only verified users can create trip offers.");
+      } else if (!user.isDriver) {
+        event.preventDefault();
+        setVerificationMessage("Only drivers can create trip offers.");
+      }
     }
   };
 
@@ -38,7 +41,7 @@ export default function PlacesPage() {
   const toggleExpandPlace = (placeId) => {
     setExpandedPlaces(prevExpanded => ({
       ...prevExpanded,
-      [placeId]: !prevExpanded[placeId], // Toggle expansion state for the place
+      [placeId]: !prevExpanded[placeId],
     }));
   };
 
@@ -70,14 +73,12 @@ export default function PlacesPage() {
       <div className="flex flex-wrap gap-4">
         {places.length > 0 &&
           places
-            .filter(place => place.status !== 'deleted')  // Filter out deleted places
+            .filter(place => place.status !== 'deleted')
             .map((place) => (
               <div key={place._id} className="w-full flex cursor-pointer shadow-md rounded-2xl overflow-hidden p-4 mb-4" style={{ backgroundColor: 'white' }}>
                 <Link to={`/account/places/${place._id}`} className="flex-grow" onClick={() => toggleExpandPlace(place._id)}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <h2 className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>pick-up area:</h2>
-                    
-
                     <span>{place.province}, {place.from}</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center' }}>

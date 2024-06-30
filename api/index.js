@@ -207,8 +207,8 @@ app.get('/profile', authenticate, async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
 
   try {
-    const { name, email, _id, balance, phone_number, verification, age, gender } = await User.findById(req.userData.id);
-    res.json({ name, email, _id, balance, phone_number, verification, age, gender });
+    const { name, email, _id, balance, phone_number, verification, age, gender, isDriver } = await User.findById(req.userData.id);
+    res.json({ name, email, _id, balance, phone_number, verification, age, gender, isDriver });
   } catch (error) {
     console.error('Profile fetch error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
