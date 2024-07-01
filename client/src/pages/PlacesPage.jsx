@@ -14,10 +14,15 @@ export default function PlacesPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('/user-places', { withCredentials: true }).then(({ data }) => {
-      setPlaces(data);
-    });
+    axios.get('/user-places', { withCredentials: true })
+      .then(({ data }) => {
+        setPlaces(data);
+      })
+      .catch(err => {
+        console.error('Error fetching user places:', err.response ? err.response.data : err.message);
+      });
   }, []);
+  
 
   const handleAddTripClick = (event) => {
     if (user) {
