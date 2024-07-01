@@ -281,8 +281,6 @@ app.get('/user-places', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { token } = req.cookies;
 
-  console.log('Token from cookies:', token);
-
   if (!token) {
     return res.status(401).json({ error: 'JWT Token not provided' });
   }
@@ -302,6 +300,7 @@ app.get('/user-places', async (req, res) => {
     }
   });
 });
+
 
 
 
