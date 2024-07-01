@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AccountNav from "../AccountNav";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
@@ -11,6 +11,7 @@ export default function PlacesPage() {
   const [places, setPlaces] = useState([]);
   const [verificationMessage, setVerificationMessage] = useState("");
   const [expandedPlaces, setExpandedPlaces] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get('/user-places', { withCredentials: true }).then(({ data }) => {
@@ -23,10 +24,13 @@ export default function PlacesPage() {
       if (user.verification === "not verified") {
         event.preventDefault();
         setVerificationMessage("Only verified users can create trip offers.");
+        return;
       } else if (!user.isDriver) {
         event.preventDefault();
         setVerificationMessage("Only drivers can create trip offers.");
+        return;
       }
+      navigate('/account/Mytrips/new'); // This line should navigate to the page if all checks pass
     }
   };
 
@@ -51,9 +55,8 @@ export default function PlacesPage() {
         <AccountNav />
       </div>
       <div className="text-center mb-4">
-        <Link
+        <button
           className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
-          to={'/account/Mytrips/new'}
           onClick={handleAddTripClick}
         >
           <svg
@@ -65,7 +68,7 @@ export default function PlacesPage() {
             <path fillRule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clipRule="evenodd" />
           </svg>
           Add trip offer
-        </Link>
+        </button>
         {verificationMessage && (
           <p className="text-red-700 mt-2">{verificationMessage}</p>
         )}
