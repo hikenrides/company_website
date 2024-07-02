@@ -1,18 +1,19 @@
-import './App.css'
-import {Route, Routes} from "react-router-dom";
+import React from 'react';
+import './App.css';
+import { Route, Routes } from "react-router-dom";
+import axios from "axios";
+import { UserContextProvider } from "./UserContext.jsx";
 import IndexPage from "./pages/IndexPage.jsx";
 import LoginPage from "./pages/LoginPage";
 import Layout from "./Layout";
 import RegisterPage from "./pages/RegisterPage";
-import axios from "axios";
-import {UserContextProvider} from "./UserContext.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import PlacesPage from "./pages/PlacesPage";
 import PlacesFormPage from "./pages/PlacesFormPage";
 import PlacePage from "./pages/PlacePage";
 import BookingsPage from "./pages/BookingsPage";
 import BookingPage from "./pages/BookingPage";
-import TripRequest from "./pages/TripRequest"
+import TripRequest from "./pages/TripRequest";
 import RequestsPage from './pages/RequestsPage';
 import TripOfferPage from './pages/TripOfferPage';
 import RequestOfferPage from './pages/RequestOfferPage';
@@ -28,6 +29,25 @@ axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 axios.defaults.withCredentials = true;
 
 function App() {
+  // Function to get JWT token from storage (localStorage or cookies)
+  const getAuthToken = () => {
+    return localStorage.getItem('accessToken'); // Adjust this according to your token storage method
+  };
+
+  // Axios request interceptor to add JWT token to headers
+  axios.interceptors.request.use(
+    config => {
+      const token = getAuthToken();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    error => {
+      return Promise.reject(error);
+    }
+  );
+
   return (
     <UserContextProvider>
       <Routes>
@@ -56,7 +76,7 @@ function App() {
         </Route>
       </Routes>
     </UserContextProvider>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -14,12 +14,18 @@ export default function PlacesPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('/user-places', { withCredentials: true })
+    api.get('/user-places', { withCredentials: true })
       .then(({ data }) => {
         setPlaces(data);
       })
-      .catch(err => {
-        console.error('Error fetching user places:', err.response ? err.response.data : err.message);
+      .catch(error => {
+        if (error.response && error.response.status === 401) {
+          // Handle unauthorized access
+          console.error('JWT Token not provided or expired');
+          // Redirect to login or handle as needed
+        } else {
+          console.error('Error fetching user places:', error.response ? error.response.data : error.message);
+        }
       });
   }, []);
   
