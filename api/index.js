@@ -35,6 +35,8 @@ const s3Client = new S3Client({
   },
 });
 
+
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -44,12 +46,12 @@ app.use(express.json());
 
 function getUserDataFromReq(req) {
   return new Promise((resolve, reject) => {
-    const token = req.cookies.token;
-
-    if (!token) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
       return reject(new Error('JWT not provided'));
     }
 
+    const token = authHeader.split(' ')[1];
     jwt.verify(token, jwtSecret, {}, (err, userData) => {
       if (err) {
         console.error('JWT Verification Error:', err);
@@ -59,6 +61,7 @@ function getUserDataFromReq(req) {
     });
   });
 }
+
 
 app.get('/', (req, res) => {
   res.send('Hello, this is the root route of the backend!');
@@ -165,25 +168,19 @@ app.post('/login', async (req, res) => {
 
   if (userDoc) {
     const passOk = bcrypt.compareSync(password, userDoc.password);
-
     if (passOk) {
       jwt.sign(
-        {
-          email: userDoc.email,
-          id: userDoc._id,
-        },
+        { email: userDoc.email, id: userDoc._id },
         jwtSecret,
         {},
         (err, token) => {
           if (err) throw err;
-
           res.cookie('token', token, {
             httpOnly: true,
             sameSite: 'None',
-            secure: true,
-            expires: new Date(Date.now() + 900000),
+            secure: true, // Must be true if SameSite=None
+            expires: new Date(Date.now() + 900000), // Cookie expires in 15 minutes
           }).json(userDoc);
-          
         }
       );
     } else {
@@ -194,19 +191,19 @@ app.post('/login', async (req, res) => {
   }
 });
 
+
+
 app.get('/profile', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  if (token) {
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-      if (err) throw err;
-      const { name, email, _id, balance, phone_number, verification, age, gender, isDriver } = await User.findById(userData.id);
-      res.json({ name, email, _id, balance, phone_number, verification, age, gender, isDriver });
-    });
-  } else {
-    res.json(null);
+  try {
+    const userData = await getUserDataFromReq(req);
+    const { name, email, _id, balance, phone_number, verification, age, gender, isDriver } = await User.findById(userData.id);
+    res.json({ name, email, _id, balance, phone_number, verification, age, gender, isDriver });
+  } catch (err) {
+    res.status(401).json({ error: err.message });
   }
 });
+
 
 app.post('/logout', (req, res) => {
   res.cookie('token', '').json(true);

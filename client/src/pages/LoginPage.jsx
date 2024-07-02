@@ -29,9 +29,15 @@ export default function LoginPage() {
     ev.preventDefault();
     try {
       console.log('Sending login request...', email, password);
-      const { data } = await axios.post("/login", { email, password }, { withCredentials: true });
-      if (data && data._id) {
-        setUser(data);
+      const { data } = await axios.post("/login", { email, password });
+      if (data && data.token) {
+        localStorage.setItem('token', data.token);
+        const profileResponse = await axios.get('/profile', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        setUser(profileResponse.data);
         alert("Login successful");
         setRedirect(true);
       } else {

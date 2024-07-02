@@ -8,11 +8,21 @@ export function UserContextProvider({ children }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (!user) {
-      axios.get('/profile').then(({ data }) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.get('/profile', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then(({ data }) => {
         setUser(data);
         setReady(true);
+      }).catch(error => {
+        console.error('Error fetching profile:', error);
+        setReady(true); // Even if the profile fetch fails, mark ready to true
       });
+    } else {
+      setReady(true);
     }
   }, []);
 
