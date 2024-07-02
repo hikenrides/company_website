@@ -394,8 +394,26 @@ app.get('/requested-trips', (req, res) => {
 app.get('/places/:id', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { id } = req.params;
-  res.json(await Place.findById(id));
+
+  try {
+    const { token } = req.cookies;
+    const decodedToken = jwt.verify(token, jwtSecret);
+    const { id: userId } = decodedToken; // Ensure to use the correct property name from decoded token
+
+    const place = await Place.findById(id);
+    if (!place) {
+      return res.status(404).json({ error: 'Place not found' });
+    }
+
+    // Additional authorization logic if needed, e.g., check if the user owns the place
+
+    res.json(place);
+  } catch (error) {
+    console.error('Error fetching place:', error);
+    res.status(401).json({ error: 'Unauthorized' });
+  }
 });
+
 
 app.put('/places', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);

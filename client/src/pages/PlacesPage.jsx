@@ -14,7 +14,7 @@ export default function PlacesPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get('/user-places', { withCredentials: true })
+    axios.get('/user-places', { withCredentials: true })
       .then(({ data }) => {
         setPlaces(data);
       })
