@@ -14,8 +14,6 @@ const Booking2 = require('./models/Booking2');
 const Request = require('./models/requests');
 const Message = require('./models/message');
 const Withdrawals = require('./models/withdrawals');
-const axios = require('axios');
-
 
 require('dotenv').config();
 
@@ -45,19 +43,6 @@ const upload = multer({ storage });
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
-
-axios.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 function getUserDataFromReq(req) {
   return new Promise((resolve, reject) => {
@@ -235,7 +220,10 @@ app.post('/places', (req, res) => {
     extraInfo, owner_number, date, maxGuests,status,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
+    if (err) {
+      console.error('JWT Verification Error:', err);
+      return res.status(401).json({ error: 'JWT verification failed' });
+    }
     const placeDoc = await Place.create({
       owner: userData.id, price,
       province, from, province2, destination, color, brand, type, seats,

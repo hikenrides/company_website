@@ -29,24 +29,20 @@ axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 axios.defaults.withCredentials = true;
 
 function App() {
-  // Function to get JWT token from storage (localStorage or cookies)
-  const getAuthToken = () => {
-    return localStorage.getItem('accessToken'); // Adjust this according to your token storage method
-  };
 
-  // Axios request interceptor to add JWT token to headers
   axios.interceptors.request.use(
-    config => {
-      const token = getAuthToken();
+    (config) => {
+      const token = localStorage.getItem('token'); // Adjust according to where you store your token
       if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+        config.headers['Authorization'] = `Bearer ${token}`;
       }
       return config;
     },
-    error => {
+    (error) => {
       return Promise.reject(error);
     }
   );
+  
 
   return (
     <UserContextProvider>
