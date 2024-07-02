@@ -181,7 +181,9 @@ app.post('/login', async (req, res) => {
             httpOnly: true,
             sameSite: 'None',
             secure: true,
+            expires: new Date(Date.now() + 900000),
           }).json(userDoc);
+          
         }
       );
     } else {
