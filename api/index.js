@@ -48,10 +48,12 @@ function getUserDataFromReq(req) {
   return new Promise((resolve, reject) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
+      console.error('JWT not provided');
       return reject(new Error('JWT not provided'));
     }
 
     const token = authHeader.split(' ')[1];
+    console.log('Received token:', token); // Log the received token
     jwt.verify(token, jwtSecret, {}, (err, userData) => {
       if (err) {
         console.error('JWT Verification Error:', err);
@@ -175,12 +177,13 @@ app.post('/login', async (req, res) => {
         {},
         (err, token) => {
           if (err) throw err;
+          console.log('Generated token:', token); // Log the generated token
           res.cookie('token', token, {
             httpOnly: true,
             sameSite: 'None',
             secure: true, // Must be true if SameSite=None
             expires: new Date(Date.now() + 900000), // Cookie expires in 15 minutes
-          }).json(userDoc);
+          }).json({ userDoc, token }); // Include token in response
         }
       );
     } else {
@@ -190,7 +193,6 @@ app.post('/login', async (req, res) => {
     res.json('not found');
   }
 });
-
 
 
 

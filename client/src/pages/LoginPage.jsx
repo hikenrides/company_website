@@ -28,8 +28,10 @@ export default function LoginPage() {
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
     try {
+      console.log('Sending login request...', email, password);
       const { data } = await axios.post("/login", { email, password });
-      if (data) {
+      if (data && data.token) {
+        console.log('Received token:', data.token); // Log the received token
         localStorage.setItem('token', data.token);
         const profileResponse = await axios.get('/profile', {
           headers: {
@@ -43,9 +45,11 @@ export default function LoginPage() {
         alert("Login failed: Invalid credentials");
       }
     } catch (e) {
+      console.error('Error during login:', e);
       alert("Login failed: Invalid credentials");
     }
   }
+  
   
   if (redirect) {
     return <Navigate to={"/account/trips"} />;
