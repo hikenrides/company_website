@@ -24,6 +24,7 @@ export default function PlacesPage() {
   }, []);
   
 
+
   const handleAddTripClick = (event) => {
     if (user) {
       if (user.verification === "not verified") {

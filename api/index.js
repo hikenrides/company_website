@@ -44,6 +44,19 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 function getUserDataFromReq(req) {
   return new Promise((resolve, reject) => {
     const authHeader = req.headers.authorization;
