@@ -124,9 +124,9 @@ function Card() {
                         1
                     </IconContext.Provider>
                 </motion.span>
-                <h3>Browse and select Available trips/rides<br/>and find a suitable one for you</h3>
+                <h3>Browse, select Available trips/rides<br/>and find a suitable one for you<br/>NB: Make sure your account is verified</h3>
                 <a href="#">
-                    <span>Click to view Available trips →</span>
+                    <span>Available trips →</span>
                 </a>
             </motion.div>
             <motion.div className="card" variants={item}>
@@ -135,7 +135,7 @@ function Card() {
                         2
                     </IconContext.Provider>
                 </motion.span>
-                <h3>Insert the details required and make payment<br/>NB: refundable if driver cancels the ride</h3>
+                <h3>Insert the details required and book your trip<br/>NB: Make sure there's suffient funds on your hikenrides account</h3>
             </motion.div>
             <motion.div className="card" variants={item}>
                 <motion.span className="service_icon" style={{backgroundColor:"#D2691E"}} variants={hoverEffect}>
@@ -143,7 +143,7 @@ function Card() {
                         3
                     </IconContext.Provider>
                 </motion.span>
-                <h3>Contact details of the driver will be sent to you<br/>and you will also receive a reference number</h3>
+                <h3>Trip details of the driver will be sent to you<br/>and you will also receive a reference number</h3>
             </motion.div>
             <motion.div className="card" variants={item}>
                 <motion.span className="service_icon" style={{backgroundColor:"#D2691E"}} variants={hoverEffect}>

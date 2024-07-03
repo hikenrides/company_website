@@ -28,10 +28,9 @@ export default function BookingWidget2({ request }) {
     return true;
   };
 
-  const validateBalance = () => {
-    const totalCost = passengers * request.price;
-    if (user.balance < totalCost) {
-      setErrorMessage("Insufficient funds. Please add funds to your account.");
+  const validateDriver = () => {
+    if (!user.isDriver) {
+      setErrorMessage("Only drivers can accept requests.");
       return false;
     }
     setErrorMessage("");
@@ -49,7 +48,7 @@ export default function BookingWidget2({ request }) {
 
   async function bookThisPlace() {
     try {
-      if (!validatePassengers() || !validateBalance()) {
+      if (!validatePassengers() || !validateDriver()) {
         return;
       }
       const reference = generateReference();
@@ -66,26 +65,12 @@ export default function BookingWidget2({ request }) {
         },
         { withCredentials: true }
       );
-      const updatedBalance = user.balance - (passengers * request.price);
-      await axios.put('/users/update-balance', {
-        id: user._id,
-        balance: updatedBalance
-        }, { withCredentials: true });
       const bookingId = response.data._id;
       setRedirect(`/account/bookings../${bookingId}`);
     } catch (error) {
       console.error("Error accepting request:", error);
     }
   }
-
-  const updateUserBalance = async (amount) => {
-    try {
-      await axios.post("/updateBalance", { amount }, { withCredentials: true });
-      console.log("User balance updated successfully");
-    } catch (error) {
-      console.error("Error updating user balance:", error);
-    }
-  };
 
   if (redirect) {
     return <Navigate to={redirect} />;
