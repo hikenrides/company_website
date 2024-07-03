@@ -12,7 +12,7 @@ const DepositPage = () => {
   };
 
   return (
-    <div className="text-center max-w-lg mx-auto text-white mb-30">
+    <div className="text-center max-w-lg mx-auto text-white mb-60">
       <h2 className="text-xl mb-4">Deposit Options</h2>
       <div className="flex flex-col gap-4 items-center">
         <motion.button
