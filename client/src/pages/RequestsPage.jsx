@@ -12,7 +12,14 @@ export default function RequestsPage() {
   const [verificationMessage, setVerificationMessage] = useState("");
 
   useEffect(() => {
-    axios.get('/requested-trips', { withCredentials: true }).then(({ data }) => {
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+
+    axios.get('/requested-trips', config).then(({ data }) => {
       setRequests(data.filter(request => request.status !== 'deleted')); 
     });
   }, []);
@@ -27,7 +34,14 @@ export default function RequestsPage() {
   };
 
   const handleDeleteRequest = (requestId) => {
-    axios.delete(`/requests/${requestId}`, { withCredentials: true })
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+
+    axios.delete(`/requests/${requestId}`, config)
       .then(() => {
         setRequests(requests.filter(request => request._id !== requestId));
       })
@@ -92,3 +106,4 @@ export default function RequestsPage() {
     </div>
   );
 }
+

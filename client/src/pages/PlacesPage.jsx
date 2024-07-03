@@ -14,7 +14,13 @@ export default function PlacesPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('/user-places', { withCredentials: true })
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.get('/user-places', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then(({ data }) => {
         setPlaces(data);
       })
@@ -27,9 +33,8 @@ export default function PlacesPage() {
           console.error('Error fetching user places:', error.response ? error.response.data : error.message);
         }
       });
+    }
   }, []);
-  
-
 
   const handleAddTripClick = (event) => {
     if (user) {
@@ -47,11 +52,18 @@ export default function PlacesPage() {
   };
 
   const handleDeleteTrip = (placeId) => {
-    axios.delete(`/places/${placeId}`, { withCredentials: true })
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.delete(`/places/${placeId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then(() => {
         setPlaces(places.filter(place => place._id !== placeId));
       })
       .catch(err => console.error('Error deleting place:', err));
+    }
   };
 
   const toggleExpandPlace = (placeId) => {

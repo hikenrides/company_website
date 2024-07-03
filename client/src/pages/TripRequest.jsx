@@ -45,14 +45,21 @@ export default function TripRequest() {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+
     if (!id) {
-      axios.get('/profile', { withCredentials: true }).then(response => {
+      axios.get('/profile', config).then(response => {
         const { data } = response;
         setPhone(data.phone_number);
       });
       return;
     }
-    axios.get('/requests/' + id, { withCredentials: true }).then(response => {
+    axios.get('/requests/' + id, config).then(response => {
       const { data } = response;
       setProvince(data.province);
       setFrom(data.from);
@@ -103,11 +110,17 @@ export default function TripRequest() {
       NumOfPassengers,
       price,
     };
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
     try {
       if (id) {
-        await axios.put(`/requests/${id}`, RequestData);
+        await axios.put(`/requests/${id}`, RequestData, config);
       } else {
-        await axios.post('/requests', RequestData);
+        await axios.post('/requests', RequestData, config);
       }
       setRedirect(true);
     } catch (error) {

@@ -49,14 +49,21 @@ export default function PlacesFormPage() {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+
     if (!id) {
-      axios.get('/profile', { withCredentials: true }).then(response => {
+      axios.get('/profile', config).then(response => {
         const { data } = response;
         setPhone(data.phone_number);
       });
       return;
     }
-    axios.get('/places/' + id, { withCredentials: true }).then(response => {
+    axios.get('/places/' + id, config).then(response => {
       const { data } = response;
       setProvince(data.province);
       setFrom(data.from);
@@ -105,15 +112,21 @@ export default function PlacesFormPage() {
       color, brand, type, seats, extraInfo, owner_number,
       date, maxGuests, price,
     };
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
     try {
       if (id) {
         // update
         await axios.put('/places', {
           id, ...placeData
-        });
+        }, config);
       } else {
         // new place
-        await axios.post('/places', placeData);
+        await axios.post('/places', placeData, config);
       }
       setRedirect(true);
     } catch (error) {
