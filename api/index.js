@@ -35,6 +35,8 @@ const s3Client = new S3Client({
   },
 });
 
+
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -61,6 +63,7 @@ function getUserDataFromReq(req) {
     });
   });
 }
+
 
 app.get('/', (req, res) => {
   res.send('Hello, this is the root route of the backend!');
@@ -99,55 +102,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
-app.post('/messages', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
 
-    const { sender, receiver, content } = req.body;
-
-    try {
-      if (userData.id !== sender) {
-        return res.status(403).json({ error: 'Forbidden' });
-      }
-
-      const messageDoc = await Message.create({
-        sender,
-        receiver,
-        content,
-      });
-
-      res.json(messageDoc);
-    } catch (error) {
-      console.error('Error creating message:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-});
-
-app.get('/messages/:receiverId', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
-
-    const { receiverId } = req.params;
-
-    try {
-      if (userData.id !== receiverId) {
-        return res.status(403).json({ error: 'Forbidden' });
-      }
-
-      const messages = await Message.find({ receiver: receiverId });
-
-      res.json(messages);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-});
 
 app.put('/users/update-balance', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
@@ -185,6 +140,8 @@ app.post('/login', async (req, res) => {
     res.json('not found');
   }
 });
+
+
 
 app.get('/profile', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
@@ -272,14 +229,103 @@ app.post('/withdrawals', (req, res) => {
   });
 });
 
-app.get('/user-places', (req, res) => {
+app.get('/user-places', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const authHeader = req.headers.authorization;
   const token = authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'JWT Token not provided' });
+  }
+
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
-    const { id } = userData;
-    res.json(await Place.find({ owner: id }));
+    if (err) {
+      console.error('JWT Verification Error:', err);
+      return res.status(401).json({ error: 'JWT verification failed' });
+    }
+
+    try {
+      const places = await Place.find({ owner: userData.id, status: 'active' });
+      res.json(places);
+    } catch (error) {
+      console.error('Error fetching places:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+});
+
+
+
+app.delete('/places/:id', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const authHeader = req.headers.authorization;
+  const token = authHeader.split(' ')[1];
+  const placeId = req.params.id;
+
+  if (!token) {
+    return res.status(401).json({ error: 'JWT Token not provided' });
+  }
+
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) {
+      console.error('JWT Verification Error:', err);
+      return res.status(401).json({ error: 'JWT verification failed' });
+    }
+
+    try {
+      const place = await Place.findById(placeId);
+      if (!place) {
+        return res.status(404).json({ error: 'Place not found' });
+      }
+
+      if (place.owner.toString() !== userData.id) {
+        return res.status(403).json({ error: 'Forbidden' });
+      }
+
+      place.status = 'deleted';
+      await place.save();
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error deleting place:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+});
+app.delete('/requests/:id', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const authHeader = req.headers.authorization;
+  const token = authHeader.split(' ')[1];
+  const requestId = req.params.id;
+
+  if (!token) {
+    return res.status(401).json({ error: 'JWT Token not provided' });
+  }
+
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) {
+      console.error('JWT Verification Error:', err);
+      return res.status(401).json({ error: 'JWT verification failed' });
+    }
+
+    try {
+      const request = await Request.findById(requestId);
+      if (!request) {
+        return res.status(404).json({ error: 'Request not found' });
+      }
+
+      if (request.owner.toString() !== userData.id) {
+        return res.status(403).json({ error: 'Forbidden' });
+      }
+
+      request.status = 'deleted';
+      await request.save();
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error deleting request:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   });
 });
 
@@ -294,17 +340,23 @@ app.get('/user-requests', (req, res) => {
   });
 });
 
+app.get('/requested-trips', (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const authHeader = req.headers.authorization;
+  const token = authHeader.split(' ')[1];
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    const { id } = userData;
+    res.json(await Request.find({ owner: id, status: 'active' })); 
+  });
+});
+
+
 app.get('/places/:id', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { id } = req.params;
   res.json(await Place.findById(id));
 });
 
-app.get('/requests/:id', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { id } = req.params;
-  res.json(await Request.findById(id));
-});
 
 app.put('/places', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
@@ -323,6 +375,16 @@ app.put('/places', async (req, res) => {
     await placeDoc.save();
     res.json('ok');
   }
+});
+app.get('/places', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  res.json(await Place.find());
+});
+
+app.get('/requests/:id', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { id } = req.params;
+  res.json(await Request.findById(id));
 });
 
 app.put('/requests', async (req, res) => {
@@ -344,11 +406,6 @@ app.put('/requests', async (req, res) => {
   }
 });
 
-app.get('/places', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  res.json(await Place.find());
-});
-
 app.get('/requests', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   res.json(await Request.find());
@@ -357,24 +414,17 @@ app.get('/requests', async (req, res) => {
 app.post('/bookings', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
-  const { place, place2, checkIn, checkOut, numberOfGuests, name, phone, email, gender } = req.body;
-
-  if (!place && !place2) {
-    return res.status(400).json({ error: 'At least one of place or place2 must be provided' });
-  }
-
-  let bookingDoc;
+  const {
+    place, passengers, name, phone, price, reference,
+  } = req.body;
 
   try {
-    if (place) {
-      bookingDoc = await Booking.create({
-        place, user: userData.id, checkIn, checkOut, numberOfGuests, name, phone, email, gender,
-      });
-    } else if (place2) {
-      bookingDoc = await Booking2.create({
-        place2, user: userData.id, checkIn, checkOut, numberOfGuests, name, phone, email, gender,
-      });
-    }
+    const placeData = await Place.findById(place);
+    const ownerNumber = placeData.owner_number;
+
+    const bookingDoc = await Booking.create({
+      place, passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
+    });
 
     res.json(bookingDoc);
   } catch (error) {
@@ -383,20 +433,86 @@ app.post('/bookings', async (req, res) => {
   }
 });
 
-app.get('/bookings', async (req, res) => {
+app.post('/bookings2', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
+  const {
+    request, passengers, name, phone, price, reference,
+  } = req.body;
 
   try {
-    const bookings = await Booking.find({ user: userData.id }).populate('place');
-    const bookings2 = await Booking2.find({ user: userData.id }).populate('place2');
-    res.json({ bookings, bookings2 });
+    const requestData = await Request.findById(request);
+    const ownerNumber = requestData.owner_number;
+
+    const bookingDoc = await Booking2.create({
+      request, passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
+    });
+
+    res.json(bookingDoc);
   } catch (error) {
-    console.error('Error fetching bookings:', error);
+    console.error('Error creating booking2:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
+app.get('/bookings', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const userData = await getUserDataFromReq(req);
+  res.json(await Booking.find({ user: userData.id }).populate('place'));
+});
+
+app.get('/bookings2', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const userData = await getUserDataFromReq(req);
+  res.json(await Booking2.find({ user: userData.id }).populate('request'));
+});
+
+app.post('/upload-verification', upload.fields([{ name: 'idPhoto' }, { name: 'documentPhoto' }]), async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { idPhoto, documentPhoto } = req.files;
+  const { phoneNumber } = req.body; // Get phone number from request body
+
+  const uploadToS3 = async (file, newFileName) => {
+    const params = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: newFileName,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+    };
+    const data = await s3Client.send(new PutObjectCommand(params));
+    return `https://${params.Bucket}.s3.amazonaws.com/${params.Key}`;
+  };
+
+  try {
+    // Generate new file names
+    const idPhotoFileName = `${phoneNumber}_photo.jpg`;
+    const documentPhotoFileName = `${phoneNumber}_identity.pdf`;
+
+    // Upload files to S3
+    const [idPhotoUrl, documentPhotoUrl] = await Promise.all([
+      uploadToS3(idPhoto[0], idPhotoFileName),
+      uploadToS3(documentPhoto[0], documentPhotoFileName)
+    ]);
+
+    // Update user's document in MongoDB with the URLs
+    const user = await User.findOneAndUpdate(
+      { phone_number: phoneNumber },
+      { idPhotoUrl, documentPhotoUrl },
+      { new: true }
+    );
+
+    res.status(200).json({
+      message: 'Files uploaded successfully',
+      idPhotoUrl,
+      documentPhotoUrl,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to upload files' });
+  }
+});
+
+
 app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+  console.log(`Server running on PORT ${port}`);
 });
