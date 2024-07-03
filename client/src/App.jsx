@@ -24,6 +24,8 @@ import DepositPage from "./pages/DepositPage.jsx";
 import WithdrawPage from "./pages/WithdrawPage.jsx";
 import WithdrawForm from "./pages/WithdrawForm.jsx";
 import VerificationPage from './pages/VerificationPage.jsx';
+import AboutUs from './AboutUs.jsx';
+import Security from './Security.jsx';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 axios.defaults.withCredentials = true;
@@ -69,6 +71,9 @@ function App() {
           <Route path="/withdraw" element={<WithdrawPage />} />
           <Route path="/WithdrawalForm" element={<WithdrawForm />} />
           <Route path="/verification" element={<VerificationPage />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/security" element={<Security />} />
+
         </Route>
       </Routes>
     </UserContextProvider>

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AccountNav from "../AccountNav";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
@@ -103,7 +103,7 @@ export default function PlacesPage() {
             .filter(place => place.status !== 'deleted')
             .map((place) => (
               <div key={place._id} className="w-full flex cursor-pointer shadow-md rounded-2xl overflow-hidden p-4 mb-4" style={{ backgroundColor: 'white' }}>
-                <Link to={`/account/places/${place._id}`} className="flex-grow" onClick={() => toggleExpandPlace(place._id)}>
+                <div className="flex-grow">
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <h2 className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>pick-up area:</h2>
                     <span>{place.province}, {place.from}</span>
@@ -120,7 +120,7 @@ export default function PlacesPage() {
                     <p className="text-sm mt-2" style={{ color: 'orange', marginRight: '8px' }}>date:</p>
                     <span>{new Date(place.date).toLocaleDateString('en-US')}</span>
                   </div>
-                </Link>
+                </div>
                 <button onClick={() => handleDeleteTrip(place._id)} className="ml-4 text-red-500 hover:text-red-700">
                   <IconButton aria-label="delete">
                     <DeleteIcon />

@@ -11,18 +11,13 @@ const Footer= () =>{
             <div className="sb__footer section__padding">
                 <div className="sb__footer-links">
                     
-                    <div className="sb__footer-links_div">
+                    {/*<div className="sb__footer-links_div">
                         <h4>Resources</h4>
                         <a href="/resource">
                             <p>Resource Center</p>
                         </a>
-                        <a href="/resource">
-                            <p>Testimonials</p>
-                        </a>
-                        <a href="/resource">
-                            <p>STV</p>
-                        </a>
-                    </div>
+
+                    </div>*/}
                     <div className="sb__footer-links_div">
                         <h4>Contact Us
                         </h4>
@@ -34,21 +29,18 @@ const Footer= () =>{
                         <a href="/about">
                             <p>About Us</p>
                         </a>
-                        <a href="/press">
+                        <a href="/account/trips">
                             <p>Trips</p>
                         </a>
-                        <a href="/career">
+                        <a href="/account/requests">
                             <p>Requests</p>
-                        </a>
-                        <a href="/contact">
-                            <p>Drivers</p>
                         </a>
                         
                     </div>
                     <div className="sb__footer-links_div">
                         <h4>Social media</h4>
                         <div className="socialmedia">
-                            <a href="https://www.facebook.com/profile.php?id=61553868901955"><p><img src={fb} alt=""/></p></a>
+                            {/*<a href="https://www.facebook.com/profile.php?id=61553868901955"><p><img src={fb} alt=""/></p></a>*/}
                             <a href="https://x.com/hikenrides"><p><img src={twitter} alt=""/></p></a>
                             <a href="https://www.linkedin.com/company/103176597/admin/feed/posts/?feedType=following"><p><img src={linkedin} alt=""/></p></a>
                             <a href="https://www.tiktok.com/@hikenrides?lang=en"><p><img src={insta} alt=""/></p></a>
@@ -66,10 +58,9 @@ const Footer= () =>{
                         </p>
                     </div>
                     <div className="sb__footer-below-links">
-                        <a href="/terms"><div><p>Terms & Conditions</p></div></a>
+                        <a href="/Terms and Conditions"><div><p>Terms & Conditions</p></div></a>
                         <a href="/privacy"><div><p>Privacy</p></div></a>
                         <a href="/security"><div><p>Security</p></div></a>
-                        <a href="/cookies"><div><p>Cookie Declaration</p></div></a>
                     </div>
                 </div>
 

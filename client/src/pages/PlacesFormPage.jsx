@@ -308,6 +308,7 @@ export default function PlacesFormPage() {
               onChange={(date) => setDate(date)}
               placeholderText="Select leaving date"
               dateFormat="MM/dd/yyyy"
+              popperPlacement="top-start"
             />
           </div>
 

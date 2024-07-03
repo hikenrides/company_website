@@ -77,7 +77,7 @@ export default function RequestsPage() {
         {requests.length > 0 &&
           requests.map((request) => (
             <div key={request._id} className="w-full flex cursor-pointer shadow-md rounded-2xl overflow-hidden p-4 mb-4" style={{ backgroundColor: 'white' }}>
-              <Link to={`/account/Myrequests/${request._id}`} className="flex-grow">
+              <div className="flex-grow">
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <h2 className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>pick-up area:</h2>
                   <span>{request.from}</span>
@@ -94,7 +94,7 @@ export default function RequestsPage() {
                   <p className="text-sm mt-2" style={{ color: 'orange', marginRight: '8px' }}>date:</p>
                   <span>{new Date(request.date).toLocaleDateString('en-US')}</span>
                 </div>
-              </Link>
+              </div>
               <button onClick={() => handleDeleteRequest(request._id)} className="ml-4 text-red-500 hover:text-red-700">
                 <IconButton aria-label="delete">
                   <DeleteIcon />

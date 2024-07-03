@@ -194,6 +194,7 @@ export default function RegisterPage() {
                     name="driverLicense"
                     value={driverLicense}
                     onChange={(ev) => setDriverLicense(ev.target.value)}
+                    inputProps={{ maxLength: 12 }}
                   />
                 </Grid>
               )}

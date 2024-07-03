@@ -190,21 +190,22 @@ export default function TripRequest() {
           onChange={(ev) => setExtraInfo(ev.target.value)}
         />
 
-        {preInput('Departure', 'Add departing date, number of passengers, and price per person')}
-        <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
+{preInput('Departure', 'add departing date, number of passengers and price per person')}
+        <div className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
           <div>
-            <h3 className="mt-2 -mb-1">Date</h3>
+            <h3 className="text-white mt-2 -mb-1">Date</h3>
             <DatePicker
               className="bg-gray-300"
               selected={date}
               onChange={(date) => setDate(date)}
               placeholderText="Select leaving date"
               dateFormat="MM/dd/yyyy"
+              popperPlacement="top-start"
             />
           </div>
 
           <div>
-            <h3 className="mt-2 -mb-1">Number of people</h3>
+            <h3 className=" text-white mt-2 -mb-1">Number of people</h3>
             <input
               className="bg-gray-300"
               type="number"
@@ -214,7 +215,7 @@ export default function TripRequest() {
           </div>
 
           <div>
-            <h3 className="mt-2 -mb-1">Price per person</h3>
+            <h3 className="text-white mt-2 -mb-1">Price per person</h3>
             <input
               className="bg-gray-300"
               type="number"
