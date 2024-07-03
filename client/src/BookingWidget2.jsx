@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
 export default function BookingWidget2({ request }) {
   const [passengers, setPassengers] = useState(1);
@@ -9,6 +10,7 @@ export default function BookingWidget2({ request }) {
   const [phone, setPhone] = useState("");
   const [redirect, setRedirect] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [open, setOpen] = useState(false); // For controlling the modal
   const { user } = useContext(UserContext);
 
   useEffect(() => {
@@ -19,9 +21,7 @@ export default function BookingWidget2({ request }) {
 
   const validatePassengers = () => {
     if (passengers < 1 || passengers > request.maxGuests) {
-      setErrorMessage(
-        `Please enter a valid number of passengers (1-${request.maxGuests}).`
-      );
+      setErrorMessage(`Please enter a valid number of passengers (1-${request.maxGuests}).`);
       return false;
     }
     setErrorMessage("");
@@ -65,12 +65,16 @@ export default function BookingWidget2({ request }) {
         },
         { withCredentials: true }
       );
-      const bookingId = response.data._id;
-      setRedirect(`/account/bookings../${bookingId}`);
+      setOpen(true); // Show the modal on success
     } catch (error) {
       console.error("Error accepting request:", error);
     }
   }
+
+  const handleClose = () => {
+    setOpen(false);
+    setRedirect("/account/requests");
+  };
 
   if (redirect) {
     return <Navigate to={redirect} />;
@@ -81,9 +85,7 @@ export default function BookingWidget2({ request }) {
       <div className="text-2xl text-center">
         Price: {passengers > 0 && <span> R{passengers * request.price}</span>}
       </div>
-      {errorMessage && (
-        <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
-      )}
+      {errorMessage && <p className="text-red-500 text-sm mt-2">{errorMessage}</p>}
       <div className="border rounded-2xl mt-4">
         <div className="py-3 px-4 border-t">
           <label>Number of passengers:</label>
@@ -93,9 +95,7 @@ export default function BookingWidget2({ request }) {
             onChange={(ev) => setPassengers(ev.target.value)}
             max={request.maxGuests}
           />
-          {errorMessage && (
-            <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
-          )}
+          {errorMessage && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
         </div>
         {passengers > 0 && (
           <div className="py-3 px-4 border-t">
@@ -117,6 +117,16 @@ export default function BookingWidget2({ request }) {
       <button onClick={bookThisPlace} className="primary mt-4">
         Accept Request
       </button>
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Request Accepted</DialogTitle>
+        <DialogContent>
+          <p>We've notified the passenger and we'll communicate with you if there's any changes.</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Okay</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
