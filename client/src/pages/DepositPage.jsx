@@ -41,7 +41,7 @@ const DepositPage = () => {
           </p>
         )}
 
-        <motion.div
+        {/*<motion.div
           className="bg-blue-400 text-white py-2 px-4 rounded text-center"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -55,7 +55,7 @@ const DepositPage = () => {
           <h2>
           Note: when making the deposit use the phone number that you are using in your hikenrides account as a reference, the money will reflect in your account within 24 hours
           </h2>
-          </motion.div>
+          </motion.div>*/}
           </div>
           </div>
           );
