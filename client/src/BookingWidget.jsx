@@ -77,12 +77,6 @@ export default function BookingWidget({ place }) {
         }, { withCredentials: true });
 
 
-      // Send a message to the person who posted the offer
-      await axios.post("/messages", {
-        sender: user._id, // Assuming user is the person making the booking
-        receiver: place.owner, // Assuming place.user is the person who posted the offer
-        content: `Booking request for place ${place._id}. Booking ID: ${bookingId}`,
-      });
 
       setRedirect(`/account/bookings/${bookingId}`);
     } catch (error) {

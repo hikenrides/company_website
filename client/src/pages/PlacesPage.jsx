@@ -11,7 +11,6 @@ export default function PlacesPage() {
   const [places, setPlaces] = useState([]);
   const [verificationMessage, setVerificationMessage] = useState("");
   const [expandedPlaces, setExpandedPlaces] = useState({});
-  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -32,9 +31,7 @@ export default function PlacesPage() {
     }
   }, []);
 
-  const handleEditClick = (id) => {
-    navigate(`/account/places/${id}`);
-  };
+ 
 
   const handleAddTripClick = (event) => {
     if (user && user.verification === "not verified") {
@@ -125,12 +122,6 @@ export default function PlacesPage() {
                     >
                       {expandedPlaces[place._id] ? "Show Less" : "Show More"}
                     </button>
-                    <button
-                      onClick={() => handleEditClick(place._id)}
-                      className="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600 mr-2"
-                    >
-                      Edit
-                    </button>
                     <IconButton
                       onClick={() => handleDeleteClick(place._id)}
                       aria-label="delete"
@@ -143,13 +134,7 @@ export default function PlacesPage() {
               ))
             ) : (
               <div className="text-center">
-                <p>No places found. Please add some places.</p>
-                <button
-                  onClick={() => navigate('/account/places/new')}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-                >
-                  Add New Place
-                </button>
+                <p>No Trip offers found. Please add some trip offers</p>
               </div>
             )}
           </div>

@@ -11,7 +11,7 @@ export default function RequestsPage() {
   const [requests, setRequests] = useState([]);
   const [verificationMessage, setVerificationMessage] = useState("");
   const [expandedRequests, setExpandedRequests] = useState({});
-  const navigate = useNavigate();
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -50,10 +50,7 @@ export default function RequestsPage() {
       .catch(err => console.error('Error deleting request:', err));
   };
 
-  const handleEditClick = (id) => {
-    navigate(`/account/requests/${id}`);
-  };
-
+ 
   const handleExpandClick = (id) => {
     setExpandedRequests((prevExpanded) => ({
       ...prevExpanded,
@@ -108,12 +105,6 @@ export default function RequestsPage() {
                 >
                   {expandedRequests[request._id] ? "Show Less" : "Show More"}
                 </button>
-                <button
-                  onClick={() => handleEditClick(request._id)}
-                  className="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600 mr-2"
-                >
-                  Edit
-                </button>
                 <IconButton
                   onClick={() => handleDeleteRequest(request._id)}
                   aria-label="delete"
@@ -128,12 +119,6 @@ export default function RequestsPage() {
         ) : (
           <div className="text-center">
             <p>No requests found. Please add some requests.</p>
-            <button
-              onClick={() => navigate('/account/Myrequests/new')}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-            >
-              Add New Request
-            </button>
           </div>
         )}
       </div>
