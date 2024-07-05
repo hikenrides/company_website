@@ -1,4 +1,4 @@
-import {Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AccountNav from "../AccountNav";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
@@ -35,6 +35,7 @@ export default function PlacesPage() {
   const handleEditClick = (id) => {
     navigate(`/account/places/${id}`);
   };
+
   const handleAddTripClick = (event) => {
     if (user && user.verification === "not verified") {
       event.preventDefault();
@@ -43,6 +44,7 @@ export default function PlacesPage() {
       // Proceed to navigate to add trip offer page
     }
   };
+
   const handleDeleteClick = (id) => {
     const token = localStorage.getItem('token');
     if (token) {

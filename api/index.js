@@ -290,7 +290,7 @@ app.delete('/places/:id', async (req, res) => {
         status: 'deleted',
       });
 
-      await place.remove();
+      await Place.findByIdAndRemove(placeId);
 
       res.json({ success: true });
     } catch (error) {
@@ -299,6 +299,7 @@ app.delete('/places/:id', async (req, res) => {
     }
   });
 });
+
 app.delete('/requests/:id', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const authHeader = req.headers.authorization;
