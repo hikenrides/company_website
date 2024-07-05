@@ -300,7 +300,7 @@ app.delete('/places/:id', async (req, res) => {
   });
 });
 
-router.delete('/requests/:id', async (req, res) => {
+app.delete('/requests/:id', async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
     const token = authHeader.split(' ')[1];
