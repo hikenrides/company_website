@@ -300,45 +300,35 @@ app.delete('/places/:id', async (req, res) => {
   });
 });
 
-app.delete('/requests/:id', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const authHeader = req.headers.authorization;
-  const token = authHeader.split(' ')[1];
-  const requestId = req.params.id;
+router.delete('/requests/:id', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    const token = authHeader.split(' ')[1];
+    const requestId = req.params.id;
 
-  if (!token) {
-    return res.status(401).json({ error: 'JWT Token not provided' });
+    if (!token) {
+      return res.status(401).json({ error: 'JWT Token not provided' });
+    }
+
+    const decoded = jwt.verify(token, jwtSecret);
+
+    const request = await Request.findOne({ _id: requestId, owner: decoded.id });
+    if (!request) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+
+    await DeletedRequest.create({
+      ...request.toObject(),
+      status: 'deleted',
+    });
+
+    await Request.deleteOne({ _id: requestId });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting request:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) {
-      console.error('JWT Verification Error:', err);
-      return res.status(401).json({ error: 'JWT verification failed' });
-    }
-
-    try {
-      const request = await Request.findById(requestId);
-      if (!request) {
-        return res.status(404).json({ error: 'Request not found' });
-      }
-
-      if (request.owner.toString() !== userData.id) {
-        return res.status(403).json({ error: 'Forbidden' });
-      }
-
-      await DeletedRequest.create({
-        ...request.toObject(),
-        status: 'deleted',
-      });
-
-      await request.remove();
-
-      res.json({ success: true });
-    } catch (error) {
-      console.error('Error deleting request:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
 });
 
 // Move expired places to DeletedPlace model
