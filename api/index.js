@@ -532,12 +532,21 @@ app.post('/bookings', async (req, res) => {
       place, passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
     });
 
+    // Move the place to DeletedPlace with status booked
+    await DeletedPlace.create({
+      ...placeData.toObject(),
+      status: 'booked',
+    });
+
+    await placeData.remove(); // Remove the original place from Place collection
+
     res.json(bookingDoc);
   } catch (error) {
     console.error('Error creating booking:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 app.post('/bookings2', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
@@ -553,6 +562,14 @@ app.post('/bookings2', async (req, res) => {
     const bookingDoc = await Booking2.create({
       request, passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
     });
+
+    // Move the request to DeletedRequest with status booked
+    await DeletedRequest.create({
+      ...requestData.toObject(),
+      status: 'booked',
+    });
+
+    await requestData.remove(); // Remove the original request from Request collection
 
     res.json(bookingDoc);
   } catch (error) {
