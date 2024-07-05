@@ -14,6 +14,9 @@ const Booking2 = require('./models/Booking2');
 const Request = require('./models/requests');
 const Message = require('./models/message');
 const Withdrawals = require('./models/withdrawals');
+const DeletedPlace = require('./models/DeletedPlace');
+const DeletedRequest = require('./models/DeletedRequest');
+const cron = require('node-cron');
 
 require('dotenv').config();
 
@@ -282,8 +285,12 @@ app.delete('/places/:id', async (req, res) => {
         return res.status(403).json({ error: 'Forbidden' });
       }
 
-      place.status = 'deleted';
-      await place.save();
+      await DeletedPlace.create({
+        ...place.toObject(),
+        status: 'deleted',
+      });
+
+      await place.remove();
 
       res.json({ success: true });
     } catch (error) {
@@ -318,12 +325,120 @@ app.delete('/requests/:id', async (req, res) => {
         return res.status(403).json({ error: 'Forbidden' });
       }
 
-      request.status = 'deleted';
-      await request.save();
+      await DeletedRequest.create({
+        ...request.toObject(),
+        status: 'deleted',
+      });
+
+      await request.remove();
 
       res.json({ success: true });
     } catch (error) {
       console.error('Error deleting request:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+});
+
+// Move expired places to DeletedPlace model
+cron.schedule('0 0 * * *', async () => {
+  mongoose.connect(process.env.MONGO_URL);
+  const now = new Date();
+
+  try {
+    const expiredPlaces = await Place.find({ date: { $lt: now }, status: 'active' });
+    for (const place of expiredPlaces) {
+      await DeletedPlace.create({
+        ...place.toObject(),
+        status: 'expired',
+      });
+      await place.remove();
+    }
+
+    const expiredRequests = await Request.find({ date: { $lt: now }, status: 'active' });
+    for (const request of expiredRequests) {
+      await DeletedRequest.create({
+        ...request.toObject(),
+        status: 'expired',
+      });
+      await request.remove();
+    }
+  } catch (error) {
+    console.error('Error moving expired documents:', error);
+  }
+});
+
+// Move booked places to DeletedPlace model
+app.post('/book-place/:id', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const authHeader = req.headers.authorization;
+  const token = authHeader.split(' ')[1];
+  const placeId = req.params.id;
+
+  if (!token) {
+    return res.status(401).json({ error: 'JWT Token not provided' });
+  }
+
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) {
+      console.error('JWT Verification Error:', err);
+      return res.status(401).json({ error: 'JWT verification failed' });
+    }
+
+    try {
+      const place = await Place.findById(placeId);
+      if (!place) {
+        return res.status(404).json({ error: 'Place not found' });
+      }
+
+      await DeletedPlace.create({
+        ...place.toObject(),
+        status: 'booked',
+      });
+
+      await place.remove();
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error booking place:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+});
+
+// Move booked requests to DeletedRequest model
+app.post('/book-request/:id', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const authHeader = req.headers.authorization;
+  const token = authHeader.split(' ')[1];
+  const requestId = req.params.id;
+
+  if (!token) {
+    return res.status(401).json({ error: 'JWT Token not provided' });
+  }
+
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) {
+      console.error('JWT Verification Error:', err);
+      return res.status(401).json({ error: 'JWT verification failed' });
+    }
+
+    try {
+      const request = await Request.findById(requestId);
+      if (!request) {
+        return res.status(404).json({ error: 'Request not found' });
+      }
+
+      await DeletedRequest.create({
+        ...request.toObject(),
+        status: 'booked',
+      });
+
+      await request.remove();
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error booking request:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });

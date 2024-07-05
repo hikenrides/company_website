@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
 import AccountNav from "../AccountNav";
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
@@ -26,61 +26,56 @@ export default function PlacesPage() {
       })
       .catch(error => {
         if (error.response && error.response.status === 401) {
-          // Handle unauthorized access
-          console.error('JWT Token not provided or expired');
-          // Redirect to login or handle as needed
-        } else {
-          console.error('Error fetching user places:', error.response ? error.response.data : error.message);
+          setVerificationMessage("You need to verify your email first.");
         }
       });
     }
   }, []);
 
+  const handleEditClick = (id) => {
+    navigate(`/account/places/${id}`);
+  };
   const handleAddTripClick = (event) => {
-    if (user) {
-      if (user.verification === "not verified") {
-        event.preventDefault();
-        setVerificationMessage("Only verified users can create trip offers.");
-        return;
-      } else if (!user.isDriver) {
-        event.preventDefault();
-        setVerificationMessage("Only drivers can create trip offers.");
-        return;
-      }
-      navigate('/account/Mytrips/new'); // This line should navigate to the page if all checks pass
+    if (user && user.verification === "not verified") {
+      event.preventDefault();
+      setVerificationMessage("Only verified users can create trip offers.");
+    } else {
+      // Proceed to navigate to add trip offer page
     }
   };
-
-  const handleDeleteTrip = (placeId) => {
+  const handleDeleteClick = (id) => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.delete(`/places/${placeId}`, {
+      axios.delete(`/places/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
-      .then(() => {
-        setPlaces(places.filter(place => place._id !== placeId));
+      .then(({ data }) => {
+        setPlaces(places.filter((place) => place._id !== id));
       })
-      .catch(err => console.error('Error deleting place:', err));
+      .catch(error => {
+        console.error('Error deleting place:', error);
+      });
     }
   };
 
-  const toggleExpandPlace = (placeId) => {
-    setExpandedPlaces(prevExpanded => ({
+  const handleExpandClick = (id) => {
+    setExpandedPlaces((prevExpanded) => ({
       ...prevExpanded,
-      [placeId]: !prevExpanded[placeId],
+      [id]: !prevExpanded[id],
     }));
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '60vh' }}>
+    <div>
       <div className="hidden md:block mb-4">
         <AccountNav />
       </div>
       <div className="text-center mb-4">
-        <button
+        <Link
           className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
+          to={'/account/Mytrips/new'}
           onClick={handleAddTripClick}
         >
           <svg
@@ -92,42 +87,71 @@ export default function PlacesPage() {
             <path fillRule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clipRule="evenodd" />
           </svg>
           Add trip offer
-        </button>
+        </Link>
         {verificationMessage && (
           <p className="text-red-700 mt-2">{verificationMessage}</p>
         )}
       </div>
-      <div className="flex flex-wrap gap-4">
-        {places.length > 0 &&
-          places
-            .filter(place => place.status !== 'deleted')
-            .map((place) => (
-              <div key={place._id} className="w-full flex cursor-pointer shadow-md rounded-2xl overflow-hidden p-4 mb-4" style={{ backgroundColor: 'white' }}>
-                <div className="flex-grow">
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <h2 className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>pick-up area:</h2>
-                    <span>{place.province}, {place.from}</span>
+      <div className="text-center">
+        <div>
+          <div className="mt-4">
+            {places.length > 0 ? (
+              places.map((place) => (
+                <div
+                  key={place._id}
+                  className={`bg-gray-200 p-4 mb-4 rounded-lg shadow-md ${expandedPlaces[place._id] ? "expanded" : ""}`}
+                >
+                  <div className="text-left">
+                    <p><strong>From:</strong> {place.province}</p>
+                    <p><strong>To:</strong> {place.province2}</p>
+                    <p><strong>Destination:</strong> {place.destination}</p>
+                    <p><strong>Brand:</strong> {place.brand}</p>
+                    <p><strong>Color:</strong> {place.color}</p>
+                    <p><strong>Type:</strong> {place.type}</p>
+                    <p><strong>Price:</strong> ${place.price}</p>
+                    <p><strong>Date:</strong> {new Date(place.date).toLocaleDateString()}</p>
+                    {expandedPlaces[place._id] && (
+                      <div>
+                        <p><strong>Extra Info:</strong> {place.extraInfo}</p>
+                      </div>
+                    )}
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <h2 className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>destination:</h2>
-                    <span>{place.province2}, {place.destination}</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <h2 style={{ color: 'orange', marginRight: '8px' }}>price:</h2>
-                    <span>{place.price} per person</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <p className="text-sm mt-2" style={{ color: 'orange', marginRight: '8px' }}>date:</p>
-                    <span>{new Date(place.date).toLocaleDateString('en-US')}</span>
+                  <div className="flex justify-end mt-2">
+                    <button
+                      onClick={() => handleExpandClick(place._id)}
+                      className="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600 mr-2"
+                    >
+                      {expandedPlaces[place._id] ? "Show Less" : "Show More"}
+                    </button>
+                    <button
+                      onClick={() => handleEditClick(place._id)}
+                      className="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600 mr-2"
+                    >
+                      Edit
+                    </button>
+                    <IconButton
+                      onClick={() => handleDeleteClick(place._id)}
+                      aria-label="delete"
+                      size="large"
+                    >
+                      <DeleteIcon fontSize="inherit" />
+                    </IconButton>
                   </div>
                 </div>
-                <button onClick={() => handleDeleteTrip(place._id)} className="ml-4 text-red-500 hover:text-red-700">
-                  <IconButton aria-label="delete">
-                    <DeleteIcon />
-                  </IconButton>
+              ))
+            ) : (
+              <div className="text-center">
+                <p>No places found. Please add some places.</p>
+                <button
+                  onClick={() => navigate('/account/places/new')}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                >
+                  Add New Place
                 </button>
               </div>
-            ))}
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
