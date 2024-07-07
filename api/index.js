@@ -16,6 +16,7 @@ const Message = require('./models/message');
 const Withdrawals = require('./models/withdrawals');
 const DeletedPlace = require('./models/DeletedPlace');
 const DeletedRequest = require('./models/DeletedRequest');
+const { BookedPlace, BookedRequest } = require('./models/Booked'); 
 const cron = require('node-cron');
 
 require('dotenv').config();
@@ -525,7 +526,7 @@ app.post('/bookings', async (req, res) => {
   } = req.body;
 
   try {
-    const placeData = await Place.findById(place); // Ensure this returns a Mongoose document
+    const placeData = await Place.findById(place);
     if (!placeData) {
       return res.status(404).json({ error: 'Place not found' });
     }
@@ -535,13 +536,14 @@ app.post('/bookings', async (req, res) => {
       place, passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
     });
 
-    // Move the place to DeletedPlace with status booked
-    await DeletedPlace.create({
+    // Move the place to BookedPlace with status booked
+    await BookedPlace.create({
       ...placeData.toObject(),
       status: 'booked',
+      passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
     });
 
-    await Place.deleteOne({ _id: place }); // Remove the original place from Place collection
+    await placeData.deleteOne(); // Remove the original place from Place collection
 
     res.json(bookingDoc);
   } catch (error) {
@@ -558,7 +560,7 @@ app.post('/bookings2', async (req, res) => {
   } = req.body;
 
   try {
-    const requestData = await Request.findById(request); // Ensure this returns a Mongoose document
+    const requestData = await Request.findById(request);
     if (!requestData) {
       return res.status(404).json({ error: 'Request not found' });
     }
@@ -568,21 +570,21 @@ app.post('/bookings2', async (req, res) => {
       request, passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
     });
 
-    // Move the request to DeletedRequest with status booked
-    await DeletedRequest.create({
+    // Move the request to BookedRequest with status booked
+    await BookedRequest.create({
       ...requestData.toObject(),
       status: 'booked',
+      passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
     });
 
-    await Request.deleteOne({ _id: request }); // Remove the original request from Request collection
+    await requestData.deleteOne(); // Remove the original request from Request collection
 
     res.json(bookingDoc);
   } catch (error) {
     console.error('Error creating booking2:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-});
-
+})
 
 
 app.get('/bookings', async (req, res) => {

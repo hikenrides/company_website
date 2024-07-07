@@ -31,8 +31,6 @@ export default function PlacesPage() {
     }
   }, []);
 
- 
-
   const handleAddTripClick = (event) => {
     if (user && user.verification === "not verified") {
       event.preventDefault();
@@ -67,7 +65,7 @@ export default function PlacesPage() {
   };
 
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '60vh' }}>
       <div className="hidden md:block mb-4">
         <AccountNav />
       </div>
@@ -101,17 +99,37 @@ export default function PlacesPage() {
                   className={`bg-gray-200 p-4 mb-4 rounded-lg shadow-md ${expandedPlaces[place._id] ? "expanded" : ""}`}
                 >
                   <div className="text-left">
-                    <p><strong>From:</strong> {place.province}</p>
-                    <p><strong>To:</strong> {place.province2}</p>
-                    <p><strong>Destination:</strong> {place.destination}</p>
-                    <p><strong>Brand:</strong> {place.brand}</p>
-                    <p><strong>Color:</strong> {place.color}</p>
-                    <p><strong>Type:</strong> {place.type}</p>
-                    <p><strong>Price:</strong> ${place.price}</p>
-                    <p><strong>Date:</strong> {new Date(place.date).toLocaleDateString()}</p>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>pick-up area:</strong>
+                      <span>{place.province}, {place.from}</span>
+                    </div>
+                    <hr style={{ border: '1px solid gray' }} />
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>destination:</strong>
+                      <span>{place.province2}, {place.destination}</span>
+                    </div>
+                    <hr style={{ border: '1px solid gray' }} />
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <strong style={{ color: 'orange', marginRight: '8px' }}>price:</strong>
+                      <span>{place.price} per person</span>
+                    </div>
+                    <hr style={{ border: '1px solid gray' }} />
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <strong className="text-sm mt-2" style={{ color: 'orange', marginRight: '8px' }}>date:</strong>
+                      <span>{new Date(place.date).toLocaleDateString('en-US')}</span>
+                    </div>
+                    <hr style={{ border: '1px solid gray' }} />
                     {expandedPlaces[place._id] && (
                       <div>
-                        <p><strong>Extra Info:</strong> {place.extraInfo}</p>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>vehicle-destination:</strong>
+                          <span>{place.brand}, {place.color}, {place.type}</span>
+                        </div>
+                        <hr style={{ border: '1px solid gray' }} />
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <p><strong style={{ color: 'orange', marginRight: '8px' }}>Extra Info:</strong> {place.extraInfo}</p>
+                        </div>
+                        <hr style={{ border: '1px solid gray' }} />
                       </div>
                     )}
                   </div>

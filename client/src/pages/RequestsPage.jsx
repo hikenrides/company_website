@@ -59,11 +59,11 @@ export default function RequestsPage() {
   };
 
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '60vh' }}>
       <div className="hidden md:block mb-4">
         <AccountNav />
       </div>
-      <div className="mb-4">
+      <div className="text-center mb-4">
         <Link
           className="inline-flex items-center gap-1 bg-primary text-white py-2 px-6 rounded-full"
           to={'/account/Myrequests/new'}
@@ -83,19 +83,39 @@ export default function RequestsPage() {
           <p className="text-red-700 mt-2">{verificationMessage}</p>
         )}
       </div>
-      <div className="mt-4">
+      <div className="mt-4 ">
         {requests.length > 0 ? (
           requests.map((request) => (
             <div key={request._id} className={`bg-gray-200 p-4 mb-4 rounded-lg shadow-md ${expandedRequests[request._id] ? "expanded" : ""}`}>
               <div className="text-left">
-                <p><strong>Pick-up Area:</strong> {request.from}</p>
-                <p><strong>Destination:</strong> {request.destination}</p>
-                <p><strong>Price:</strong> ${request.price} per person</p>
-                <p><strong>Date:</strong> {new Date(request.date).toLocaleDateString()}</p>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>pick-up area:</strong>
+                  <span>{request.province}, {request.from}</span>
+                </div>
+                <hr style={{ border: '1px solid gray' }} />
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>destination:</strong>
+                  <span>{request.province2}, {request.destination}</span>
+                </div>
+                <hr style={{ border: '1px solid gray' }} />
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <strong style={{ color: 'orange', marginRight: '8px' }}>price:</strong>
+                  <span>{request.price} per person</span>
+                </div>
+                <hr style={{ border: '1px solid gray' }} />
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <strong className="text-sm mt-2" style={{ color: 'orange', marginRight: '8px' }}>date:</strong>
+                  <span>{new Date(request.date).toLocaleDateString('en-US')}</span>
+                </div>
+                <hr style={{ border: '1px solid gray' }} />
                 {expandedRequests[request._id] && (
                   <div>
-                    <p><strong>Extra Info:</strong> {request.extraInfo}</p>
-                  </div>
+                   <div style={{ display: 'flex', alignItems: 'center' }}>
+                   <strong className="text-sm mt-2" style={{ color: 'orange', marginRight: '8px' }}>Extra Info:</strong>
+                   <span>{request.extraInfo}</span>
+                 </div>
+                 <hr style={{ border: '1px solid gray' }} />
+                 </div>
                 )}
               </div>
               <div className="flex justify-end mt-2">
