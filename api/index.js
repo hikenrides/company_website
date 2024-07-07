@@ -541,7 +541,7 @@ app.post('/bookings', async (req, res) => {
       status: 'booked',
     });
 
-    await placeData.remove(); // Remove the original place from Place collection
+    await Place.deleteOne({ _id: place }); // Remove the original place from Place collection
 
     res.json(bookingDoc);
   } catch (error) {
@@ -574,7 +574,7 @@ app.post('/bookings2', async (req, res) => {
       status: 'booked',
     });
 
-    await requestData.remove(); // Remove the original request from Request collection
+    await Request.deleteOne({ _id: request }); // Remove the original request from Request collection
 
     res.json(bookingDoc);
   } catch (error) {
@@ -582,6 +582,7 @@ app.post('/bookings2', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 
 app.get('/bookings', async (req, res) => {
