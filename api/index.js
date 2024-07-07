@@ -538,12 +538,16 @@ app.post('/bookings', async (req, res) => {
 
     // Move the place to BookedPlace with status booked
     await BookedPlace.create({
-      ...placeData.toObject(),
+      place: placeData._id,
+      passengers,
+      name,
+      phone,
+      price,
+      reference,
+      owner_number: ownerNumber,
+      user: userData.id,
       status: 'booked',
-      passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
     });
-
-    await placeData.deleteOne(); // Remove the original place from Place collection
 
     res.json(bookingDoc);
   } catch (error) {
@@ -551,6 +555,7 @@ app.post('/bookings', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 app.post('/bookings2', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
@@ -572,19 +577,23 @@ app.post('/bookings2', async (req, res) => {
 
     // Move the request to BookedRequest with status booked
     await BookedRequest.create({
-      ...requestData.toObject(),
+      request: requestData._id,
+      passengers,
+      name,
+      phone,
+      price,
+      reference,
+      owner_number: ownerNumber,
+      user: userData.id,
       status: 'booked',
-      passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
     });
-
-    await requestData.deleteOne(); // Remove the original request from Request collection
 
     res.json(bookingDoc);
   } catch (error) {
     console.error('Error creating booking2:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-})
+});
 
 
 app.get('/bookings', async (req, res) => {

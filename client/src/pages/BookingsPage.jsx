@@ -21,7 +21,7 @@ export default function BookingsPage() {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" }); // Adjust breakpoint as needed
 
   return (
-    <div >
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '60vh' }}>
       <div className={`hidden md:block ${isMobile ? 'hidden' : ''}`}> {/* Conditionally render AccountNav on larger screens */}
         <AccountNav />
       </div>
