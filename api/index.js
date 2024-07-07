@@ -634,6 +634,31 @@ app.post('/bookings2', async (req, res) => {
   }
 });
 
+app.delete('/bookings/:id', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const userData = await getUserDataFromReq(req);
+  const { id } = req.params;
+
+  try {
+    const bookingDoc = await Booking.findById(id);
+    if (!bookingDoc) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+    if (bookingDoc.user.toString() !== userData.id) {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    await Booking.findByIdAndDelete(id);
+
+    // Optionally, update the user's balance or other relevant actions
+
+    res.json({ message: 'Booking cancelled' });
+  } catch (error) {
+    console.error('Error cancelling booking:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 app.get('/bookings', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);

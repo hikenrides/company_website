@@ -9,13 +9,29 @@ export default function BookingWidget({ place }) {
   const [phone, setPhone] = useState("");
   const [redirect, setRedirect] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [existingBooking, setExistingBooking] = useState(null);
   const { user } = useContext(UserContext);
 
   useEffect(() => {
     if (user) {
       setName(user.name);
+      checkExistingBooking();
     }
   }, [user]);
+
+  const checkExistingBooking = async () => {
+    try {
+      const response = await axios.get("/bookings", { withCredentials: true });
+      const booking = response.data.find(
+        (booking) => booking.place._id === place._id
+      );
+      if (booking) {
+        setExistingBooking(booking);
+      }
+    } catch (error) {
+      console.error("Error checking existing bookings:", error);
+    }
+  };
 
   const validatePassengers = () => {
     if (passengers < 1 || passengers > place.maxGuests) {
@@ -39,16 +55,15 @@ export default function BookingWidget({ place }) {
   };
 
   function generateReference() {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let result = "";
     for (let i = 0; i < 7; i++) {
       result += characters.charAt(Math.floor(Math.random() * characters.length));
     }
     return result;
   }
-  
 
-  async function bookThisPlace() {
+  const bookThisPlace = async () => {
     try {
       if (!validatePassengers() || !validateBalance()) {
         return;
@@ -63,28 +78,38 @@ export default function BookingWidget({ place }) {
           phone,
           place: place._id,
           price: passengers * place.price,
-          reference
+          reference,
         },
         { withCredentials: true }
       );
 
       const bookingId = response.data._id;
 
-      const updatedBalance = user.balance - (passengers * place.price);
-      await axios.put('/users/update-balance', {
-        id: user._id,
-        balance: updatedBalance
-        }, { withCredentials: true });
-
-
+      const updatedBalance = user.balance - passengers * place.price;
+      await axios.put(
+        "/users/update-balance",
+        {
+          id: user._id,
+          balance: updatedBalance,
+        },
+        { withCredentials: true }
+      );
 
       setRedirect(`/account/bookings/${bookingId}`);
     } catch (error) {
       console.error("Error making a booking:", error);
     }
-  }
+  };
 
-  
+  const cancelBooking = async () => {
+    try {
+      await axios.delete(`/bookings/${existingBooking._id}`, { withCredentials: true });
+      setExistingBooking(null);
+      setErrorMessage("");
+    } catch (error) {
+      console.error("Error canceling the booking:", error);
+    }
+  };
 
   if (redirect) {
     return <Navigate to={redirect} />;
@@ -95,9 +120,7 @@ export default function BookingWidget({ place }) {
       <div className="text-2xl text-center">
         Price: {passengers > 0 && <span> R{passengers * place.price}</span>}
       </div>
-      {errorMessage && (
-        <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
-      )}
+      {errorMessage && <p className="text-red-500 text-sm mt-2">{errorMessage}</p>}
       <div className="border rounded-2xl mt-4">
         <div className="py-3 px-4 border-t">
           <label>Number of passengers:</label>
@@ -124,9 +147,20 @@ export default function BookingWidget({ place }) {
           </div>
         )}
       </div>
-      <button onClick={bookThisPlace} className="primary mt-4">
-        Request Ride
-      </button>
+      {existingBooking ? (
+        <>
+          <p className="text-yellow-500 text-sm mt-2">
+            You've already requested the selected trip. Do you want to cancel the request?
+          </p>
+          <button onClick={cancelBooking} className="primary mt-4">
+            Cancel Request
+          </button>
+        </>
+      ) : (
+        <button onClick={bookThisPlace} className="primary mt-4">
+          Request Ride
+        </button>
+      )}
     </div>
   );
 }
