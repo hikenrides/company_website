@@ -359,43 +359,6 @@ cron.schedule('0 0 * * *', async () => {
     console.error('Error moving expired documents:', error);
   }
 });
-app.get('/check-request/:id', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { id } = req.params;
-  const userData = await getUserDataFromReq(req);
-
-  try {
-    const existingBooking = await Booking.findOne({ request: id, user: userData.id, status: { $ne: 'cancelled' } });
-    if (existingBooking) {
-      return res.json({ alreadyRequested: true });
-    }
-    res.json({ alreadyRequested: false });
-  } catch (error) {
-    console.error('Error checking request status:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-app.put('/bookings/cancel/:id', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { id } = req.params;
-  const userData = await getUserDataFromReq(req);
-
-  try {
-    const booking = await Booking.findOne({ request: id, user: userData.id, status: { $ne: 'cancelled' } });
-    if (!booking) {
-      return res.status(404).json({ error: 'Booking not found or already cancelled' });
-    }
-
-    booking.status = 'cancelled';
-    await booking.save();
-
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Error cancelling booking:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
 
 app.put('/bookings2/cancel/:id', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
