@@ -360,6 +360,26 @@ cron.schedule('0 0 * * *', async () => {
   }
 });
 
+app.put('/bookings2/cancel/:id', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { id } = req.params;
+
+  try {
+    const booking = await BookedRequest.findById(id);
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    booking.status = req.body.status;
+    await booking.save();
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error cancelling booking:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // Move booked places to DeletedPlace model
 app.post('/book-place/:id', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
@@ -434,6 +454,25 @@ app.post('/book-request/:id', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
+});
+app.put('/bookings2/cancel/:id', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { id } = req.params;
+
+  try {
+    const booking = await BookedRequest.findById(id);
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    booking.status = req.body.status;
+    await booking.save();
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error cancelling booking:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 app.get('/user-requests', (req, res) => {
@@ -604,8 +643,15 @@ app.get('/bookings', async (req, res) => {
 
 app.get('/bookings2', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const userData = await getUserDataFromReq(req);
-  res.json(await Booking2.find({ user: userData.id }).populate('request'));
+  const { request } = req.query;
+
+  try {
+    const bookings = await BookedRequest.find({ request, status: 'booked' });
+    res.json(bookings);
+  } catch (error) {
+    console.error('Error fetching bookings:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 app.post('/upload-verification', upload.fields([{ name: 'idPhoto' }, { name: 'documentPhoto' }]), async (req, res) => {

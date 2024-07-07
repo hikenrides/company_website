@@ -11,11 +11,13 @@ export default function BookingWidget2({ request }) {
   const [redirect, setRedirect] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [open, setOpen] = useState(false); // For controlling the modal
+  const [bookingStatus, setBookingStatus] = useState(null); // For tracking the booking status
   const { user } = useContext(UserContext);
 
   useEffect(() => {
     if (user) {
       setName(user.name);
+      checkExistingBooking();
     }
   }, [user]);
 
@@ -35,6 +37,17 @@ export default function BookingWidget2({ request }) {
     }
     setErrorMessage("");
     return true;
+  };
+
+  const checkExistingBooking = async () => {
+    try {
+      const response = await axios.get(`/bookings2?request=${request._id}`, { withCredentials: true });
+      if (response.data.length > 0) {
+        setBookingStatus(response.data[0]);
+      }
+    } catch (error) {
+      console.error("Error checking existing booking:", error);
+    }
   };
 
   function generateReference() {
@@ -68,6 +81,20 @@ export default function BookingWidget2({ request }) {
       setOpen(true); // Show the modal on success
     } catch (error) {
       console.error("Error accepting request:", error);
+    }
+  }
+
+  async function cancelBooking() {
+    try {
+      const response = await axios.put(
+        `/bookings2/cancel/${bookingStatus._id}`,
+        { status: "driver cancelled" },
+        { withCredentials: true }
+      );
+      setBookingStatus(null);
+      setOpen(true); // Show the modal on success
+    } catch (error) {
+      console.error("Error cancelling booking:", error);
     }
   }
 
@@ -114,12 +141,21 @@ export default function BookingWidget2({ request }) {
           </div>
         )}
       </div>
-      <button onClick={bookThisPlace} className="primary mt-4">
-        Accept Request
-      </button>
+      {bookingStatus ? (
+        <div>
+          <p className="text-green-500 text-sm mt-2">You've already accepted the trip request.</p>
+          <button onClick={cancelBooking} className="primary mt-4">
+            Cancel Acceptance
+          </button>
+        </div>
+      ) : (
+        <button onClick={bookThisPlace} className="primary mt-4">
+          Accept Request
+        </button>
+      )}
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Request Accepted</DialogTitle>
+        <DialogTitle>Request {bookingStatus ? "Cancelled" : "Accepted"}</DialogTitle>
         <DialogContent>
           <p>We've notified the passenger and we'll communicate with you if there's any changes.</p>
         </DialogContent>
