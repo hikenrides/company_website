@@ -525,7 +525,10 @@ app.post('/bookings', async (req, res) => {
   } = req.body;
 
   try {
-    const placeData = await Place.findById(place);
+    const placeData = await Place.findById(place); // Ensure this returns a Mongoose document
+    if (!placeData) {
+      return res.status(404).json({ error: 'Place not found' });
+    }
     const ownerNumber = placeData.owner_number;
 
     const bookingDoc = await Booking.create({
@@ -547,7 +550,6 @@ app.post('/bookings', async (req, res) => {
   }
 });
 
-
 app.post('/bookings2', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
@@ -556,7 +558,10 @@ app.post('/bookings2', async (req, res) => {
   } = req.body;
 
   try {
-    const requestData = await Request.findById(request);
+    const requestData = await Request.findById(request); // Ensure this returns a Mongoose document
+    if (!requestData) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
     const ownerNumber = requestData.owner_number;
 
     const bookingDoc = await Booking2.create({
@@ -577,6 +582,7 @@ app.post('/bookings2', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 app.get('/bookings', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
