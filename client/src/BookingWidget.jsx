@@ -9,13 +9,26 @@ export default function BookingWidget({ place }) {
   const [phone, setPhone] = useState("");
   const [redirect, setRedirect] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [alreadyRequested, setAlreadyRequested] = useState(false);
   const { user } = useContext(UserContext);
 
   useEffect(() => {
     if (user) {
       setName(user.name);
+      checkIfAlreadyRequested();
     }
   }, [user]);
+
+  const checkIfAlreadyRequested = async () => {
+    try {
+      const response = await axios.get(`/check-request/${place._id}`, { withCredentials: true });
+      if (response.data.alreadyRequested) {
+        setAlreadyRequested(true);
+      }
+    } catch (error) {
+      console.error("Error checking request status:", error);
+    }
+  };
 
   const validatePassengers = () => {
     if (passengers < 1 || passengers > place.maxGuests) {
@@ -46,7 +59,6 @@ export default function BookingWidget({ place }) {
     }
     return result;
   }
-  
 
   async function bookThisPlace() {
     try {
@@ -76,15 +88,20 @@ export default function BookingWidget({ place }) {
         balance: updatedBalance
         }, { withCredentials: true });
 
-
-
       setRedirect(`/account/bookings/${bookingId}`);
     } catch (error) {
       console.error("Error making a booking:", error);
     }
   }
 
-  
+  async function cancelRequest() {
+    try {
+      await axios.put(`/bookings/cancel/${place._id}`, { status: 'cancelled' }, { withCredentials: true });
+      setAlreadyRequested(false);
+    } catch (error) {
+      console.error("Error cancelling request:", error);
+    }
+  }
 
   if (redirect) {
     return <Navigate to={redirect} />;
@@ -124,9 +141,20 @@ export default function BookingWidget({ place }) {
           </div>
         )}
       </div>
-      <button onClick={bookThisPlace} className="primary mt-4">
-        Request Ride
-      </button>
+      {alreadyRequested ? (
+        <>
+          <p className="text-blue-500 text-sm mt-2">
+            You've already requested the selected trip. Do you want to cancel the request?
+          </p>
+          <button onClick={cancelRequest} className="primary mt-4">
+            Cancel Request
+          </button>
+        </>
+      ) : (
+        <button onClick={bookThisPlace} className="primary mt-4">
+          Request Ride
+        </button>
+      )}
     </div>
   );
 }
