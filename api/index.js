@@ -184,24 +184,45 @@ app.post('/places', (req, res) => {
   });
 });
 
-app.post('/requests', (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const {
-    province, from, province2, destination, price,
-    extraInfo, owner_number, date, NumOfPassengers,status
-  } = req.body;
-  const authHeader = req.headers.authorization;
-  const token = authHeader.split(' ')[1];
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
-    const RequestDoc = await Request.create({
-      owner: userData.id, price,
-      province, from, province2, destination,
-      extraInfo, owner_number, date, NumOfPassengers,status
+app.post('/requests', async (req, res) => {
+  const { province, from, province2, destination, extraInfo, owner_number, date, NumOfPassengers, price } = req.body;
+  const userData = await getUserDataFromReq(req);
+
+  const totalCost = NumOfPassengers * price;
+
+  if (userData.balance < totalCost) {
+    return res.status(400).json({ error: 'Insufficient funds' });
+  }
+
+  try {
+    // Create the trip request
+    const newRequest = new Request({
+      province,
+      from,
+      province2,
+      destination,
+      extraInfo,
+      owner_number,
+      date,
+      NumOfPassengers,
+      price,
+      user: userData.id
     });
-    res.json(RequestDoc);
-  });
+    await newRequest.save();
+
+    // Update the user's balance
+    const updatedUser = await User.findByIdAndUpdate(
+      userData.id,
+      { $inc: { balance: -totalCost } },
+      { new: true }
+    );
+
+    res.json({ success: true, request: newRequest, user: updatedUser });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
+
 
 app.post('/withdrawals', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);

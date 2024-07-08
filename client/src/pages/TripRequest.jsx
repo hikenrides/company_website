@@ -30,6 +30,7 @@ export default function TripRequest() {
   const [price, setPrice] = useState(100);
   const [redirect, setRedirect] = useState(false);
   const [formError, setFormError] = useState(false);
+  const [message, setMessage] = useState('');
 
   const validateForm = () => {
     if (province && from && province2 && destination && date && NumOfPassengers && price && owner_number) {
@@ -120,11 +121,18 @@ export default function TripRequest() {
       if (id) {
         await axios.put(`/requests/${id}`, RequestData, config);
       } else {
-        await axios.post('/requests', RequestData, config);
+        const response = await axios.post('/requests', RequestData, config);
+        if (response.data.success) {
+          setMessage("Your trip request has been successfully created and the cost of the trip has been deducted from your account. NB: cash is refundable if you cancel the request or if a driver is not found by the time when the trip is supposed to take place.");
+          setRedirect(true);
+        }
       }
-      setRedirect(true);
     } catch (error) {
-      console.log("Failed to save request:", error);
+      if (error.response && error.response.status === 400) {
+        setMessage("Insufficient funds, please deposit money to your account for you to be able to request trips.");
+      } else {
+        console.log("Failed to save request:", error);
+      }
     }
   }
 
@@ -148,6 +156,9 @@ export default function TripRequest() {
       <form onSubmit={saveRequest}>
         {formError && (
           <p style={{ color: 'red' }}>Please fill out all the required information!</p>
+        )}
+        {message && (
+          <p style={{ color: 'green' }}>{message}</p>
         )}
         {preInput('From', 'Please indicate your preferred pick-up location for passengers.')}
         <select
@@ -190,7 +201,7 @@ export default function TripRequest() {
           onChange={(ev) => setExtraInfo(ev.target.value)}
         />
 
-{preInput('Departure', 'add departing date, number of passengers and price per person')}
+        {preInput('Departure', 'Add departing date, number of passengers and price per person')}
         <div className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
           <div>
             <h3 className="text-white mt-2 -mb-1">Date</h3>
@@ -205,7 +216,7 @@ export default function TripRequest() {
           </div>
 
           <div>
-            <h3 className=" text-white mt-2 -mb-1">Number of people</h3>
+            <h3 className="text-white mt-2 -mb-1">Number of people</h3>
             <input
               className="bg-gray-300"
               type="number"
