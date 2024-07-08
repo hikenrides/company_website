@@ -197,6 +197,7 @@ app.post('/requests', async (req, res) => {
   try {
     // Create the trip request
     const newRequest = new Request({
+      owner: userData.id,
       province,
       from,
       province2,
@@ -222,7 +223,7 @@ app.post('/requests', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
+     
 
 app.post('/withdrawals', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
