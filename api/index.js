@@ -187,13 +187,19 @@ app.post('/places', (req, res) => {
 app.post('/requests', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { province, from, province2, destination, extraInfo, owner_number, date, NumOfPassengers, price } = req.body;
-  const userData = await getUserDataFromReq(req);
+  const user = await User.findById(userId);
 
   const totalCost = NumOfPassengers * price;
 
-  if (userData.balance < totalCost) {
-    return res.status(400).json({ success: false, error: 'Insufficient funds. Please deposit money to your account to request trips.' });
+  if (user.balance < price) {
+    return res.status(400).json({
+      success: false,
+      message: 'Insufficient funds'
+    });
   }
+
+  user.balance -= totalCost;
+  await user.save();
 
   try {
     // Create the trip request
@@ -207,23 +213,14 @@ app.post('/requests', async (req, res) => {
       owner_number,
       date,
       NumOfPassengers,
-      price,
+      price: totalCost,
       user: userData.id,
     });
     await newRequest.save();
 
-    // Update the user's balance
-    const updatedUser = await User.findByIdAndUpdate(
-      userData.id,
-      { $inc: { balance: -totalCost } },
-      { new: true }
-    );
-
-    res.json({
+    res.status(201).json({
       success: true,
-      message: 'Your trip request has been successfully created and the cost of the trip has been deducted from your account. NB: Cash is refundable if you cancel the request or if a driver is not found by the time when the trip is supposed to take place.',
-      request: newRequest,
-      user: updatedUser,
+      message: 'Request created successfully'
     });
   } catch (error) {
     res.status(500).json({ success: false, error: 'Internal server error' });

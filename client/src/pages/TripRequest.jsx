@@ -121,19 +121,21 @@ export default function TripRequest() {
       } else {
         const response = await axios.post('/requests', RequestData, config);
         const { data } = response;
-        console.log("Response data:", data); // Debugging line
         if (data.success) {
           setMessage(data.message);
           setMessageType('success');
           setRedirect(true);
         } else {
-          setMessage(data.error);
+          setMessage(data.message);
           setMessageType('error');
         }
       }
     } catch (error) {
-      console.log("Failed to save request:", error);
-      setMessage("An error occurred while saving the request.");
+      if (error.response && error.response.data) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage("An error occurred while saving the request.");
+      }
       setMessageType('error');
     }
   }
