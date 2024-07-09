@@ -141,7 +141,7 @@ export default function TripRequest() {
   }
 
   if (redirect) {
-    return <Navigate to={'/account/requests'} />
+    return <Navigate to={'/account/Myrequests'} />
   }
 
   function renderProvinceOptions() {
