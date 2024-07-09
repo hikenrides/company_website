@@ -30,6 +30,8 @@ export default function TripRequest() {
   const [price, setPrice] = useState(100);
   const [redirect, setRedirect] = useState(false);
   const [formError, setFormError] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
   const validateForm = () => {
     if (province && from && province2 && destination && date && NumOfPassengers && price && owner_number) {
@@ -120,11 +122,21 @@ export default function TripRequest() {
       if (id) {
         await axios.put(`/requests/${id}`, RequestData, config);
       } else {
-        await axios.post('/requests', RequestData, config);
+        const response = await axios.post('/requests', RequestData, config);
+        const { data } = response;
+        if (data.success) {
+          setMessage(data.message);
+          setMessageType('success');
+          setRedirect(true);
+        } else {
+          setMessage(data.error);
+          setMessageType('error');
+        }
       }
-      setRedirect(true);
     } catch (error) {
       console.log("Failed to save request:", error);
+      setMessage("An error occurred while saving the request.");
+      setMessageType('error');
     }
   }
 
@@ -148,6 +160,9 @@ export default function TripRequest() {
       <form onSubmit={saveRequest}>
         {formError && (
           <p style={{ color: 'red' }}>Please fill out all the required information!</p>
+        )}
+        {message && (
+          <p style={{ color: messageType === 'error' ? 'red' : 'green' }}>{message}</p>
         )}
         {preInput('From', 'Please indicate your preferred pick-up location for passengers.')}
         <select
@@ -215,7 +230,7 @@ export default function TripRequest() {
           </div>
 
           <div>
-            <h3 className="text-white mt-2 -mb-1">Price per person</h3>
+            <h3 className=" text-white mt-2 -mb-1">Price per person</h3>
             <input
               className="bg-gray-300"
               type="number"
@@ -223,9 +238,33 @@ export default function TripRequest() {
               onChange={(ev) => setPrice(ev.target.value)}
             />
           </div>
-        </div>
 
-        <button className="primary my-4">Save</button>
+          <div>
+            <h3 className="text-white mt-2 -mb-1">Phone number</h3>
+            <input
+              className="bg-gray-300"
+              type="tel"
+              value={owner_number}
+              onChange={(ev) => setPhone(ev.target.value)}
+              placeholder="e.g. +27123456789"
+            />
+          </div>
+        </div>
+        <div className="flex justify-between mt-4">
+          <button
+            type="button"
+            className="py-2 px-4 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+            onClick={() => setRedirect(true)}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="py-2 px-4 bg-primary text-white rounded-md hover:bg-primary-dark"
+          >
+            Save
+          </button>
+        </div>
       </form>
     </div>
   );
