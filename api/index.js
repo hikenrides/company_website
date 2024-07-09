@@ -232,13 +232,14 @@ app.post('/requests', async (req, res) => {
   }
 });  
 
-app.post('/withdrawals', (req, res) => {
+app.post('/withdrawals', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {
     amount, accountNumber, accountName, bankName,
   } = req.body;
   const authHeader = req.headers.authorization;
   const token = authHeader.split(' ')[1];
+  
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) {
       console.error('JWT Verification Error:', err);
@@ -246,6 +247,15 @@ app.post('/withdrawals', (req, res) => {
     }
 
     try {
+      const user = await User.findById(userData.id);
+      
+      if (user.balance < amount) {
+        return res.status(400).json({ error: 'Insufficient funds' });
+      }
+
+      user.balance -= amount;
+      await user.save();
+
       const withdrawalsDoc = await Withdrawals.create({
         owner: userData.id,
         amount,
@@ -254,13 +264,14 @@ app.post('/withdrawals', (req, res) => {
         bankName,
       });
 
-      res.json(withdrawalsDoc);
+      res.json({ success: true, message: 'Withdrawal is being processed. It will be sent within 24hrs of working days.', withdrawal: withdrawalsDoc });
     } catch (error) {
       console.error('Error creating withdrawal:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
 });
+
 
 app.get('/user-places', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);

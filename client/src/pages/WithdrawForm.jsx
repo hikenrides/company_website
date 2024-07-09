@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const WithdrawForm = () => {
   const [amount, setAmount] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
   const [accountName, setAccountName] = useState('');
   const [bankName, setBankName] = useState('');
+  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -24,18 +25,25 @@ const WithdrawForm = () => {
 
       // Handle the response as needed
       console.log('Withdrawal successful:', response.data);
-      navigate("/account");
+      setMessage(response.data.message);
+      setError('');
 
-      // Reset the form and error state
+      // Reset the form state
       setAmount('');
       setAccountNumber('');
       setAccountName('');
       setBankName('');
-      setError('');
+
+      // Optionally, navigate to the account page or display the message
+      // navigate("/account");
     } catch (error) {
-      // Handle errors from the backend
-      console.error('Withdrawal Error:', error.response.data.error);
-      setError('Error processing withdrawal. Please try again.');
+      if (error.response && error.response.data.error === 'Insufficient funds') {
+        setError('Insufficient funds');
+      } else {
+        setError('Error processing withdrawal. Please try again.');
+      }
+      setMessage('');
+      console.error('Withdrawal Error:', error.response ? error.response.data.error : error.message);
     }
   };
 
@@ -104,6 +112,9 @@ const WithdrawForm = () => {
             <option value="TymeBank">TymeBank</option>
           </select>
         </div>
+
+        {error && <div className="text-red-500 mb-4">{error}</div>}
+        {message && <div className="text-green-500 mb-4">{message}</div>}
 
         <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Withdraw
