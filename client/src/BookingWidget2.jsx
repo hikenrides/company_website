@@ -12,6 +12,7 @@ export default function BookingWidget2({ request }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [open, setOpen] = useState(false); // For controlling the modal
   const [bookingStatus, setBookingStatus] = useState(null); // For tracking the booking status
+  const [action, setAction] = useState(""); // For tracking the action type (accept or cancel)
   const { user } = useContext(UserContext);
 
   useEffect(() => {
@@ -78,6 +79,7 @@ export default function BookingWidget2({ request }) {
         },
         { withCredentials: true }
       );
+      setAction("accept");
       setOpen(true); // Show the modal on success
     } catch (error) {
       console.error("Error accepting request:", error);
@@ -92,6 +94,7 @@ export default function BookingWidget2({ request }) {
         { withCredentials: true }
       );
       setBookingStatus(null);
+      setAction("cancel");
       setOpen(true); // Show the modal on success
     } catch (error) {
       console.error("Error cancelling booking:", error);
@@ -154,9 +157,13 @@ export default function BookingWidget2({ request }) {
       )}
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Request {bookingStatus ? "Cancelled" : "Accepted"}</DialogTitle>
+        <DialogTitle>Request {action === "accept" ? "Accepted" : "Cancelled"}</DialogTitle>
         <DialogContent>
-          <p>We've notified the passenger and we'll communicate with you if there's any changes.</p>
+          <p>
+            {action === "accept"
+              ? "We've notified and sent your contact details to the passenger."
+              : "We'll notify the passenger about the cancellation of the trip."}
+          </p>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Okay</Button>

@@ -4,6 +4,7 @@ import AccountNav from "../AccountNav";
 import { Navigate, useParams } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
 const provinces = [
   "Eastern Cape",
@@ -32,6 +33,7 @@ export default function TripRequest() {
   const [formError, setFormError] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
+  const [open, setOpen] = useState(false);
 
   const validateForm = () => {
     if (province && from && province2 && destination && date && NumOfPassengers && price && owner_number) {
@@ -54,7 +56,7 @@ export default function TripRequest() {
     if (!id) {
       axios.get('/profile', config).then(response => {
         const { data } = response;
-        setPhone(`+27${data.phone_number}`);
+        setPhone(data.phone_number);
       });
       return;
     }
@@ -63,12 +65,12 @@ export default function TripRequest() {
       setProvince(data.province);
       setFrom(data.from);
       setProvince2(data.province2);
-      setDestination(data.destination);
+      setDestination(data.address);
       setExtraInfo(data.extraInfo);
       setDate(new Date(data.date));
       setPassengers(data.NumOfPassengers);
       setPrice(data.price);
-      setPhone(data.owner_number);
+      setPhone(data.phone_number);
     });
   }, [id]);
 
@@ -121,11 +123,15 @@ export default function TripRequest() {
       } else {
         const response = await axios.post('/requests', RequestData, config);
         const { data } = response;
-        setMessage(data.message);
-        setMessageType(data.success ? 'success' : 'error');
         if (data.success) {
+          setMessage(data.message);
+          setMessageType('success');
           setRedirect(true);
+        } else {
+          setMessage(data.message);
+          setMessageType('error');
         }
+        setOpen(true); // Open the dialog
       }
     } catch (error) {
       if (error.response && error.response.data) {
@@ -134,8 +140,16 @@ export default function TripRequest() {
         setMessage("An error occurred while saving the request.");
       }
       setMessageType('error');
+      setOpen(true); // Open the dialog
     }
   }
+
+  const handleClose = () => {
+    setOpen(false);
+    if (messageType === 'success') {
+      setRedirect(true);
+    }
+  };
 
   if (redirect) {
     return <Navigate to={'/account/Myrequests'} />
@@ -158,7 +172,6 @@ export default function TripRequest() {
         {formError && (
           <p style={{ color: 'red' }}>Please fill out all the required information!</p>
         )}
-        
         {preInput('From', 'Please indicate your preferred pick-up location for passengers.')}
         <select
           className="bg-gray-300"
@@ -245,9 +258,6 @@ export default function TripRequest() {
             />
           </div>
         </div>
-        {message && (
-          <p style={{ color: messageType === 'error' ? 'red' : 'green' }}>{message}</p>
-        )}
         <div className="flex justify-between mt-4">
           <button
             type="button"
@@ -264,6 +274,16 @@ export default function TripRequest() {
           </button>
         </div>
       </form>
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>{messageType === 'success' ? "Request Created" : "Error"}</DialogTitle>
+        <DialogContent>
+          <p>{message}</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Okay</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

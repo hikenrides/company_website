@@ -22,8 +22,7 @@ export default function PageRequest() {
 
   return (
     <div className="mt-4 bg-gray-100 -mx-8 px-8 pt-8">
-      <h1 className="text-3xl">{request.from}</h1>
-      <AddressLink>{request.address}</AddressLink>
+      <AddressLink>{request.province2}, {request.destination}</AddressLink>
       <div className="mt-8 mb-8 grid gap-8 grid-cols-1 md:grid-cols-[2fr_1fr]">
         <div>
           Date: {request.date}<br />
