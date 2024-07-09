@@ -54,7 +54,7 @@ export default function TripRequest() {
     if (!id) {
       axios.get('/profile', config).then(response => {
         const { data } = response;
-        setPhone(data.phone_number);
+        setPhone(`+27${data.phone_number}`);
       });
       return;
     }
@@ -158,9 +158,7 @@ export default function TripRequest() {
         {formError && (
           <p style={{ color: 'red' }}>Please fill out all the required information!</p>
         )}
-        {message && (
-          <p style={{ color: messageType === 'error' ? 'red' : 'green' }}>{message}</p>
-        )}
+        
         {preInput('From', 'Please indicate your preferred pick-up location for passengers.')}
         <select
           className="bg-gray-300"
@@ -247,6 +245,9 @@ export default function TripRequest() {
             />
           </div>
         </div>
+        {message && (
+          <p style={{ color: messageType === 'error' ? 'red' : 'green' }}>{message}</p>
+        )}
         <div className="flex justify-between mt-4">
           <button
             type="button"
