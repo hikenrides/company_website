@@ -185,21 +185,21 @@ app.post('/places', (req, res) => {
 });
 
 app.post('/requests', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
   const { province, from, province2, destination, extraInfo, owner_number, date, NumOfPassengers, price } = req.body;
-  const user = await User.findById(userId);
+  const userData = await getUserDataFromReq(req);
 
   const totalCost = NumOfPassengers * price;
 
-  if (user.balance < price) {
+  if (userData.balance < totalCost) {
     return res.status(400).json({
       success: false,
       message: 'Insufficient funds'
     });
   }
 
-  user.balance -= totalCost;
-  await user.save();
+  userData.balance -= totalCost;
+  await userData.save();
+
 
   try {
     // Create the trip request
@@ -213,20 +213,25 @@ app.post('/requests', async (req, res) => {
       owner_number,
       date,
       NumOfPassengers,
-      price: totalCost,
-      user: userData.id,
+      price,
+      user: userData.id
     });
     await newRequest.save();
 
-    res.status(201).json({
-      success: true,
-      message: 'Request created successfully'
-    });
+    // Update the user's balance
+    const updatedUser = await User.findByIdAndUpdate(
+      userData.id,
+      { $inc: { balance: -totalCost } },
+      { new: true }
+    );
+
+    res.json({ success: true, request: newRequest, user: updatedUser });
   } catch (error) {
-    res.status(500).json({ success: false, error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
-  
+
+     
 
 app.post('/withdrawals', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
