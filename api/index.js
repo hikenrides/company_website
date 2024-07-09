@@ -185,52 +185,60 @@ app.post('/places', (req, res) => {
 });
 
 app.post('/requests', async (req, res) => {
-  const { province, from, province2, destination, extraInfo, owner_number, date, NumOfPassengers, price } = req.body;
+  mongoose.connect(process.env.MONGO_URL);
+  const { province, from, province2, destination, price, extraInfo, owner_number, date, NumOfPassengers, status } = req.body;
+  const authHeader = req.headers.authorization;
+  const token = authHeader.split(' ')[1];
   
-  try {
-    // Assuming getUserDataFromReq returns the User model instance
-    const userData = await getUserDataFromReq(req);
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+    
+    const totalCost = price * NumOfPassengers;
 
-    const totalCost = NumOfPassengers * price;
+    try {
+      // Fetch user data
+      const user = await User.findById(userData.id);
 
-    if (userData.balance < totalCost) {
-      return res.status(400).json({
-        success: false,
-        message: 'Insufficient funds'
+      // Check if the user has sufficient funds
+      if (user.balance < totalCost) {
+        return res.status(400).json({
+          success: false,
+          message: 'Insufficient funds. Please deposit money to your account to request trips.'
+        });
+      }
+
+      // Deduct the cost from user's balance
+      user.balance -= totalCost;
+      await user.save();
+
+      // Create the trip request
+      const RequestDoc = await Request.create({
+        owner: userData.id,
+        province,
+        from,
+        province2,
+        destination,
+        price,
+        extraInfo,
+        owner_number,
+        date,
+        NumOfPassengers,
+        status
       });
+
+      res.json({
+        success: true,
+        message: 'Your trip request has been successfully created and the cost of the trip has been deducted from your account. NB: Cash is refundable if you cancel the request or if a driver is not found by the time the trip is supposed to take place.',
+        request: RequestDoc,
+        user
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
     }
+  });
+});
 
-    userData.balance -= totalCost;
-
-    // Create the trip request
-    const newRequest = new Request({
-      owner: userData.id,
-      province,
-      from,
-      province2,
-      destination,
-      extraInfo,
-      owner_number,
-      date,
-      NumOfPassengers,
-      price,
-      user: userData.id
-    });
-    await newRequest.save();
-
-    // Update the user's balance
-    const updatedUser = await User.findByIdAndUpdate(
-      userData.id,
-      { $inc: { balance: -totalCost } },
-      { new: true }
-    );
-
-    res.json({ success: true, request: newRequest, user: updatedUser });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});  
 
 app.post('/withdrawals', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);

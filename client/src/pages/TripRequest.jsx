@@ -67,8 +67,7 @@ export default function TripRequest() {
       setExtraInfo(data.extraInfo);
       setDate(new Date(data.date));
       setPassengers(data.NumOfPassengers);
-      setPrice(data.price);
-      setPhone(data.phone_number);
+      setPhone(data.owner_number);
     });
   }, [id]);
 
