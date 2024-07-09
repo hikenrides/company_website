@@ -58,16 +58,23 @@ function getUserDataFromReq(req) {
 
     const token = authHeader.split(' ')[1];
     console.log('Received token:', token); // Log the received token
-    jwt.verify(token, jwtSecret, {}, (err, userData) => {
+    jwt.verify(token, jwtSecret, {}, (err, decodedToken) => {
       if (err) {
         console.error('JWT Verification Error:', err);
         return reject(new Error('JWT verification failed'));
       }
-      resolve(userData);
+
+      // Fetch the user data from the database using the decoded token
+      User.findById(decodedToken.id, (err, userData) => {
+        if (err || !userData) {
+          console.error('User data retrieval error:', err || 'User not found');
+          return reject(new Error('User data retrieval error'));
+        }
+        resolve(userData); // Resolve with the Mongoose user model instance
+      });
     });
   });
 }
-
 
 app.get('/', (req, res) => {
   res.send('Hello, this is the root route of the backend!');
@@ -188,7 +195,7 @@ app.post('/requests', async (req, res) => {
   const { province, from, province2, destination, extraInfo, owner_number, date, NumOfPassengers, price } = req.body;
   
   try {
-    // Assuming getUserDataFromReq returns the User model instance
+    // Retrieve user data from the request
     const userData = await getUserDataFromReq(req);
 
     const totalCost = NumOfPassengers * price;
@@ -201,7 +208,7 @@ app.post('/requests', async (req, res) => {
     }
 
     userData.balance -= totalCost;
-    await userData.save();
+    await userData.save(); // Save the updated user balance
 
     // Create the trip request
     const newRequest = new Request({
@@ -217,9 +224,9 @@ app.post('/requests', async (req, res) => {
       price,
       user: userData.id
     });
-    await newRequest.save();
+    await newRequest.save(); // Save the new trip request
 
-    // Update the user's balance
+    // Update the user's balance in the database
     const updatedUser = await User.findByIdAndUpdate(
       userData.id,
       { $inc: { balance: -totalCost } },
@@ -228,10 +235,10 @@ app.post('/requests', async (req, res) => {
 
     res.json({ success: true, request: newRequest, user: updatedUser });
   } catch (error) {
-    console.error(error);
+    console.error('Request creation error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-});  
+});
 
 app.post('/withdrawals', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
