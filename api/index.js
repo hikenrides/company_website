@@ -186,22 +186,23 @@ app.post('/places', (req, res) => {
 
 app.post('/requests', async (req, res) => {
   const { province, from, province2, destination, extraInfo, owner_number, date, NumOfPassengers, price } = req.body;
-  const userData = await getUserDataFromReq(req);
-
-  const totalCost = NumOfPassengers * price;
-
-  if (userData.balance < totalCost) {
-    return res.status(400).json({
-      success: false,
-      message: 'Insufficient funds'
-    });
-  }
-
-  userData.balance -= totalCost;
-  await userData.save();
-
-
+  
   try {
+    // Assuming getUserDataFromReq returns the User model instance
+    const userData = await getUserDataFromReq(req);
+
+    const totalCost = NumOfPassengers * price;
+
+    if (userData.balance < totalCost) {
+      return res.status(400).json({
+        success: false,
+        message: 'Insufficient funds'
+      });
+    }
+
+    userData.balance -= totalCost;
+    await userData.save();
+
     // Create the trip request
     const newRequest = new Request({
       owner: userData.id,
@@ -227,11 +228,10 @@ app.post('/requests', async (req, res) => {
 
     res.json({ success: true, request: newRequest, user: updatedUser });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Internal server error' });
   }
-});
-
-     
+});  
 
 app.post('/withdrawals', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
