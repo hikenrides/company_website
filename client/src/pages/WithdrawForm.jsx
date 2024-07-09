@@ -26,7 +26,6 @@ const WithdrawForm = () => {
       console.log('Withdrawal successful:', response.data);
       navigate("/account");
 
-
       // Reset the form and error state
       setAmount('');
       setAccountNumber('');
@@ -39,7 +38,6 @@ const WithdrawForm = () => {
       setError('Error processing withdrawal. Please try again.');
     }
   };
-
 
   return (
     <div className="bg-gray-800 p-4 rounded-lg shadow-md text-white max-w-lg mx-auto">
@@ -58,15 +56,8 @@ const WithdrawForm = () => {
           />
         </div>
 
-        
-<div
- 
-className="mb-4">
-
-          
-<label
- 
-htmlFor="accountNumber" className="block text-sm font-medium text-gray-400">
+        <div className="mb-4">
+          <label htmlFor="accountNumber" className="block text-sm font-medium text-gray-400">
             Account Number:
           </label>
           <input
@@ -78,15 +69,8 @@ htmlFor="accountNumber" className="block text-sm font-medium text-gray-400">
           />
         </div>
 
-        
-<div
- 
-className="mb-4">
-
-          
-<label
- 
-htmlFor="accountHolderName" className="block text-sm font-medium text-gray-400">
+        <div className="mb-4">
+          <label htmlFor="accountHolderName" className="block text-sm font-medium text-gray-400">
             Account Holder Name:
           </label>
           <input
@@ -98,26 +82,29 @@ htmlFor="accountHolderName" className="block text-sm font-medium text-gray-400">
           />
         </div>
 
-        
-<div
- 
-className="mb-4">
-
-          
-<label
- 
-htmlFor="bankName" className="block text-sm font-medium text-gray-400">
+        <div className="mb-4">
+          <label htmlFor="bankName" className="block text-sm font-medium text-gray-400">
             Bank Name:
           </label>
-          <input
-            type="text"
+          <select
             id="bankName"
             value={bankName}
             onChange={(e) => setBankName(e.target.value)}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
+          >
+            <option value="">Select a bank</option>
+            <option value="Absa Group Limited">Absa Group Limited</option>
+            <option value="African Bank Limited">African Bank Limited</option>
+            <option value="Bidvest Bank Limited">Bidvest Bank Limited</option>
+            <option value="Capitec Bank Limited">Capitec Bank Limited</option>
+            <option value="First National Bank">First National Bank</option>
+            <option value="Discovery Limited">Discovery Limited</option>
+            <option value="Nedbank Limited">Nedbank Limited</option>
+            <option value="Standard Bank of South Africa">Standard Bank of South Africa</option>
+            <option value="TymeBank">TymeBank</option>
+          </select>
         </div>
-        {/* Add other fields as needed */}
+
         <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Withdraw
         </button>

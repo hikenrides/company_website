@@ -122,7 +122,6 @@ export default function BookingWidget2({ request }) {
             onChange={(ev) => setPassengers(ev.target.value)}
             max={request.maxGuests}
           />
-          {errorMessage && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
         </div>
         {passengers > 0 && (
           <div className="py-3 px-4 border-t">

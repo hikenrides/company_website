@@ -11,6 +11,7 @@ export default function PlacesPage() {
   const [places, setPlaces] = useState([]);
   const [verificationMessage, setVerificationMessage] = useState("");
   const [expandedPlaces, setExpandedPlaces] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -25,18 +26,28 @@ export default function PlacesPage() {
       })
       .catch(error => {
         if (error.response && error.response.status === 401) {
-          setVerificationMessage("You need to verify your email first.");
+          // Handle unauthorized access
+          console.error('JWT Token not provided or expired');
+          // Redirect to login or handle as needed
+        } else {
+          console.error('Error fetching user places:', error.response ? error.response.data : error.message);
         }
       });
     }
   }, []);
 
   const handleAddTripClick = (event) => {
-    if (user && user.verification === "not verified") {
-      event.preventDefault();
-      setVerificationMessage("Only verified users can create trip offers.");
-    } else {
-      // Proceed to navigate to add trip offer page
+    if (user) {
+      if (user.verification === "not verified") {
+        event.preventDefault();
+        setVerificationMessage("Only verified users can create trip offers.");
+        return;
+      } else if (!user.isDriver) {
+        event.preventDefault();
+        setVerificationMessage("Only drivers can create trip offers.");
+        return;
+      }
+      navigate('/account/Mytrips/new'); // This line should navigate to the page if all checks pass
     }
   };
 
