@@ -63,10 +63,11 @@ export default function TripRequest() {
       setProvince(data.province);
       setFrom(data.from);
       setProvince2(data.province2);
-      setDestination(data.address);
+      setDestination(data.destination);
       setExtraInfo(data.extraInfo);
       setDate(new Date(data.date));
       setPassengers(data.NumOfPassengers);
+      setPrice(data.price);
       setPhone(data.owner_number);
     });
   }, [id]);
@@ -120,13 +121,10 @@ export default function TripRequest() {
       } else {
         const response = await axios.post('/requests', RequestData, config);
         const { data } = response;
+        setMessage(data.message);
+        setMessageType(data.success ? 'success' : 'error');
         if (data.success) {
-          setMessage(data.message);
-          setMessageType('success');
           setRedirect(true);
-        } else {
-          setMessage(data.message);
-          setMessageType('error');
         }
       }
     } catch (error) {

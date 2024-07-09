@@ -186,57 +186,46 @@ app.post('/places', (req, res) => {
 
 app.post('/requests', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
-  const { province, from, province2, destination, price, extraInfo, owner_number, date, NumOfPassengers, status } = req.body;
+  const {
+    province, from, province2, destination, price,
+    extraInfo, owner_number, date, NumOfPassengers, status
+  } = req.body;
   const authHeader = req.headers.authorization;
   const token = authHeader.split(' ')[1];
-  
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
-    
+
+  try {
+    const decodedToken = jwt.verify(token, jwtSecret);
+    const user = await User.findById(decodedToken.id);
+
     const totalCost = price * NumOfPassengers;
 
-    try {
-      // Fetch user data
-      const user = await User.findById(userData.id);
-
-      // Check if the user has sufficient funds
-      if (user.balance < totalCost) {
-        return res.status(400).json({
-          success: false,
-          message: 'Insufficient funds. Please deposit money to your account to request trips.'
-        });
-      }
-
-      // Deduct the cost from user's balance
-      user.balance -= totalCost;
-      await user.save();
-
-      // Create the trip request
-      const RequestDoc = await Request.create({
-        owner: userData.id,
-        province,
-        from,
-        province2,
-        destination,
-        price,
-        extraInfo,
-        owner_number,
-        date,
-        NumOfPassengers,
-        status
+    if (user.balance < totalCost) {
+      return res.status(400).json({
+        success: false,
+        message: "Insufficient funds. Please deposit money to your account to request trips."
       });
-
-      res.json({
-        success: true,
-        message: 'Your trip request has been successfully created and the cost of the trip has been deducted from your account. NB: Cash is refundable if you cancel the request or if a driver is not found by the time the trip is supposed to take place.',
-        request: RequestDoc,
-        user
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal server error' });
     }
-  });
+
+    user.balance -= totalCost;
+    await user.save();
+
+    const RequestDoc = await Request.create({
+      owner: user._id, price,
+      province, from, province2, destination,
+      extraInfo, owner_number, date, NumOfPassengers, status
+    });
+
+    res.json({
+      success: true,
+      message: "Your trip request has been successfully created and the cost of the trip has been deducted from your account. NB: Cash is refundable if you cancel the request or if a driver is not found by the time when the trip is supposed to take place.",
+      request: RequestDoc
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while creating the request."
+    });
+  }
 });
 
 
