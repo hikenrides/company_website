@@ -38,9 +38,6 @@ export default function TripRequest() {
       setFormError(false);
       return true;
     } else {
-      console.log({
-        province, from, province2, destination, date, NumOfPassengers, price, owner_number
-      });
       setFormError(true);
       return false;
     }
@@ -124,6 +121,7 @@ export default function TripRequest() {
       } else {
         const response = await axios.post('/requests', RequestData, config);
         const { data } = response;
+        console.log("Response data:", data); // Debugging line
         if (data.success) {
           setMessage(data.message);
           setMessageType('success');
@@ -205,7 +203,7 @@ export default function TripRequest() {
           onChange={(ev) => setExtraInfo(ev.target.value)}
         />
 
-{preInput('Departure', 'add departing date, number of passengers and price per person')}
+        {preInput('Departure', 'add departing date, number of passengers and price per person')}
         <div className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
           <div>
             <h3 className="text-white mt-2 -mb-1">Date</h3>

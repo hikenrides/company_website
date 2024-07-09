@@ -192,7 +192,7 @@ app.post('/requests', async (req, res) => {
   const totalCost = NumOfPassengers * price;
 
   if (userData.balance < totalCost) {
-    return res.status(400).json({ error: 'Insufficient funds. Please deposit money to your account to request trips.' });
+    return res.status(400).json({ success: false, error: 'Insufficient funds. Please deposit money to your account to request trips.' });
   }
 
   try {
@@ -226,12 +226,10 @@ app.post('/requests', async (req, res) => {
       user: updatedUser,
     });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ success: false, error: 'Internal server error' });
   }
 });
-
-
-     
+  
 
 app.post('/withdrawals', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
