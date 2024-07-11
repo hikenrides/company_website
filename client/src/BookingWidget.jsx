@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
 export default function BookingWidget({ place }) {
   const [passengers, setPassengers] = useState(1);
@@ -9,6 +10,7 @@ export default function BookingWidget({ place }) {
   const [phone, setPhone] = useState("");
   const [redirect, setRedirect] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false); // Dialog state
   const { user } = useContext(UserContext);
 
   useEffect(() => {
@@ -20,8 +22,9 @@ export default function BookingWidget({ place }) {
   const validatePassengers = () => {
     if (passengers < 1 || passengers > place.maxGuests) {
       setErrorMessage(
-        `Please enter a valid number of passengers (1-${place.maxGuests}).`
+        `The driver only wants ${place.maxGuests} guests.`
       );
+      setDialogOpen(true); // Open dialog
       return false;
     }
     setErrorMessage("");
@@ -46,7 +49,6 @@ export default function BookingWidget({ place }) {
     }
     return result;
   }
-  
 
   async function bookThisPlace() {
     try {
@@ -76,15 +78,11 @@ export default function BookingWidget({ place }) {
         balance: updatedBalance
         }, { withCredentials: true });
 
-
-
       setRedirect(`/account/bookings/${bookingId}`);
     } catch (error) {
       console.error("Error making a booking:", error);
     }
   }
-
-  
 
   if (redirect) {
     return <Navigate to={redirect} />;
@@ -127,6 +125,19 @@ export default function BookingWidget({ place }) {
       <button onClick={bookThisPlace} className="primary mt-4">
         Request Ride
       </button>
+
+      {/* Dialog */}
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+        <DialogTitle>Error</DialogTitle>
+        <DialogContent>
+          <p>{errorMessage}</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialogOpen(false)} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

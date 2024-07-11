@@ -606,6 +606,11 @@ app.post('/bookings', async (req, res) => {
     if (!placeData) {
       return res.status(404).json({ error: 'Place not found' });
     }
+
+    if (placeData.maxGuests < passengers) {
+      return res.status(400).json({ error: `The driver only wants ${placeData.maxGuests} guests` });
+    }
+
     const ownerNumber = placeData.owner_number;
 
     const bookingDoc = await Booking.create({
@@ -625,13 +630,16 @@ app.post('/bookings', async (req, res) => {
       status: 'booked',
     });
 
+    // Update the maxGuests field
+    placeData.maxGuests -= passengers;
+    await placeData.save();
+
     res.json(bookingDoc);
   } catch (error) {
     console.error('Error creating booking:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 
 app.post('/bookings2', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);

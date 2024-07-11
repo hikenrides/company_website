@@ -141,6 +141,11 @@ export default function PlacesPage() {
                           <p><strong style={{ color: 'orange', marginRight: '8px' }}>Extra Info:</strong> {place.extraInfo}</p>
                         </div>
                         <hr style={{ border: '1px solid gray' }} />
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>Max passengers:</strong>
+                          <span>{place.maxGuests}</span>
+                        </div>
+                        <hr style={{ border: '1px solid gray' }} />
                       </div>
                     )}
                   </div>
