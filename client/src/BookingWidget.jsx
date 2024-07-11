@@ -22,7 +22,7 @@ export default function BookingWidget({ place }) {
   const validatePassengers = () => {
     if (passengers < 1 || passengers > place.maxGuests) {
       setErrorMessage(
-        `The driver only wants ${place.maxGuests} guests.`
+        `The driver only wants ${place.maxGuests} passengers.`
       );
       setDialogOpen(true); // Open dialog
       return false;

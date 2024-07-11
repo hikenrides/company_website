@@ -224,6 +224,7 @@ export default function TripRequest() {
               placeholderText="Select leaving date"
               dateFormat="MM/dd/yyyy"
               popperPlacement="top-start"
+              minDate={new Date()}
             />
           </div>
 
@@ -260,15 +261,8 @@ export default function TripRequest() {
         </div>
         <div className="flex justify-between mt-4">
           <button
-            type="button"
-            className="py-2 px-4 bg-gray-500 text-white rounded-md hover:bg-gray-600"
-            onClick={() => setRedirect(true)}
-          >
-            Cancel
-          </button>
-          <button
             type="submit"
-            className="py-2 px-4 bg-primary text-white rounded-md hover:bg-primary-dark"
+            className="primary my-4"
           >
             Save
           </button>

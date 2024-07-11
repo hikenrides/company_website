@@ -309,6 +309,7 @@ export default function PlacesFormPage() {
               placeholderText="Select leaving date"
               dateFormat="MM/dd/yyyy"
               popperPlacement="top-start"
+              minDate={new Date()}
             />
           </div>
 
