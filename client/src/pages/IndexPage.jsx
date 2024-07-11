@@ -6,6 +6,7 @@ import {motion} from 'framer-motion';
 import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { UserContext } from "../UserContext.jsx";
+import Footer from "../footer";
 
 
 
@@ -135,7 +136,6 @@ const header={
 
 
 
-
 function IndexPage() {
 
   const { user } = useContext(UserContext);
@@ -232,7 +232,7 @@ function IndexPage() {
       </motion.div>
 
       <Card/>
-
+      <Footer />
 
     </motion.div>
   );

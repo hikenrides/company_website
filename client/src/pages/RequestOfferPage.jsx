@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import FindCarForm from "../FindCarForm";
 import { Container, Row, Col } from "reactstrap";
 import { UserContext } from "../UserContext";
+import Footer from "../footer";
 
 const provinces = [
   "Eastern Cape",
@@ -74,7 +75,7 @@ export default function RequestOfferPage() {
   };
 
   return (
-    <div className="mt-10 mb-20">
+    <div className="mt-10">
       <section className="p-0 mb-10">
         <div className="hero__form">
           <Container>
@@ -164,6 +165,9 @@ export default function RequestOfferPage() {
           )}
         </div>
       ))}
+      <div className="mt-20">
+        <Footer />
+        </div>
     </div>
   );
 }

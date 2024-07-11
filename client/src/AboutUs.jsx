@@ -1,8 +1,9 @@
 import React from 'react';
+import Footer from './footer';
 
 const AboutUs = () => {
   return (
-    <div className="about-us mb-20">
+    <div className="about-us">
       <h2 style={{ marginBottom: '1.5rem', fontSize: '1.5rem', fontWeight: 'bold', color: '#333', fontFamily: 'Verdana' }}>About Us</h2>
       <p style={{ color: '#333', fontFamily: 'Verdana' }}>Welcome to Hikenrides, where we're transforming the way people commute by connecting drivers with cars and passengers. Our mission is to make travel more affordable, convenient, and eco-friendly by facilitating ride-sharing opportunities.</p>
       <h2 style={{ marginBottom: '1.5rem', marginTop: '1.5rem', fontSize: '1.5rem', fontWeight: 'bold', color: '#333', fontFamily: 'Verdana'}}>Our Mission</h2>
@@ -21,6 +22,9 @@ const AboutUs = () => {
       <h2 style={{ marginBottom: '1.5rem',marginTop: '1.5rem' , fontSize: '1.5rem', fontWeight: 'bold', color: '#333', fontFamily: 'Verdana' }}>Get Involved</h2>
       <p style={{ color: '#333', fontFamily: 'Verdana' }}>Whether you're a driver looking to share your commute or a passenger seeking a ride, Hikenrides welcomes you to join our journey towards smarter, greener commuting solutions.</p>
       <p style={{ color: '#333', fontFamily: 'Verdana' }}>Join us at Hikenrides and discover the benefits of collaborative travel today!</p>
+      <div className='mt-20'>
+        <Footer />
+      </div>
     </div>
   );
 };

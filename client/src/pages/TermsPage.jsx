@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './TermsAndConditions.css'; // Import your CSS file
+import Footer from '../footer';
 
 const TermsAndConditions = () => {
   return (
+    <div>
     <div className="terms-container">
       <h1 className="terms-header">Terms and Conditions</h1>
       <div className="terms-content">
@@ -52,6 +54,10 @@ const TermsAndConditions = () => {
         <Link to="/register">Back to Registration</Link>
       </div>
     </div>
+    <div>
+    <Footer />
+  </div>
+  </div>
   );
 };
 

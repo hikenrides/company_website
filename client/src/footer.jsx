@@ -7,7 +7,7 @@ import insta from './assets/instaimg.png';
 
 const Footer= () =>{
     return (
-        <div className="footer mb-0">
+        <div className="footer mt-2">
             <div className="sb__footer section__padding">
                 <div className="sb__footer-links">
                     

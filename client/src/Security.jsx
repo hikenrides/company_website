@@ -1,8 +1,9 @@
 import React from 'react';
+import Footer from './footer';
 
 const Security = () => {
   return (
-    <div className="security mb-20">
+    <div className="security">
       <h2 style={{ marginBottom: '1.5rem', fontSize: '1.5rem', fontWeight: 'bold', color: '#333', fontFamily: 'Verdana' }}>Security</h2>
       <p style={{ color: '#333', fontFamily: 'Verdana' }}>At Hikenrides, we prioritize the safety and security of our users. Here are some of the measures we take to ensure a secure experience:</p>
       
@@ -25,6 +26,9 @@ const Security = () => {
       <p style={{ color: '#333', fontFamily: 'Verdana' }}>Our dedicated support team is available around the clock to assist with any security-related concerns or issues.</p>
       
       <p style={{ color: '#333', fontFamily: 'Verdana' }}>For more information on our security policies and practices, please refer to our Terms and Conditions or contact our support team.</p>
+      <div className='mt-20'>
+        <Footer />
+      </div>
     </div>
   );
 };

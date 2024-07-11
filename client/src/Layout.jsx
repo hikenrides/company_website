@@ -1,7 +1,6 @@
 import React from "react";
 import Header from "./Header";
 import { Outlet } from "react-router-dom";
-import Footer from "./footer";
 
 const Layout = () => {
   const layoutStyle = {
@@ -13,7 +12,6 @@ const Layout = () => {
 
   const contentStyle = {
     flex: 1, // Allow content to take remaining space
-    padding: "1rem", // Adjust the padding as needed
   };
 
   return (
@@ -22,7 +20,7 @@ const Layout = () => {
       <div style={contentStyle}>
         <Outlet />
       </div>
-      <Footer />
+     
     </div>
   );
 };
