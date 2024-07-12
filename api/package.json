@@ -15,6 +15,7 @@
     "@aws-sdk/client-s3-node": "^0.1.0-preview.2",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -31,6 +32,7 @@
     "mongoose": "^7.5.2",
     "multer": "^1.4.5-lts.1",
     "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.14",
     "safe-buffer": "^5.2.1",
     "twilio": "^4.20.0"
   },

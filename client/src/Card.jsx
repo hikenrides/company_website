@@ -62,49 +62,6 @@ function Card() {
             >Why Use Our Services?</motion.span>
         </div>
 
-
-        <motion.div className="service_card" variants={container} initial="hidden" exit="exit" whileInView="show" viewport={{once:false}}>
-
-            <motion.div className="card" variants={item}>
-                <motion.span className="service_icon" style={{backgroundColor:"#ddfbf9"}} variants={hoverEffect} >
-                <IconContext.Provider value={{color:"#56a8f4", size:"22px"}}>
-                        <IoNewspaper/>
-                    </IconContext.Provider>
-                </motion.span>
-                <h3>Travel at any distance for less by sharing trips<br/>with others heading to your destination.</h3>
-                
-            </motion.div>
-
-            <motion.div className="card" variants={item}>
-                <motion.span className="service_icon" style={{backgroundColor:"#e7daf8"}} variants={hoverEffect} >
-                <IconContext.Provider value={{color:"#56a8f4", size:"22px"}}>
-                        <IoNewspaper/>
-                    </IconContext.Provider>
-                </motion.span>
-                <h3>Affordable long-distance travel made possible  <br/>by ride-sharing with similar destination routes.</h3>
-               
-            </motion.div>
-            <motion.div className="card" variants={item}>
-                <motion.span className="service_icon" style={{backgroundColor:"#ffede6"}} variants={hoverEffect} >
-                <IconContext.Provider value={{color:"#56a8f4", size:"22px"}}>
-                        <IoNewspaper/>
-                    </IconContext.Provider>
-                </motion.span>
-                <h3>Share trips to cut costs and travel further<br/>our budget-friendly ride-sharing service.</h3>
-               
-            </motion.div>
-            <motion.div className="card" variants={item}>
-                <motion.span className="service_icon" style={{backgroundColor:"#ffe1e9"}} variants={hoverEffect}>
-                <IconContext.Provider value={{color:"#56a8f4", size:"22px"}}>
-                        <IoNewspaper/>
-                    </IconContext.Provider>
-                </motion.span>
-                <h3>Connect with others heading your way and<br/>save on long-distance travel expenses.</h3>
-
-            </motion.div>
-        </motion.div>
-
-
         <div className="title_wrapper">
             <motion.span className="service_title"
                 initial={{y:20, opacity:0}}
@@ -155,10 +112,7 @@ function Card() {
             </motion.div>
         </motion.div>
 
-        <div className="image_container">
-            <motion.img src={'/images/paystack.jpg'} alt="bg" initial={{x:200, opacity:0}} animate={{x:0, opacity:1}} transition={{duration:.5, delay:0.8}} style={{ margin: 'auto', display: 'block' }} />
-        </div>
-
+       
     </motion.div>
   )
 }

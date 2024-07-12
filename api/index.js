@@ -18,6 +18,9 @@ const DeletedPlace = require('./models/DeletedPlace');
 const DeletedRequest = require('./models/DeletedRequest');
 const { BookedPlace, BookedRequest } = require('./models/Booked'); 
 const cron = require('node-cron');
+const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
+const transporter = require('./transporter');
 
 require('dotenv').config();
 
@@ -47,6 +50,7 @@ const upload = multer({ storage });
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
+app.use(bodyParser.json());
 
 function getUserDataFromReq(req) {
   return new Promise((resolve, reject) => {
@@ -84,6 +88,7 @@ app.post('/register', async (req, res) => {
 
   try {
     console.log('Received registration request:', { name, email });
+    const hashedPassword = bcrypt.hashSync(password, bcryptSalt);
     const userDoc = await User.create({
       name,
       gender,
@@ -92,13 +97,31 @@ app.post('/register', async (req, res) => {
       email,
       isDriver,
       driverLicense,
-      password: bcrypt.hashSync(password, bcryptSalt),
+      password: hashedPassword,
       messages,
       balance,
       verification: 'not verified', // Set default verification status
       registrationDate: new Date(),
     });
+
     console.log('User registered:', userDoc);
+
+    // Send welcome email
+    const mailOptions = {
+      from: 'your-email@gmail.com',
+      to: email,
+      subject: 'Welcome to Hikenrides!',
+      text: `Hello ${name},\n\nWelcome to Hikenrides! Your registration was successful.`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending welcome email:', error);
+      } else {
+        console.log('Welcome email sent:', info.response);
+      }
+    });
+
     res.json(userDoc);
   } catch (e) {
     console.error('Registration failed:', e);
@@ -145,7 +168,35 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.post('/api/send-email', async (req, res) => {
+  const { email } = req.body;
 
+  // Configure nodemailer with your SMTP credentials or use a service like SendGrid
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'cephas@hikenrides.com',
+      pass: 'programmer1303',
+    },
+  });
+
+  // Email content
+  const mailOptions = {
+    from: 'cephas@hikenrides.com',
+    to: 'malusicephas17@gmail.com',
+    subject: 'New Subscription',
+    text: `New email subscription: ${email}`,
+  };
+
+  try {
+    // Send email
+    await transporter.sendMail(mailOptions);
+    res.sendStatus(200);
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.sendStatus(500);
+  }
+});
 
 app.get('/profile', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
