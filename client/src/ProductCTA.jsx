@@ -10,29 +10,10 @@ import Button from './Button';
 function ProductCTA() {
   const [open, setOpen] = React.useState(false);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    const email = event.target.email.value; // Access email value correctly
-    
-    try {
-      const response = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-  
-      if (response.ok) {
-        setOpen(true);
-      } else {
-        throw new Error('Failed to send email');
-      }
-    } catch (error) {
-      console.error('Error sending email:', error);
-    }
+    setOpen(true);
   };
-  
 
   const handleClose = () => {
     setOpen(false);
@@ -59,7 +40,6 @@ function ProductCTA() {
                 Learnmore about hikenrides
               </Typography>
               <TextField
-                name="email" 
                 noBorder
                 placeholder="Your email"
                 variant="standard"
