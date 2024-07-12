@@ -108,7 +108,7 @@ app.post('/register', async (req, res) => {
 
     // Send welcome email
     const mailOptions = {
-      from: 'your-email@gmail.com',
+      from: process.env.EMAIL,
       to: email,
       subject: 'Welcome to Hikenrides!',
       text: `Hello ${name},\n\nWelcome to Hikenrides! Your registration was successful.`,
@@ -175,14 +175,14 @@ app.post('/api/send-email', async (req, res) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'cephas@hikenrides.com',
-      pass: 'programmer1303',
+      user: process.env.EMAIL,
+      pass: process.env.PASS,
     },
   });
 
   // Email content
   const mailOptions = {
-    from: 'cephas@hikenrides.com',
+    from: process.env.EMAIL,
     to: 'malusicephas17@gmail.com',
     subject: 'New Subscription',
     text: `New email subscription: ${email}`,

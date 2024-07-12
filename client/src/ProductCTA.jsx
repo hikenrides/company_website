@@ -12,8 +12,8 @@ function ProductCTA() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const email = event.target.email.value;
-  
+    const email = event.target.email.value; // Access email value correctly
+    
     try {
       const response = await fetch('/api/send-email', {
         method: 'POST',
@@ -59,6 +59,7 @@ function ProductCTA() {
                 Learnmore about hikenrides
               </Typography>
               <TextField
+                name="email" 
                 noBorder
                 placeholder="Your email"
                 variant="standard"
@@ -89,7 +90,7 @@ function ProductCTA() {
               right: 0,
               bottom: 0,
               width: '100%',
-              background: 'url(/static/themes/onepirate/productCTAImageDots.png)',
+              background: 'url(/images/productCTAImageDots.png)',
             }}
           />
           <Box
