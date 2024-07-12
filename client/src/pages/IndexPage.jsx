@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { UserContext } from "../UserContext.jsx";
 import Footer from "../footer";
+import ProductValues from '../ProductValues.jsx';
 
 
 
@@ -232,6 +233,7 @@ function IndexPage() {
       </motion.div>
 
       <Card/>
+      <ProductValues />
       <Footer />
 
     </motion.div>
