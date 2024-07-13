@@ -59,15 +59,6 @@ function Card() {
                 animate={{y:0, opacity:1}}
                 exit={{opacity:0}}
                 transition={{duration:.5, delay:1.8}}
-            >Why Use Our Services?</motion.span>
-        </div>
-
-        <div className="title_wrapper">
-            <motion.span className="service_title"
-                initial={{y:20, opacity:0}}
-                animate={{y:0, opacity:1}}
-                exit={{opacity:0}}
-                transition={{duration:.5, delay:1.8}}
             >Process to getting a ride</motion.span>
         </div>
 

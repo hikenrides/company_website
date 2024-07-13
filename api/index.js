@@ -17,7 +17,7 @@ const Withdrawals = require('./models/withdrawals');
 const DeletedPlace = require('./models/DeletedPlace');
 const DeletedRequest = require('./models/DeletedRequest');
 const { BookedPlace, BookedRequest } = require('./models/Booked'); 
-const Subscription = require('../models/Subscription');
+const Subscription = require('./models/Subscription');
 const cron = require('node-cron');
 
 require('dotenv').config();
