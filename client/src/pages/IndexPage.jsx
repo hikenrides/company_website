@@ -235,9 +235,6 @@ function IndexPage() {
       
       <ProductValues />
       <Card/>
-      <div className="image_container">
-            <motion.img src={'/images/paystack.jpg'} alt="bg" initial={{x:200, opacity:0}} animate={{x:0, opacity:1}} transition={{duration:.5, delay:0.8}} style={{ margin: 'auto', display: 'block' }} />
-        </div>
       <ProductCTA />
       <Footer />
 

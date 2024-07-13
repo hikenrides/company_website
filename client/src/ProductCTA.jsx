@@ -6,13 +6,24 @@ import Typography from './Typography';
 import TextField from './TextField';
 import Snackbar from './Snackbar';
 import Button from './Button';
+import axios from 'axios'; // Add axios import
 
 function ProductCTA() {
   const [open, setOpen] = React.useState(false);
+  const [email, setEmail] = React.useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    setOpen(true);
+    try {
+      const response = await axios.post('/subscribe', { email });
+      if (response.data.success) {
+        setOpen(true);
+      } else {
+        alert(response.data.message);
+      }
+    } catch (error) {
+      alert('An error occurred while subscribing.');
+    }
   };
 
   const handleClose = () => {
@@ -37,12 +48,14 @@ function ProductCTA() {
                 Receive offers
               </Typography>
               <Typography variant="h5">
-                Learnmore about hikenrides
+                Learn more about Hikenrides
               </Typography>
               <TextField
                 noBorder
                 placeholder="Your email"
                 variant="standard"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 sx={{ width: '100%', mt: 3, mb: 2 }}
               />
               <Button

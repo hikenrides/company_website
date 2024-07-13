@@ -17,6 +17,7 @@ const Withdrawals = require('./models/withdrawals');
 const DeletedPlace = require('./models/DeletedPlace');
 const DeletedRequest = require('./models/DeletedRequest');
 const { BookedPlace, BookedRequest } = require('./models/Booked'); 
+const Subscription = require('../models/Subscription');
 const cron = require('node-cron');
 
 require('dotenv').config();
@@ -145,7 +146,24 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.post('/subscribe', async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ success: false, message: 'Email is required' });
+  }
 
+  try {
+    const subscription = new Subscription({ email });
+    await subscription.save();
+    res.status(201).json({ success: true, message: 'Subscription successful' });
+  } catch (error) {
+    if (error.code === 11000) {
+      res.status(400).json({ success: false, message: 'Email already subscribed' });
+    } else {
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+  }
+});
 
 app.get('/profile', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
