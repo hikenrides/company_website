@@ -23,6 +23,23 @@ function ProductValues() {
             <Box sx={item}>
               <Box
                 component="img"
+                src="/images/productValues3.svg"
+                alt="clock"
+                sx={{ height: 55 }}
+              />
+              <Typography variant="h6" sx={{ mb: 2 , color: 'white', fontFamily: 'Playfair Display', fontStyle: 'italic'}}>
+                Save Money.
+              </Typography>
+              <Typography variant="h5" sx={{ color: 'white', fontFamily: 'Roboto' }}>
+                {'Start saving on fuel, parking, and maintenance'}
+                {' costs while contributing to a greener planet.'}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Box sx={item}>
+              <Box
+                component="img"
                 src="/images/productValues1.svg"
                 alt="suitcase"
                 sx={{ height: 55 }}
@@ -56,23 +73,6 @@ function ProductValues() {
                   'Experience the joy of travel by sharing your ride with diverse and interesting people. '
                 }
                 {'Join us and make every commute an adventure!'}
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Box sx={item}>
-              <Box
-                component="img"
-                src="/images/productValues3.svg"
-                alt="clock"
-                sx={{ height: 55 }}
-              />
-              <Typography variant="h6" sx={{ mb: 2 , color: 'white', fontFamily: 'Playfair Display', fontStyle: 'italic'}}>
-                Save Money.
-              </Typography>
-              <Typography variant="h5" sx={{ color: 'white', fontFamily: 'Roboto' }}>
-                {'Start saving on fuel, parking, and maintenance'}
-                {' costs while contributing to a greener planet.'}
               </Typography>
             </Box>
           </Grid>
