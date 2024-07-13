@@ -72,10 +72,10 @@ function Card() {
                         1
                     </IconContext.Provider>
                 </motion.span>
-                <h3>Browse, select Available trips/rides<br/>and find a suitable one for you<br/>NB: Make sure your account is verified</h3>
-                <a href="#">
+                <h3>Browse, select Available trips/rides and find a suitable one for you. NB: Make sure your account is verified</h3>
+                {/*<a href="#">
                     <span>Available trips →</span>
-                </a>
+                </a>*/}
             </motion.div>
             <motion.div className="card" variants={item}>
                 <motion.span className="service_icon" style={{backgroundColor:"#D2691E"}} variants={hoverEffect}>
@@ -83,7 +83,7 @@ function Card() {
                         2
                     </IconContext.Provider>
                 </motion.span>
-                <h3>Insert the details required and book your trip<br/>NB: Make sure there's suffient funds on your hikenrides account</h3>
+                <h3>Insert the details required and book your trip.<br/>NB: Make sure there's suffient funds on your hikenrides account</h3>
             </motion.div>
             <motion.div className="card" variants={item}>
                 <motion.span className="service_icon" style={{backgroundColor:"#D2691E"}} variants={hoverEffect}>

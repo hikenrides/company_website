@@ -6,7 +6,7 @@ import Typography from './Typography';
 import TextField from './TextField';
 import Snackbar from './Snackbar';
 import Button from './Button';
-import axios from 'axios'; // Add axios import
+import axios from 'axios';
 
 function ProductCTA() {
   const [open, setOpen] = React.useState(false);
@@ -39,15 +39,15 @@ function ProductCTA() {
               display: 'flex',
               justifyContent: 'center',
               bgcolor: 'warning.main',
-              py: 8,
-              px: 3,
+              py: { xs: 6, md: 8 },
+              px: { xs: 2, md: 3 },
             }}
           >
             <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 400 }}>
-              <Typography variant="h2" component="h2" gutterBottom>
+              <Typography variant="h2" component="h2" gutterBottom sx={{ fontSize: { xs: '1.5rem', md: '2.5rem' } }}>
                 Receive offers
               </Typography>
-              <Typography variant="h5">
+              <Typography variant="h5" sx={{ fontSize: { xs: '1rem', md: '1.5rem' } }}>
                 Learn more about Hikenrides
               </Typography>
               <TextField
@@ -56,13 +56,13 @@ function ProductCTA() {
                 variant="standard"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                sx={{ width: '100%', mt: 3, mb: 2 }}
+                sx={{ width: '100%', mt: { xs: 2, md: 3 }, mb: { xs: 1.5, md: 2 }, fontSize: { xs: '0.875rem', md: '1rem' } }}
               />
               <Button
                 type="submit"
                 color="primary"
                 variant="contained"
-                sx={{ width: '100%' }}
+                sx={{ width: '100%', fontSize: { xs: '0.875rem', md: '1rem' }, py: { xs: 1.5, md: 2 } }}
               >
                 Keep me updated
               </Button>
@@ -78,8 +78,8 @@ function ProductCTA() {
           <Box
             sx={{
               position: 'absolute',
-              top: -67,
-              left: -67,
+              top: { xs: -50, md: -67 },
+              left: { xs: -50, md: -67 },
               right: 0,
               bottom: 0,
               width: '100%',
@@ -92,12 +92,12 @@ function ProductCTA() {
             alt="call to action"
             sx={{
               position: 'absolute',
-              top: -28,
-              left: -28,
+              top: { xs: -20, md: -28 },
+              left: { xs: -20, md: -28 },
               right: 0,
               bottom: 0,
               width: '100%',
-              maxWidth: 600,
+              maxWidth: { xs: 300, md: 600 },
             }}
           />
         </Grid>
@@ -112,3 +112,4 @@ function ProductCTA() {
 }
 
 export default ProductCTA;
+
