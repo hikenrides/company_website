@@ -76,17 +76,6 @@ function ProductCTA() {
           sx={{ display: { md: 'block', xs: 'none' }, position: 'relative' }}
         >
           <Box
-            sx={{
-              position: 'absolute',
-              top: { xs: -50, md: -67 },
-              left: { xs: -50, md: -67 },
-              right: 0,
-              bottom: 0,
-              width: '100%',
-              background: 'url(/images/productCTAImageDots.png)',
-            }}
-          />
-          <Box
             component="img"
             src="/images/commute.jpg"
             alt="call to action"
