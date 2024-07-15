@@ -143,7 +143,7 @@ app.post('/login', async (req, res) => {
     }
   } else {
     // User not found with the given email
-    res.status(404).json({ error: 'User not found' });
+    res.status(404).json({ error: 'Invalid Email or Password' });
   }
 });
 

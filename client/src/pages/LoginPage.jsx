@@ -117,7 +117,7 @@ export default function LoginPage() {
               label="Show Password"
             />
             {errorMessage && (
-              <Typography variant="body2" color="error" align="center">
+              <Typography variant="body2" color="red" align="center">
                 {errorMessage}
               </Typography>
             )}
