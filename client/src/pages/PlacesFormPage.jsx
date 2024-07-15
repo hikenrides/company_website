@@ -79,7 +79,7 @@ export default function PlacesFormPage() {
       setMaxGuests(data.maxGuests);
       setPrice(data.price);
       setPhone(data.phone_number);
-      setFrequency(data.frequency); // Load frequency data
+      setFrequency(data.frequency);
     });
   }, [id]);
 
@@ -336,8 +336,8 @@ export default function PlacesFormPage() {
           <label className="text-white">
             <input
               type="radio"
-              value="One-time"
-              checked={frequency === 'One-time'}
+              value="Once-off"
+              checked={frequency === 'Once-off'}
               onChange={(ev) => setFrequency(ev.target.value)}
               className="mr-1"
             />
