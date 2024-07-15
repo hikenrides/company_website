@@ -341,7 +341,7 @@ export default function PlacesFormPage() {
               onChange={(ev) => setFrequency(ev.target.value)}
               className="mr-1"
             />
-            One-time
+            Once-off
           </label>
           <label className="text-white">
             <input

@@ -146,6 +146,11 @@ export default function PlacesPage() {
                           <span>{place.maxGuests}</span>
                         </div>
                         <hr style={{ border: '1px solid gray' }} />
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>Trip frequency:</strong>
+                          <span>{place.frequency}</span>
+                        </div>
+                        <hr style={{ border: '1px solid gray' }} />
                       </div>
                     )}
                   </div>
