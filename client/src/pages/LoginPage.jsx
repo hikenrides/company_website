@@ -15,6 +15,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Link from '@mui/material/Link';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 const defaultTheme = createTheme();
 
@@ -24,13 +26,16 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const { setUser } = useContext(UserContext);
+  const [errorMessage, setErrorMessage] = useState("");
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
     try {
       console.log('Sending login request...', email, password);
-      const { data } = await axios.post("/login", { email, password });
-      if (data && data.token) {
+      const { data, status } = await axios.post("/login", { email, password });
+      if (status === 200 && data && data.token) {
         console.log('Received token:', data.token); // Log the received token
         localStorage.setItem('token', data.token);
         const profileResponse = await axios.get('/profile', {
@@ -42,14 +47,16 @@ export default function LoginPage() {
         alert("Login successful");
         setRedirect(true);
       } else {
-        alert("Login failed: Invalid credentials");
+        setErrorMessage("Invalid credentials");
       }
-    } catch (e) {
-      console.error('Error during login:', e);
-      alert("Login failed: Invalid credentials");
+    } catch (error) {
+      if (error.response && error.response.data) {
+        setErrorMessage(error.response.data.error || "Login failed: Invalid credentials");
+      } else {
+        setErrorMessage("Login failed: Invalid credentials");
+      }
     }
   }
-  
   
   if (redirect) {
     return <Navigate to={"/account/trips"} />;
@@ -61,7 +68,7 @@ export default function LoginPage() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 2,
+            marginTop: isMobile ? 2 : 8,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -109,6 +116,11 @@ export default function LoginPage() {
               }
               label="Show Password"
             />
+            {errorMessage && (
+              <Typography variant="body2" color="error" align="center">
+                {errorMessage}
+              </Typography>
+            )}
             <Button
               type="submit"
               fullWidth

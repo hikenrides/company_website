@@ -138,12 +138,15 @@ app.post('/login', async (req, res) => {
         }
       );
     } else {
-      res.status(422).json('pass not ok');
+      // Incorrect password
+      res.status(422).json({ error: 'Invalid password' });
     }
   } else {
-    res.json('not found');
+    // User not found with the given email
+    res.status(404).json({ error: 'User not found' });
   }
 });
+
 
 app.post('/subscribe', async (req, res) => {
   const { email } = req.body;
