@@ -108,7 +108,6 @@ app.post('/register', async (req, res) => {
 });
 
 
-
 app.put('/users/update-balance', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { id, balance } = req.body;
