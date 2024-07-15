@@ -290,16 +290,18 @@ export default function PlacesFormPage() {
           </div>
         </div>
 
-        {preInput('Date and time', 'indicate the date and time of the trip')}
-        <div className="my-2 py-2">
-          <DatePicker
-            selected={date}
-            onChange={(date) => setDate(date)}
-            showTimeSelect
-            dateFormat="Pp"
-            className="bg-gray-300"
-          />
-        </div>
+        {preInput('Date', 'indicate the date')}
+        <div>
+            <DatePicker
+              className="bg-gray-300"
+              selected={date}
+              onChange={(date) => setDate(date)}
+              placeholderText="Select leaving date"
+              dateFormat="MM/dd/yyyy"
+              popperPlacement="top-start"
+              minDate={new Date()}
+            />
+          </div>
 
         {preInput('Max number of passengers', 'Indicate the maximum number of passengers you are willing to accommodate in your vehicle')}
         <input
