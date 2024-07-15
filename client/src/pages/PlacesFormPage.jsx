@@ -34,6 +34,7 @@ export default function PlacesFormPage() {
   const [owner_number, setPhone] = useState('');
   const [redirect, setRedirect] = useState(false);
   const [formError, setFormError] = useState(false);
+  const [frequency, setFrequency] = useState('Regular');
 
   const validateForm = () => {
     if (province && from && province2 && destination && color && brand && type && seats && date && maxGuests && price && owner_number) {
@@ -78,6 +79,7 @@ export default function PlacesFormPage() {
       setMaxGuests(data.maxGuests);
       setPrice(data.price);
       setPhone(data.phone_number);
+      setFrequency(data.frequency); // Load frequency data
     });
   }, [id]);
 
@@ -110,7 +112,7 @@ export default function PlacesFormPage() {
     const placeData = {
       province, from, province2, destination,
       color, brand, type, seats, extraInfo, owner_number,
-      date, maxGuests, price,
+      date, maxGuests, price, frequency, // Add frequency to place data
     };
     const token = localStorage.getItem('token');
     const config = {
@@ -251,26 +253,21 @@ export default function PlacesFormPage() {
                 Type:
               </label>
               <select id="typeSelect" className="bg-gray-300" value={type} onChange={(ev) => setType(ev.target.value)}>
-                <option value="utility vehicle">Utility vehicle</option>
-                <option value="hybrid">Hybrid</option>
-                <option value="family car">Family Car</option>
-                <option value="limousine">Limousine</option>
-                <option value="mini mpv">Mini MPV</option>
-                <option value="convertible">Convertible</option>
-                <option value="truck">Truck</option>
                 <option value="hatchback">Hatchback</option>
                 <option value="sedan">Sedan</option>
-                <option value="mini-van">Mini-van</option>
-                <option value="van">Van</option>
-                <option value="cross-over">Cross-over</option>
-                <option value="station wagon">Station Wagon</option>
-                <option value="coupe">Coupe</option>
-                <option value="pickup truck">Pickup truck</option>
-                <option value="sports car">Sports car</option>
                 <option value="suv">SUV</option>
-                <option value="electric vehicle">Electric vehicle</option>
-                <option value="compact">Compact</option>
-                <option value="roadster">Roadster</option>
+                <option value="coupe">Coupe</option>
+                <option value="convertible">Convertible</option>
+                <option value="pickup">Pickup</option>
+                <option value="van">Van</option>
+                <option value="minivan">Minivan</option>
+                <option value="wagon">Wagon</option>
+                <option value="crossover">Crossover</option>
+                <option value="luxury">Luxury</option>
+                <option value="electric">Electric</option>
+                <option value="sports">Sports Car</option>
+                <option value="diesel">Diesel</option>
+                <option value="hybrid">Hybrid</option>
               </select>
             </div>
             <div className="select-container">
@@ -288,46 +285,93 @@ export default function PlacesFormPage() {
                 <option value="10">10</option>
                 <option value="11">11</option>
                 <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
               </select>
             </div>
           </div>
         </div>
 
-        {preInput('Extra info (optional)', 'trip rules, etc')}
-        <textarea className="bg-gray-300" value={extraInfo} onChange={(ev) => setExtraInfo(ev.target.value)} />
-
-        {preInput('Departure', 'add departing date, number of passengers and price per person')}
-        <div className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
-          <div>
-            <h3 className="text-white mt-2 -mb-1">Date</h3>
-            <DatePicker
-              className="bg-gray-300"
-              selected={date}
-              onChange={(date) => setDate(date)}
-              placeholderText="Select leaving date"
-              dateFormat="MM/dd/yyyy"
-              popperPlacement="top-start"
-              minDate={new Date()}
-            />
-          </div>
-
-          <div>
-            <h3 className="text-white mt-2 -mb-1">Max number of passengers</h3>
-            <input className="bg-gray-300" type="number" value={maxGuests} onChange={ev => setMaxGuests(ev.target.value)} />
-          </div>
-
-          <div>
-            <h3 className="text-white mt-2 -mb-1">Price per person</h3>
-            <input className="bg-gray-300" type="number" value={price} onChange={ev => setPrice(ev.target.value)} />
-          </div>
+        {preInput('Date and time', 'indicate the date and time of the trip')}
+        <div className="my-2 py-2">
+          <DatePicker
+            selected={date}
+            onChange={(date) => setDate(date)}
+            showTimeSelect
+            dateFormat="Pp"
+            className="bg-gray-300"
+          />
         </div>
 
+        {preInput('Max number of passengers', 'Indicate the maximum number of passengers you are willing to accommodate in your vehicle')}
+        <input
+          className="bg-gray-300"
+          type="number"
+          value={maxGuests}
+          onChange={(ev) => setMaxGuests(ev.target.value)}
+          placeholder="Max number of passengers"
+        />
+
+        {preInput('Price per passenger', 'indicate the price you charge per passenger')}
+        <input
+          className="bg-gray-300"
+          type="number"
+          value={price}
+          onChange={(ev) => setPrice(ev.target.value)}
+          placeholder="Price per passenger"
+        />
+
+        {preInput('Trip Frequency', 'Indicate how frequently this trip will occur')}
+        <div className="flex flex-col md:flex-row gap-2 mt-2">
+          <label className="text-white">
+            <input
+              type="radio"
+              value="Regular"
+              checked={frequency === 'Regular'}
+              onChange={(ev) => setFrequency(ev.target.value)}
+              className="mr-1"
+            />
+            Regular
+          </label>
+          <label className="text-white">
+            <input
+              type="radio"
+              value="One-time"
+              checked={frequency === 'One-time'}
+              onChange={(ev) => setFrequency(ev.target.value)}
+              className="mr-1"
+            />
+            One-time
+          </label>
+          <label className="text-white">
+            <input
+              type="radio"
+              value="Daily"
+              checked={frequency === 'Daily'}
+              onChange={(ev) => setFrequency(ev.target.value)}
+              className="mr-1"
+            />
+            Daily
+          </label>
+          <label className="text-white">
+            <input
+              type="radio"
+              value="Weekly"
+              checked={frequency === 'Weekly'}
+              onChange={(ev) => setFrequency(ev.target.value)}
+              className="mr-1"
+            />
+            Weekly
+          </label>
+        </div>
+
+        {preInput('Description', 'Add any additional information about the trip')}
+        <textarea
+          className="bg-gray-300"
+          value={extraInfo}
+          onChange={(ev) => setExtraInfo(ev.target.value)}
+        />
+
         <button className="primary my-4">Save</button>
-        {formError && (
-          <p style={{ color: 'red' }}>Please fill out all the required information!</p>
-        )}
+        {formError && <p className="text-red-500">Please fill in all fields before saving.</p>}
       </form>
     </div>
   );

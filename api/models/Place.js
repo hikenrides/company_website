@@ -14,6 +14,7 @@ const placeSchema = new mongoose.Schema({
   owner_number: Number,
   date: Date,
   maxGuests: Number,
+  frequency: { type: String, enum: ['Regular', 'Once-off', 'Daily', 'Weekly'] },
   price: Number,
   status: { type: String, default: 'active' },
 });

@@ -184,7 +184,7 @@ app.post('/places', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {
     province, from, province2, destination, color, brand, type, seats, price,
-    extraInfo, owner_number, date, maxGuests,status,
+    extraInfo, owner_number, date, maxGuests,frequency ,status,
   } = req.body;
   const authHeader = req.headers.authorization;
   const token = authHeader.split(' ')[1];
@@ -196,7 +196,7 @@ app.post('/places', (req, res) => {
     const placeDoc = await Place.create({
       owner: userData.id, price,
       province, from, province2, destination, color, brand, type, seats,
-      extraInfo, owner_number, date, maxGuests,status,
+      extraInfo, owner_number, date, maxGuests,frequency ,status,
     });
     res.json(placeDoc);
   });
@@ -563,7 +563,7 @@ app.put('/places', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const {
     id, province, from, province2, destination, color, brand, type, seats, price,
-    extraInfo, owner_number, date, maxGuests,status,
+    extraInfo, owner_number, date, maxGuests,frequency ,status,
   } = req.body;
   const userData = await getUserDataFromReq(req);
   const placeDoc = await Place.findById(id);
@@ -571,7 +571,7 @@ app.put('/places', async (req, res) => {
   if (userData.id === placeDoc.owner.toString()) {
     placeDoc.set({
       province, from, province2, destination, color, brand, type, seats, price,
-      extraInfo, owner_number, date, maxGuests,status,
+      extraInfo, owner_number, date, maxGuests,frequency ,status,
     });
     await placeDoc.save();
     res.json('ok');
