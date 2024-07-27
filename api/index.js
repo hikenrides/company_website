@@ -19,6 +19,8 @@ const DeletedRequest = require('./models/DeletedRequest');
 const { BookedPlace, BookedRequest } = require('./models/Booked'); 
 const Subscription = require('./models/Subscription');
 const cron = require('node-cron');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 require('dotenv').config();
 
@@ -146,7 +148,39 @@ app.post('/login', async (req, res) => {
     res.status(404).json({ error: 'Invalid Email or Password' });
   }
 });
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: "http://localhost:3000/auth/google/callback"
+},
+async (accessToken, refreshToken, profile, done) => {
+  try {
+    let user = await User.findOne({ googleId: profile.id });
+    if (!user) {
+      user = await User.create({
+        googleId: profile.id,
+        email: profile.emails[0].value,
+        name: profile.displayName
+      });
+    }
+    done(null, user);
+  } catch (err) {
+    done(err, null);
+  }
+}
+));
 
+app.use(passport.initialize());
+
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/' }),
+  (req, res) => {
+    const token = jwt.sign({ id: req.user._id, email: req.user.email }, jwtSecret);
+    res.redirect(`/?token=${token}`);
+  }
+);
 
 app.post('/subscribe', async (req, res) => {
   const { email } = req.body;

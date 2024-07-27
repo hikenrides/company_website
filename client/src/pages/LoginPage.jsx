@@ -1,7 +1,8 @@
 import React, { useContext, useState } from "react";
-import { Link as RouterLink, Navigate } from "react-router-dom";
-import axios from "axios";
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { UserContext } from "../UserContext.jsx";
+import axios from 'axios';
+import { Navigate, Link as RouterLink } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -33,10 +34,8 @@ export default function LoginPage() {
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
     try {
-      console.log('Sending login request...', email, password);
       const { data, status } = await axios.post("/login", { email, password });
       if (status === 200 && data && data.token) {
-        console.log('Received token:', data.token); // Log the received token
         localStorage.setItem('token', data.token);
         const profileResponse = await axios.get('/profile', {
           headers: {
@@ -57,7 +56,27 @@ export default function LoginPage() {
       }
     }
   }
-  
+
+  const handleGoogleSuccess = async (response) => {
+    try {
+      const { data } = await axios.post('/auth/google', { token: response.credential });
+      localStorage.setItem('token', data.token);
+      const profileResponse = await axios.get('/profile', {
+        headers: {
+          Authorization: `Bearer ${data.token}`
+        }
+      });
+      setUser(profileResponse.data);
+      setRedirect(true);
+    } catch (error) {
+      setErrorMessage("Google login failed");
+    }
+  };
+
+  const handleGoogleFailure = (error) => {
+    setErrorMessage("Google login failed");
+  };
+
   if (redirect) {
     return <Navigate to={"/account/trips"} />;
   }
@@ -129,6 +148,13 @@ export default function LoginPage() {
             >
               Login
             </Button>
+            <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onFailure={handleGoogleFailure}
+                cookiePolicy={'single_host_origin'}
+              />
+            </GoogleOAuthProvider>
             <Grid container>
               <Grid item xs>
                 <Link component={RouterLink} to="/register" variant="body2">
