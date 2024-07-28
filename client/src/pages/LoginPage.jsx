@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
-import { GoogleLogin } from 'react-google-login';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { UserContext } from "../UserContext.jsx";
 import axios from 'axios';
-import { Navigate } from "react-router-dom";
+import { Navigate, Link as RouterLink } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -61,18 +61,18 @@ export default function LoginPage() {
     try {
       const { data } = await axios.get('/profile', {
         headers: {
-          Authorization: `Bearer ${response.tokenId}`
+          Authorization: `Bearer ${response.credential}`
         }
       });
       setUser(data);
-      localStorage.setItem('token', response.tokenId);
+      localStorage.setItem('token', response.credential);
       setRedirect(true);
     } catch (error) {
       setErrorMessage("Google login failed");
     }
   };
 
-  const handleGoogleFailure = (response) => {
+  const handleGoogleFailure = () => {
     setErrorMessage("Google login failed");
   };
 
@@ -147,13 +147,13 @@ export default function LoginPage() {
             >
               Login
             </Button>
-            <GoogleLogin
-              clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com"
-              buttonText="Login with Google"
-              onSuccess={handleGoogleSuccess}
-              onFailure={handleGoogleFailure}
-              cookiePolicy={'single_host_origin'}
-            />
+            <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onFailure={handleGoogleFailure}
+                cookiePolicy={'single_host_origin'}
+              />
+            </GoogleOAuthProvider>
             <Grid container>
               <Grid item xs>
                 <Link component={RouterLink} to="/register" variant="body2">
