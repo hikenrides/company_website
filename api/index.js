@@ -76,7 +76,8 @@ function getUserDataFromReq(req) {
 
     const token = authHeader.split(' ')[1];
     console.log('Received token:', token); // Log the received token
-    jwt.verify(token, getKey, { algorithms: ['RS256'] }, (err, userData) => {
+
+    jwt.verify(token, jwtSecret, (err, userData) => {
       if (err) {
         console.error('JWT Verification Error:', err);
         return reject(new Error('JWT verification failed'));
@@ -198,13 +199,17 @@ app.get('/auth/google/callback', async (req, res) => {
     });
 
     const payload = ticket.getPayload();
-    const { email } = payload;
+    const { email, name } = payload;
 
-    // Find user by email
+    // Find or create user
     let user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(401).json({ error: 'No user found with this email' });
+      user = await User.create({
+        googleId: payload.sub,  // Save Google ID to find the user later
+        email,
+        name
+      });
     }
 
     // Create JWT token
@@ -215,6 +220,18 @@ app.get('/auth/google/callback', async (req, res) => {
     res.status(401).json({ error: 'Google login failed' });
   }
 });
+
+const handleGoogleSuccess = async (response) => {
+  try {
+    const { credential } = response;
+    const { data } = await axios.get(`/auth/google/callback?token=${credential}`);
+    setUser(data);
+    localStorage.setItem('token', data.token);
+    setRedirect(true);
+  } catch (error) {
+    setErrorMessage("Google login failed");
+  }
+};
 
 
 app.post('/subscribe', async (req, res) => {
