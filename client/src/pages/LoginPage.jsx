@@ -60,14 +60,18 @@ export default function LoginPage() {
   const handleGoogleSuccess = async (response) => {
     try {
       const { credential } = response;
+      // Call the backend to verify the Google token
       const { data } = await axios.get(`/auth/google/callback?token=${credential}`);
-      setUser(data);
+      
+      // Save the token and user data to local storage and context
       localStorage.setItem('token', data.token);
+      setUser(data);
       setRedirect(true);
     } catch (error) {
       setErrorMessage("Google login failed");
     }
   };
+  
   
   const handleGoogleFailure = () => {
     setErrorMessage("Google login failed");

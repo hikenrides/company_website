@@ -193,33 +193,38 @@ app.get('/auth/google/callback', async (req, res) => {
   const { token } = req.query;
 
   try {
+    // Verify the Google ID token
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
+    // Extract user details from the token
     const payload = ticket.getPayload();
     const { email, name } = payload;
 
-    // Find or create user
+    // Find or create user in your database
     let user = await User.findOne({ email });
 
     if (!user) {
       user = await User.create({
-        googleId: payload.sub,  // Save Google ID to find the user later
+        googleId: payload.sub,  // Save Google ID for future reference
         email,
-        name
+        name,
       });
     }
 
-    // Create JWT token
+    // Create a JWT token
     const jwtToken = jwt.sign({ id: user._id, email: user.email }, jwtSecret);
+
+    // Send the JWT token in the response
     res.redirect(`/?token=${jwtToken}`);
   } catch (error) {
     console.error('Google login failed:', error);
     res.status(401).json({ error: 'Google login failed' });
   }
 });
+
 
 app.post('/subscribe', async (req, res) => {
   const { email } = req.body;
