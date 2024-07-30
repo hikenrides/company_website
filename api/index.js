@@ -221,19 +221,6 @@ app.get('/auth/google/callback', async (req, res) => {
   }
 });
 
-const handleGoogleSuccess = async (response) => {
-  try {
-    const { credential } = response;
-    const { data } = await axios.get(`/auth/google/callback?token=${credential}`);
-    setUser(data);
-    localStorage.setItem('token', data.token);
-    setRedirect(true);
-  } catch (error) {
-    setErrorMessage("Google login failed");
-  }
-};
-
-
 app.post('/subscribe', async (req, res) => {
   const { email } = req.body;
   if (!email) {
