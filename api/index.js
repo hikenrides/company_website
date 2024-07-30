@@ -21,7 +21,6 @@ const Subscription = require('./models/Subscription');
 const cron = require('node-cron');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const jwksClient = require('jwks-rsa');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
