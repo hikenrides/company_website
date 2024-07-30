@@ -197,19 +197,16 @@ app.get('/auth/google/callback', async (req, res) => {
     });
 
     const payload = ticket.getPayload();
-    const { sub, email, name, picture } = payload;
+    const { email } = payload;
 
-    let user = await User.findOne({ googleId: sub });
+    // Find user by email
+    let user = await User.findOne({ email });
 
     if (!user) {
-      user = await User.create({
-        googleId: sub,
-        email,
-        name,
-        picture,
-      });
+      return res.status(401).json({ error: 'No user found with this email' });
     }
 
+    // Create JWT token
     const jwtToken = jwt.sign({ id: user._id, email: user.email }, jwtSecret);
     res.redirect(`/?token=${jwtToken}`);
   } catch (error) {
@@ -217,6 +214,7 @@ app.get('/auth/google/callback', async (req, res) => {
     res.status(401).json({ error: 'Google login failed' });
   }
 });
+
 app.post('/subscribe', async (req, res) => {
   const { email } = req.body;
   if (!email) {
