@@ -21,6 +21,7 @@ const Subscription = require('./models/Subscription');
 const cron = require('node-cron');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const jwksClient = require('jwks-rsa');
 
 require('dotenv').config();
 
@@ -51,6 +52,21 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 
+const client = jwksClient({
+  jwksUri: 'https://www.googleapis.com/oauth2/v3/certs'
+});
+
+function getKey(header, callback) {
+  client.getSigningKey(header.kid, (err, key) => {
+    if (err) {
+      callback(err);
+    } else {
+      const signingKey = key.getPublicKey();
+      callback(null, signingKey);
+    }
+  });
+}
+
 function getUserDataFromReq(req) {
   return new Promise((resolve, reject) => {
     const authHeader = req.headers.authorization;
@@ -61,7 +77,7 @@ function getUserDataFromReq(req) {
 
     const token = authHeader.split(' ')[1];
     console.log('Received token:', token); // Log the received token
-    jwt.verify(token, jwtSecret, {}, (err, userData) => {
+    jwt.verify(token, getKey, { algorithms: ['RS256'] }, (err, userData) => {
       if (err) {
         console.error('JWT Verification Error:', err);
         return reject(new Error('JWT verification failed'));
@@ -70,7 +86,6 @@ function getUserDataFromReq(req) {
     });
   });
 }
-
 
 app.get('/', (req, res) => {
   res.send('Hello, this is the root route of the backend!');
