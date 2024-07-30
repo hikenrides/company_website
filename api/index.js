@@ -35,6 +35,8 @@ const corsOptions = {
   origin: ['https://hikenrides.com', 'http://localhost:5173', 'http://localhost:5174'],
   credentials: true,
   exposedHeaders: ['set-cookie'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 const s3Client = new S3Client({
@@ -214,6 +216,7 @@ app.get('/auth/google/callback', async (req, res) => {
     res.status(401).json({ error: 'Google login failed' });
   }
 });
+
 
 app.post('/subscribe', async (req, res) => {
   const { email } = req.body;
