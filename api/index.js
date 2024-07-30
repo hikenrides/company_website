@@ -22,6 +22,8 @@ const cron = require('node-cron');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const jwksClient = require('jwks-rsa');
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 require('dotenv').config();
 
@@ -51,10 +53,6 @@ const upload = multer({ storage });
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
-
-const client = jwksClient({
-  jwksUri: 'https://www.googleapis.com/oauth2/v3/certs'
-});
 
 function getKey(header, callback) {
   client.getSigningKey(header.kid, (err, key) => {
@@ -189,14 +187,36 @@ app.use(passport.initialize());
 
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
-  (req, res) => {
-    const token = jwt.sign({ id: req.user._id, email: req.user.email }, jwtSecret);
-    res.redirect(`/?token=${token}`);
-  }
-);
+app.get('/auth/google/callback', async (req, res) => {
+  const { token } = req.query;
 
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { sub, email, name, picture } = payload;
+
+    let user = await User.findOne({ googleId: sub });
+
+    if (!user) {
+      user = await User.create({
+        googleId: sub,
+        email,
+        name,
+        picture,
+      });
+    }
+
+    const jwtToken = jwt.sign({ id: user._id, email: user.email }, jwtSecret);
+    res.redirect(`/?token=${jwtToken}`);
+  } catch (error) {
+    console.error('Google login failed:', error);
+    res.status(401).json({ error: 'Google login failed' });
+  }
+});
 app.post('/subscribe', async (req, res) => {
   const { email } = req.body;
   if (!email) {

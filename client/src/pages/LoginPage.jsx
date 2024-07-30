@@ -59,22 +59,20 @@ export default function LoginPage() {
 
   const handleGoogleSuccess = async (response) => {
     try {
-      const { data } = await axios.get('/profile', {
-        headers: {
-          Authorization: `Bearer ${response.credential}`
-        }
-      });
+      const { credential } = response;
+      const { data } = await axios.get(`/auth/google/callback?token=${credential}`);
       setUser(data);
-      localStorage.setItem('token', response.credential);
+      localStorage.setItem('token', data.token);
       setRedirect(true);
     } catch (error) {
       setErrorMessage("Google login failed");
     }
   };
-
+  
   const handleGoogleFailure = () => {
     setErrorMessage("Google login failed");
   };
+  
 
   if (redirect) {
     return <Navigate to={"/account/trips"} />;
@@ -153,7 +151,7 @@ export default function LoginPage() {
                   onSuccess={handleGoogleSuccess}
                   onFailure={handleGoogleFailure}
                   cookiePolicy={'single_host_origin'}
-                  width="100%"
+                  fullWidth
                 />
               </GoogleOAuthProvider>
             </div>
