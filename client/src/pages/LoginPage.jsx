@@ -149,16 +149,14 @@ export default function LoginPage() {
             >
               Login
             </Button>
-            <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
-              <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
+              {/*<GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
                   onFailure={handleGoogleFailure}
                   cookiePolicy={'single_host_origin'}
                   fullWidth
                 />
-              </GoogleOAuthProvider>
-            </div>
+              </GoogleOAuthProvider>*/}
             <Grid container>
               <Grid item xs>
                 <Link component={RouterLink} to="/register" variant="body2">
