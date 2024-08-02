@@ -12,7 +12,6 @@ export default function RequestsPage() {
   const [verificationMessage, setVerificationMessage] = useState("");
   const [expandedRequests, setExpandedRequests] = useState({});
 
-
   useEffect(() => {
     const token = localStorage.getItem('token');
     const config = {
@@ -30,8 +29,6 @@ export default function RequestsPage() {
     if (user && user.verification === "not verified") {
       event.preventDefault();
       setVerificationMessage("Only verified users can create trip requests.");
-    } else {
-      // Proceed to navigate to add trip request page
     }
   };
 
@@ -50,7 +47,24 @@ export default function RequestsPage() {
       .catch(err => console.error('Error deleting request:', err));
   };
 
- 
+  const handleStatusToggle = (requestId, currentStatus) => {
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+    const newStatus = currentStatus === 'active' ? 'hidden' : 'active';
+
+    axios.patch(`/requests/${requestId}`, { status: newStatus }, config)
+      .then(() => {
+        setRequests(requests.map(request =>
+          request._id === requestId ? { ...request, status: newStatus } : request
+        ));
+      })
+      .catch(err => console.error('Error updating status:', err));
+  };
+
   const handleExpandClick = (id) => {
     setExpandedRequests((prevExpanded) => ({
       ...prevExpanded,
@@ -88,7 +102,7 @@ export default function RequestsPage() {
           requests.map((request) => (
             <div key={request._id} className={`bg-gray-200 p-4 mb-4 rounded-lg shadow-md ${expandedRequests[request._id] ? "expanded" : ""}`}>
               <div className="text-left">
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                   <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>pick-up area:</strong>
                   <span>{request.province}, {request.from}</span>
                 </div>
@@ -110,13 +124,24 @@ export default function RequestsPage() {
                 <hr style={{ border: '1px solid gray' }} />
                 {expandedRequests[request._id] && (
                   <div>
-                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                   <strong className="text-sm mt-2" style={{ color: 'orange', marginRight: '8px' }}>Extra Info:</strong>
-                   <span>{request.extraInfo}</span>
-                 </div>
-                 <hr style={{ border: '1px solid gray' }} />
-                 </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <strong className="text-sm mt-2" style={{ color: 'orange', marginRight: '8px' }}>Extra Info:</strong>
+                      <span>{request.extraInfo}</span>
+                    </div>
+                    <hr style={{ border: '1px solid gray' }} />
+                  </div>
                 )}
+                <div style={{ display: 'flex', alignItems: 'center', marginTop: '8px' }}>
+                  <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>Status:</strong>
+                  <span>{request.status}</span>
+                  <button
+                    onClick={() => handleStatusToggle(request._id, request.status)}
+                    className={`ml-4 px-4 py-2 rounded-lg text-white ${request.status === 'active' ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}
+                  >
+                    {request.status === 'active' ? 'Hide' : 'Show'}
+                  </button>
+                </div>
+                <hr style={{ border: '1px solid gray' }} />
               </div>
               <div className="flex justify-end mt-2">
                 <button

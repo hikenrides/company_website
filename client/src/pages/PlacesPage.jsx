@@ -26,9 +26,7 @@ export default function PlacesPage() {
       })
       .catch(error => {
         if (error.response && error.response.status === 401) {
-          // Handle unauthorized access
           console.error('JWT Token not provided or expired');
-          // Redirect to login or handle as needed
         } else {
           console.error('Error fetching user places:', error.response ? error.response.data : error.message);
         }
@@ -74,6 +72,26 @@ export default function PlacesPage() {
       [id]: !prevExpanded[id],
     }));
   };
+
+  const handleToggleStatus = (id, currentStatus) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.put(`/places/${id}/status`, {
+        status: currentStatus === 'active' ? 'hidden' : 'active'
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(({ data }) => {
+        setPlaces(places.map(place => place._id === id ? { ...place, status: data.status } : place));
+      })
+      .catch(error => {
+        console.error('Error updating place status:', error);
+      });
+    }
+  };
+
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '60vh' }}>
@@ -149,6 +167,17 @@ export default function PlacesPage() {
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                           <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>Trip frequency:</strong>
                           <span>{place.frequency}</span>
+                        </div>
+                        <hr style={{ border: '1px solid gray' }} />
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>Trip status:</strong>
+                          <span>{place.status}</span>
+                          <button
+                            onClick={() => handleToggleStatus(place._id, place.status)}
+                            className="ml-2 bg-green-500 text-white px-2 py-1 rounded-lg hover:bg-green-600"
+                          >
+                            {place.status === 'active' ? 'Hide' : 'Activate'}
+                          </button>
                         </div>
                         <hr style={{ border: '1px solid gray' }} />
                       </div>

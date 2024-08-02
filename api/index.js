@@ -224,7 +224,7 @@ app.get('/auth/google/callback', async (req, res) => {
     res.status(401).json({ error: 'Google login failed' });
   }
 });
-
+s
 
 app.post('/subscribe', async (req, res) => {
   const { email } = req.body;
@@ -431,6 +431,41 @@ app.delete('/places/:id', async (req, res) => {
       res.json({ success: true });
     } catch (error) {
       console.error('Error deleting place:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+});
+app.put('/places/:id/status', async (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { id } = req.params;
+  const { status } = req.body;
+  const authHeader = req.headers.authorization;
+  const token = authHeader.split(' ')[1];
+
+  if (!status || !['active', 'hidden'].includes(status)) {
+    return res.status(400).json({ error: 'Invalid status' });
+  }
+
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) {
+      console.error('JWT Verification Error:', err);
+      return res.status(401).json({ error: 'JWT verification failed' });
+    }
+
+    try {
+      const place = await Place.findById(id);
+      if (!place) {
+        return res.status(404).json({ error: 'Place not found' });
+      }
+      if (place.owner.toString() !== userData.id) {
+        return res.status(403).json({ error: 'Not authorized' });
+      }
+
+      place.status = status;
+      await place.save();
+      res.json({ status: place.status });
+    } catch (error) {
+      console.error('Error updating place status:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
