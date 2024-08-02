@@ -224,7 +224,6 @@ app.get('/auth/google/callback', async (req, res) => {
     res.status(401).json({ error: 'Google login failed' });
   }
 });
-s
 
 app.post('/subscribe', async (req, res) => {
   const { email } = req.body;
