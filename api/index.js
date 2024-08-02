@@ -383,7 +383,10 @@ app.get('/user-places', async (req, res) => {
     }
 
     try {
-      const places = await Place.find({ owner: userData.id, status: 'active' });
+      const places = await Place.find({ 
+        owner: userData.id, 
+        status: { $in: ['active', 'hidden'] } 
+      });
       res.json(places);
     } catch (error) {
       console.error('Error fetching places:', error);
@@ -391,8 +394,6 @@ app.get('/user-places', async (req, res) => {
     }
   });
 });
-
-
 
 app.delete('/places/:id', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
