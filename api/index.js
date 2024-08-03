@@ -666,6 +666,28 @@ app.get('/requested-trips', (req, res) => {
   });
 });
 
+app.put('/requests/:id/status', (req, res) => {
+  mongoose.connect(process.env.MONGO_URL);
+  const { id } = req.params;
+  const { status } = req.body;
+  const authHeader = req.headers.authorization;
+  const token = authHeader.split(' ')[1];
+
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) return res.status(401).json({ message: 'Unauthorized' });
+
+    const { id: userId } = userData;
+    const request = await Request.findOne({ _id: id, owner: userId });
+
+    if (!request) {
+      return res.status(404).json({ message: 'Request not found' });
+    }
+
+    request.status = status;
+    await request.save();
+    res.json(request);
+  });
+});
 
 app.get('/places/:id', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
