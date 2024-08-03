@@ -134,14 +134,14 @@ export default function RequestsPage() {
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <strong className="text-sm mt-2" style={{ color: 'orange', marginRight: '8px' }}>Status:</strong>
                       <span>{request.status}</span>
-                    </div>
-                    <hr style={{ border: '1px solid gray' }} />
                     <button
                       onClick={() => handleToggleStatus(request._id, request.status)}
-                      className={`bg-${request.status === 'active' ? 'red' : 'green'}-500 text-white px-2 py-1 rounded-lg hover:bg-${request.status === 'active' ? 'red' : 'green'}-600`}
+                      className="ml-2 bg-green-500 text-white px-2 py-1 rounded-lg hover:bg-green-600"
                     >
                       {request.status === 'active' ? 'Hide' : 'Activate'}
                     </button>
+                    </div>
+                    <hr style={{ border: '1px solid gray' }} />
                   </div>
                 )}
               </div>

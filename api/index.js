@@ -660,11 +660,22 @@ app.get('/requested-trips', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const authHeader = req.headers.authorization;
   const token = authHeader.split(' ')[1];
+
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
     const { id } = userData;
-    res.json(await Request.find({ owner: id, status: 'active' })); 
+    try {
+      const requests = await Request.find({ owner: id, status: { $in: ['active', 'hidden'] } });
+      res.json(requests);
+    } catch (err) {
+      res.status(500).json({ message: 'Server error' });
+    }
   });
 });
+
 
 app.put('/requests/:id/status', (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
