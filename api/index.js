@@ -65,7 +65,13 @@ function getUserDataFromReq(req) {
       return reject(new Error('JWT not provided'));
     }
 
-    const token = authHeader.split(' ')[1];
+    const tokenParts = authHeader.split(' ');
+    if (tokenParts.length !== 2 || tokenParts[0] !== 'Bearer') {
+      console.error('JWT format error');
+      return reject(new Error('JWT format error'));
+    }
+
+    const token = tokenParts[1];
     console.log('Received token:', token); // Log the received token
 
     jwt.verify(token, jwtSecret, (err, userData) => {
@@ -77,6 +83,7 @@ function getUserDataFromReq(req) {
     });
   });
 }
+
 
 
 app.get('/', (req, res) => {
