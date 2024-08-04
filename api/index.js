@@ -50,21 +50,12 @@ const s3Client = new S3Client({
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
+app.use(passport.initialize());
+
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
-
-function getKey(header, callback) {
-  client.getSigningKey(header.kid, (err, key) => {
-    if (err) {
-      callback(err);
-    } else {
-      const signingKey = key.getPublicKey();
-      callback(null, signingKey);
-    }
-  });
-}
 
 function getUserDataFromReq(req) {
   return new Promise((resolve, reject) => {
@@ -163,6 +154,8 @@ app.post('/login', async (req, res) => {
     res.status(404).json({ error: 'Invalid Email or Password' });
   }
 });
+
+
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -185,40 +178,29 @@ async (accessToken, refreshToken, profile, done) => {
 }
 ));
 
-app.use(passport.initialize());
-
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 app.get('/auth/google/callback', async (req, res) => {
   const { token } = req.query;
 
   try {
-    // Verify the Google ID token
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
-    // Extract user details from the token
     const payload = ticket.getPayload();
-    const { email, name } = payload;
+    const { email } = payload;
 
-    // Find or create user in your database
     let user = await User.findOne({ email });
 
     if (!user) {
-      user = await User.create({
-        googleId: payload.sub,  // Save Google ID for future reference
-        email,
-        name,
-      });
+      return res.status(404).json({ error: 'User not found. Please register first.' });
     }
 
-    // Create a JWT token
     const jwtToken = jwt.sign({ id: user._id, email: user.email }, jwtSecret);
 
-    // Send the JWT token in the response
-    res.redirect(`/?token=${jwtToken}`);
+    res.json({ token: jwtToken, user });
   } catch (error) {
     console.error('Google login failed:', error);
     res.status(401).json({ error: 'Google login failed' });

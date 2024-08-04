@@ -60,23 +60,18 @@ export default function LoginPage() {
   const handleGoogleSuccess = async (response) => {
     try {
       const { credential } = response;
-      // Call the backend to verify the Google token
       const { data } = await axios.get(`/auth/google/callback?token=${credential}`);
-      
-      // Save the token and user data to local storage and context
       localStorage.setItem('token', data.token);
-      setUser(data);
+      setUser(data.user);
       setRedirect(true);
     } catch (error) {
       setErrorMessage("Google login failed");
     }
   };
-  
-  
+
   const handleGoogleFailure = () => {
     setErrorMessage("Google login failed");
   };
-  
 
   if (redirect) {
     return <Navigate to={"/account/trips"} />;
@@ -147,18 +142,23 @@ export default function LoginPage() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Login
+              Sign In
             </Button>
-              <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onFailure={handleGoogleFailure}
-                  cookiePolicy={'single_host_origin'}
-                  fullWidth
-                />
-              </GoogleOAuthProvider>
+            <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onFailure={handleGoogleFailure}
+                buttonText="Sign in with Google"
+                cookiePolicy="single_host_origin"
+              />
+            </GoogleOAuthProvider>
             <Grid container>
               <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
                 <Link component={RouterLink} to="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
