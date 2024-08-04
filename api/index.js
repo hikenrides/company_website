@@ -78,6 +78,7 @@ function getUserDataFromReq(req) {
   });
 }
 
+
 app.get('/', (req, res) => {
   res.send('Hello, this is the root route of the backend!');
 });
@@ -210,6 +211,7 @@ app.get('/auth/google/callback', async (req, res) => {
     res.status(401).json({ error: 'Google login failed' });
   }
 });
+
 
 
 app.post('/subscribe', async (req, res) => {
