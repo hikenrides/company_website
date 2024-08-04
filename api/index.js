@@ -181,7 +181,11 @@ async (accessToken, refreshToken, profile, done) => {
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 app.get('/auth/google/callback', async (req, res) => {
-  const { token } = req.query;
+  const { token } = req.query; // Ensure this matches with the frontend
+
+  if (!token) {
+    return res.status(400).json({ error: 'Token is required' });
+  }
 
   try {
     const ticket = await client.verifyIdToken({
@@ -206,6 +210,7 @@ app.get('/auth/google/callback', async (req, res) => {
     res.status(401).json({ error: 'Google login failed' });
   }
 });
+
 
 app.post('/subscribe', async (req, res) => {
   const { email } = req.body;

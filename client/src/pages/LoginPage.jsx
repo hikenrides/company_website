@@ -60,7 +60,11 @@ export default function LoginPage() {
   const handleGoogleSuccess = async (response) => {
     try {
       const { credential } = response;
-      const { data } = await axios.get(`/auth/google/callback?token=${credential}`);
+      const { data } = await axios.get(`/auth/google/callback`, {
+        params: {
+          token: credential
+        }
+      });
       localStorage.setItem('token', data.token);
       setUser(data.user);
       setRedirect(true);
@@ -68,6 +72,7 @@ export default function LoginPage() {
       setErrorMessage("Google login failed");
     }
   };
+  
 
   const handleGoogleFailure = () => {
     setErrorMessage("Google login failed");
