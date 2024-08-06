@@ -165,7 +165,7 @@ export default function LoginPage() {
               Sign In
             </Button>
             <Box sx={{justifyContent: 'center'}}>
-              <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
+              {/*<GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
                   onFailure={handleGoogleFailure}
@@ -173,7 +173,7 @@ export default function LoginPage() {
                   cookiePolicy="single_host_origin"
                   style={{ width: 250 }}
                 />
-              </GoogleOAuthProvider>
+              </GoogleOAuthProvider>*/}
             </Box>
             <Grid container>
               <Grid item xs>
