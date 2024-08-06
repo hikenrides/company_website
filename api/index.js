@@ -163,6 +163,7 @@ app.post('/login', async (req, res) => {
     res.status(404).json({ error: 'Invalid Email or Password' });
   }
 });
+
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -207,7 +208,16 @@ app.get('/auth/google/callback', async (req, res) => {
     let user = await User.findOne({ email });
 
     if (!user) {
-
+      user = await User.create({
+        googleId: profile.id,
+        email: profile.emails[0].value,
+        name: profile.displayName
+      });
+      const jwtToken = jwt.sign({ id: user._id, email: user.email }, jwtSecret);
+      res.redirect(`/?token=${jwtToken}`);  // Redirect with token
+    } else {
+      // Existing user, logic might depend on your app
+      // You could potentially still create a JWT token here
     }
 
     // Create a JWT token

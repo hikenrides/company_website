@@ -63,9 +63,15 @@ export default function LoginPage() {
       // Call the backend to verify the Google token
       const { data } = await axios.get(`/auth/google/callback?token=${credential}`);
       
-      // Save the token and user data to local storage and context
-      localStorage.setItem('token', data.token);
-      setUser(data);
+      const token = response?.data?.token;
+
+      // If token exists, store it and set user data
+      if (token) {
+        localStorage.setItem('token', token);
+        setUser(response.data); // Assuming response includes user data
+      } else {
+        // Handle case where no token is provided (optional)
+      }
       setRedirect(true);
     } catch (error) {
       setErrorMessage("Google login failed");
