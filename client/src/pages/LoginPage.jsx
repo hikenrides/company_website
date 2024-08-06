@@ -170,6 +170,7 @@ export default function LoginPage() {
                 onFailure={handleGoogleFailure}
                 buttonText="Sign in with Google"
                 cookiePolicy="single_host_origin"
+                style={{ width: 250 }} 
               />
             </GoogleOAuthProvider>
             <Grid container>

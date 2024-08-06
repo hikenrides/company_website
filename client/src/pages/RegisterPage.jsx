@@ -14,6 +14,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Link from '@mui/material/Link';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 const defaultTheme = createTheme();
 
@@ -32,6 +34,9 @@ export default function RegisterPage() {
   const [passwordError, setPasswordError] = useState(false);
   const [balance, setBalance] = useState(0);
   const navigate = useNavigate();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -83,17 +88,18 @@ export default function RegisterPage() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 2,
+            marginTop: isMobile ? 2 : 8,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            marginBottom: 8,
+            marginBottom: isMobile ? 2 : 8,
+            padding: isMobile ? 2 : 4,
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant={isMobile ? "h6" : "h5"}>
             Register
           </Typography>
           <Box component="form" noValidate onSubmit={registerUser} sx={{ mt: 3 }}>
@@ -109,6 +115,8 @@ export default function RegisterPage() {
                   value={name}
                   onChange={(ev) => setName(ev.target.value)}
                   autoFocus
+                  InputLabelProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
+                  InputProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -124,6 +132,8 @@ export default function RegisterPage() {
                   SelectProps={{
                     native: true,
                   }}
+                  InputLabelProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
+                  InputProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
                 >
                   <option value=""></option>
                   <option value="male">Male</option>
@@ -140,6 +150,8 @@ export default function RegisterPage() {
                   name="phone_number"
                   value={phone_number}
                   onChange={(ev) => setNumber(ev.target.value)}
+                  InputLabelProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
+                  InputProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -151,6 +163,8 @@ export default function RegisterPage() {
                   name="age"
                   value={age}
                   onChange={(ev) => setAge(ev.target.value.slice(0, 3))}
+                  InputLabelProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
+                  InputProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -163,6 +177,8 @@ export default function RegisterPage() {
                   autoComplete="email"
                   value={email}
                   onChange={(ev) => setEmail(ev.target.value)}
+                  InputLabelProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
+                  InputProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -178,6 +194,8 @@ export default function RegisterPage() {
                   SelectProps={{
                     native: true,
                   }}
+                  InputLabelProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
+                  InputProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
                 >
                   <option value=""></option>
                   <option value="Yes">Yes</option>
@@ -195,6 +213,8 @@ export default function RegisterPage() {
                     value={driverLicense}
                     onChange={(ev) => setDriverLicense(ev.target.value)}
                     inputProps={{ maxLength: 12 }}
+                    InputLabelProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
+                    InputProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
                   />
                 </Grid>
               )}
@@ -208,6 +228,8 @@ export default function RegisterPage() {
                   id="password"
                   value={password}
                   onChange={(ev) => setPassword(ev.target.value)}
+                  InputLabelProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
+                  InputProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -220,6 +242,8 @@ export default function RegisterPage() {
                   id="confirmPassword"
                   value={confirmPassword}
                   onChange={(ev) => setConfirmPassword(ev.target.value)}
+                  InputLabelProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
+                  InputProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -258,7 +282,7 @@ export default function RegisterPage() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, fontSize: isMobile ? 12 : 14 }}
             >
               Register
             </Button>
