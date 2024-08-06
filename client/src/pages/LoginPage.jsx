@@ -79,13 +79,12 @@ export default function LoginPage() {
         setErrorMessage("Google login failed: No token provided");
       }
     } catch (error) {
-      setErrorMessage("Google login failed");
+      setErrorMessage("Invalid Email");
     }
   };
   
-  
   const handleGoogleFailure = () => {
-    setErrorMessage("Google login failed");
+    setErrorMessage("Invalid Email");
   };
   
 
@@ -103,13 +102,14 @@ export default function LoginPage() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            marginBottom: 10,
+            marginBottom: isMobile ? 2 : 10,
+            padding: isMobile ? 2 : 4,
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant={isMobile ? "h6" : "h5"}>
             Login
           </Typography>
           <Box component="form" onSubmit={handleLoginSubmit} noValidate sx={{ mt: 1 }}>
@@ -124,6 +124,8 @@ export default function LoginPage() {
               autoFocus
               value={email}
               onChange={(ev) => setEmail(ev.target.value)}
+              InputLabelProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
+              InputProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
             />
             <TextField
               margin="normal"
@@ -136,6 +138,8 @@ export default function LoginPage() {
               autoComplete="current-password"
               value={password}
               onChange={(ev) => setPassword(ev.target.value)}
+              InputLabelProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
+              InputProps={{ style: { fontSize: isMobile ? 14 : 16 } }}
             />
             <FormControlLabel
               control={
@@ -156,11 +160,11 @@ export default function LoginPage() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, fontSize: isMobile ? 14 : 16 }}
             >
               Sign In
             </Button>
-            <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
+            <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onFailure={handleGoogleFailure}
