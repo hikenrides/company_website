@@ -180,11 +180,7 @@ app.get('/auth/google/callback', async (req, res) => {
     let user = await User.findOne({ email });
 
     if (!user) {
-      user = await User.create({
-        googleId,
-        email,
-        name
-      });
+      res.status(404).json({ error: 'Invalid Email' });
     }
 
     // Create a JWT token based on user data
