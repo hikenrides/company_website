@@ -55,17 +55,6 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 
-function getKey(header, callback) {
-  client.getSigningKey(header.kid, (err, key) => {
-    if (err) {
-      callback(err);
-    } else {
-      const signingKey = key.getPublicKey();
-      callback(null, signingKey);
-    }
-  });
-}
-
 function getUserDataFromReq(req) {
   return new Promise((resolve, reject) => {
     const authHeader = req.headers.authorization;
@@ -209,21 +198,19 @@ app.get('/auth/google/callback', async (req, res) => {
 
     if (!user) {
       user = await User.create({
-        googleId: profile.id,
+        googleId: profile.id,  // Assuming `profile` is available here (might need adjustment)
         email: profile.emails[0].value,
         name: profile.displayName
       });
-      const jwtToken = jwt.sign({ id: user._id, email: user.email }, jwtSecret);
-      res.redirect(`/?token=${jwtToken}`);  // Redirect with token
-    } else {
-      // Existing user, logic might depend on your app
-      // You could potentially still create a JWT token here
     }
 
-    // Create a JWT token
-    const jwtToken = jwt.sign({ id: user._id, email: user.email }, jwtSecret);
+    // **Use retrieved user to fetch additional data (if needed)**
+    const fullUserData = await User.findById(user._id);
 
-    // Send the JWT token in the response
+    // Create a JWT token based on fullUserData
+    const jwtToken = jwt.sign({ id: fullUserData._id, email: fullUserData.email }, jwtSecret);
+
+    // Send the JWT token and potentially other user data in the response
     res.redirect(`/?token=${jwtToken}`);
   } catch (error) {
     console.error('Google login failed:', error);
