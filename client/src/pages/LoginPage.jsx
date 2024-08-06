@@ -63,20 +63,26 @@ export default function LoginPage() {
       // Call the backend to verify the Google token
       const { data } = await axios.get(`/auth/google/callback?token=${credential}`);
       
-      const token = response?.data?.token;
-
+      const token = data.token; // Update this line to access the token from response data
+  
       // If token exists, store it and set user data
       if (token) {
         localStorage.setItem('token', token);
-        setUser(response.data); // Assuming response includes user data
+        const profileResponse = await axios.get('/profile', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        setUser(profileResponse.data);
+        setRedirect(true);
       } else {
-        // Handle case where no token is provided (optional)
+        setErrorMessage("Google login failed: No token provided");
       }
-      setRedirect(true);
     } catch (error) {
       setErrorMessage("Google login failed");
     }
   };
+  
   
   
   const handleGoogleFailure = () => {

@@ -153,6 +153,48 @@ app.post('/login', async (req, res) => {
   }
 });
 
+
+
+app.use(passport.initialize());
+
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get('/auth/google/callback', async (req, res) => {
+  const { token } = req.query;
+
+  try {
+    // Verify the Google ID token
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    // Extract user details from the token
+    const payload = ticket.getPayload();
+    const { email, name, sub: googleId } = payload;
+
+    // Find or create user in your database
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = await User.create({
+        googleId,
+        email,
+        name
+      });
+    }
+
+    // Create a JWT token based on user data
+    const jwtToken = jwt.sign({ id: user._id, email: user.email }, jwtSecret);
+
+    // Send the JWT token in the response
+    res.redirect(`/?token=${jwtToken}`);
+  } catch (error) {
+    console.error('Google login failed:', error);
+    res.status(401).json({ error: 'Google login failed' });
+  }
+});
+
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -174,49 +216,6 @@ async (accessToken, refreshToken, profile, done) => {
   }
 }
 ));
-
-app.use(passport.initialize());
-
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-app.get('/auth/google/callback', async (req, res) => {
-  const { token } = req.query;
-
-  try {
-    // Verify the Google ID token
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-
-    // Extract user details from the token
-    const payload = ticket.getPayload();
-    const { email, name } = payload;
-
-    // Find or create user in your database
-    let user = await User.findOne({ email });
-
-    if (!user) {
-      user = await User.create({
-        googleId: profile.id,  // Assuming `profile` is available here (might need adjustment)
-        email: profile.emails[0].value,
-        name: profile.displayName
-      });
-    }
-
-    // **Use retrieved user to fetch additional data (if needed)**
-    const fullUserData = await User.findById(user._id);
-
-    // Create a JWT token based on fullUserData
-    const jwtToken = jwt.sign({ id: fullUserData._id, email: fullUserData.email }, jwtSecret);
-
-    // Send the JWT token and potentially other user data in the response
-    res.redirect(`/?token=${jwtToken}`);
-  } catch (error) {
-    console.error('Google login failed:', error);
-    res.status(401).json({ error: 'Google login failed' });
-  }
-});
 
 app.post('/subscribe', async (req, res) => {
   const { email } = req.body;
