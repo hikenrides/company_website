@@ -164,15 +164,17 @@ export default function LoginPage() {
             >
               Sign In
             </Button>
-            <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onFailure={handleGoogleFailure}
-                buttonText="Sign in with Google"
-                cookiePolicy="single_host_origin"
-                style={{ width: 250 }} 
-              />
-            </GoogleOAuthProvider>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+              <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onFailure={handleGoogleFailure}
+                  buttonText="Sign in with Google"
+                  cookiePolicy="single_host_origin"
+                  style={{ width: 250 }}
+                />
+              </GoogleOAuthProvider>
+            </Box>
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
