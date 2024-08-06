@@ -161,6 +161,9 @@ app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'em
 
 app.get('/auth/google/callback', async (req, res) => {
   const { token } = req.query;
+  if (!token) {
+    return res.status(400).json({ error: 'Token not provided' });
+  }
 
   try {
     // Verify the Google ID token
@@ -188,12 +191,13 @@ app.get('/auth/google/callback', async (req, res) => {
     const jwtToken = jwt.sign({ id: user._id, email: user.email }, jwtSecret);
 
     // Send the JWT token in the response
-    res.redirect(`/?token=${jwtToken}`);
+    res.json({ token: jwtToken });
   } catch (error) {
     console.error('Google login failed:', error);
     res.status(401).json({ error: 'Google login failed' });
   }
 });
+
 
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,

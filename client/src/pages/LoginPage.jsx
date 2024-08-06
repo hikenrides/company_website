@@ -84,7 +84,6 @@ export default function LoginPage() {
   };
   
   
-  
   const handleGoogleFailure = () => {
     setErrorMessage("Google login failed");
   };
