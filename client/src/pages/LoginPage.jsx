@@ -164,7 +164,7 @@ export default function LoginPage() {
             >
               Sign In
             </Button>
-            <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+            <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onFailure={handleGoogleFailure}
