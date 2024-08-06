@@ -149,14 +149,14 @@ export default function LoginPage() {
             >
               Sign In
             </Button>
-            {/*<GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+            <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onFailure={handleGoogleFailure}
                 buttonText="Sign in with Google"
                 cookiePolicy="single_host_origin"
               />
-            </GoogleOAuthProvider>*/}
+            </GoogleOAuthProvider>
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
