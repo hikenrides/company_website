@@ -164,7 +164,7 @@ export default function LoginPage() {
             >
               Sign In
             </Button>
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <Box sx={{justifyContent: 'center'}}>
               <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
