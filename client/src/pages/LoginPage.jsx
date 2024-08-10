@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { UserContext } from "../UserContext.jsx";
 import axios from 'axios';
 import { Navigate, Link as RouterLink } from "react-router-dom";
@@ -18,6 +18,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Link from '@mui/material/Link';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import CustomGoogleLoginButton from "../CustomGoogleLoginButton.jsx";
 
 const defaultTheme = createTheme();
 
@@ -60,12 +61,8 @@ export default function LoginPage() {
   const handleGoogleSuccess = async (response) => {
     try {
       const { credential } = response;
-      // Call the backend to verify the Google token
       const { data } = await axios.get(`/auth/google/callback?token=${credential}`);
-      
-      const token = data.token; // Update this line to access the token from response data
-  
-      // If token exists, store it and set user data
+      const token = data.token;
       if (token) {
         localStorage.setItem('token', token);
         const profileResponse = await axios.get('/profile', {
@@ -82,11 +79,10 @@ export default function LoginPage() {
       setErrorMessage("Invalid Email");
     }
   };
-  
+
   const handleGoogleFailure = () => {
     setErrorMessage("Invalid Email");
   };
-  
 
   if (redirect) {
     return <Navigate to={"/account/trips"} />;
@@ -164,24 +160,21 @@ export default function LoginPage() {
             >
               Sign In
             </Button>
-            <Box sx={{justifyContent: 'center'}}>
-              {/*<GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
-                <GoogleLogin
+            <Box sx={{ width: '100%' }}>
+              <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
+                <CustomGoogleLoginButton
                   onSuccess={handleGoogleSuccess}
                   onFailure={handleGoogleFailure}
-                  buttonText="Sign in with Google"
-                  cookiePolicy="single_host_origin"
-                  style={{ width: 250 }}
                 />
-              </GoogleOAuthProvider>*/}
+              </GoogleOAuthProvider>
             </Box>
-            <Grid container>
+            <Grid container justifyContent={"flex-end"}>
               <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
-              <Grid item>
+              <Grid item xs>
                 <Link component={RouterLink} to="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
