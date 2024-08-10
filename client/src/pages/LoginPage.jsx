@@ -160,14 +160,14 @@ export default function LoginPage() {
             >
               Sign In
             </Button>
-            <Box sx={{ width: '100%' }}>
+            {/*<Box sx={{ width: '100%' }}>
               <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
                 <CustomGoogleLoginButton
                   onSuccess={handleGoogleSuccess}
                   onFailure={handleGoogleFailure}
                 />
               </GoogleOAuthProvider>
-            </Box>
+            </Box>*/}
             <Grid container justifyContent={"flex-end"}>
               <Grid item xs>
                 <Link href="#" variant="body2">
