@@ -30,6 +30,32 @@ export default function LoginPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  
+  
+  const handleGoogleSuccess = async (googleUser) => {
+    try {
+      const id_token = googleUser.getAuthResponse().id_token;
+      const { data } = await axios.get(`/auth/google/callback?token=${id_token}`);
+      
+      const token = data.token;
+  
+      if (token) {
+        localStorage.setItem('token', token);
+        const profileResponse = await axios.get('/profile', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        setUser(profileResponse.data);
+        setRedirect(true);
+      } else {
+        setErrorMessage("Google login failed: No token provided");
+      }
+    } catch (error) {
+      setErrorMessage("Invalid Email");
+    }
+  };
+
   useEffect(() => {
     const script = document.createElement('script');
     script.src = "https://accounts.google.com/gsi/client";
@@ -52,33 +78,6 @@ export default function LoginPage() {
     };
     document.body.appendChild(script);
   }, []);
-  
-  const handleGoogleSuccess = async (response) => {
-    try {
-      const { credential } = response;
-  
-      // Call your backend to verify the Google token
-      const { data } = await axios.post('/auth/google/callback', { token: credential });
-  
-      const token = data.token; // Ensure your backend returns the JWT token
-  
-      if (token) {
-        localStorage.setItem('token', token);
-        const profileResponse = await axios.get('/profile', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-        setUser(profileResponse.data);
-        setRedirect(true);
-      } else {
-        setErrorMessage("Google login failed: No token provided");
-      }
-    } catch (error) {
-      setErrorMessage("Invalid Email");
-    }
-  };
-  
 
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
