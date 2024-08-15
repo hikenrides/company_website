@@ -31,41 +31,36 @@ export default function LoginPage() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    // Load the Google Platform Library and render the button
     const script = document.createElement('script');
-    script.src = "https://apis.google.com/js/platform.js";
+    script.src = "https://accounts.google.com/gsi/client";
     script.async = true;
     script.defer = true;
     script.onload = () => {
-      window.gapi.load('auth2', () => {
-        window.gapi.auth2.init({
-          client_id: '300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com',
-        }).then(() => {
-          renderButton();
-        });
+      console.log("Google Identity Services Script Loaded");
+  
+      window.google.accounts.id.initialize({
+        client_id: '300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com',
+        callback: handleGoogleSuccess,
       });
+  
+      window.google.accounts.id.renderButton(
+        document.getElementById("my-signin2"),
+        { theme: "outline", size: "large" }  // customization attributes
+      );
+  
+      window.google.accounts.id.prompt(); // also display the One Tap dialog
     };
     document.body.appendChild(script);
   }, []);
-
-  const renderButton = () => {
-    window.gapi.signin2.render('my-signin2', {
-      'scope': 'profile email',
-      'width': 240,
-      'height': 50,
-      'longtitle': true,
-      'theme': 'dark',
-      'onsuccess': handleGoogleSuccess,
-      'onfailure': handleGoogleFailure
-    });
-  };
-
-  const handleGoogleSuccess = async (googleUser) => {
+  
+  const handleGoogleSuccess = async (response) => {
     try {
-      const id_token = googleUser.getAuthResponse().id_token;
-      const { data } = await axios.get(`/auth/google/callback?token=${id_token}`);
-      
-      const token = data.token;
+      const { credential } = response;
+  
+      // Call your backend to verify the Google token
+      const { data } = await axios.post('/auth/google/callback', { token: credential });
+  
+      const token = data.token; // Ensure your backend returns the JWT token
   
       if (token) {
         localStorage.setItem('token', token);
@@ -83,11 +78,7 @@ export default function LoginPage() {
       setErrorMessage("Invalid Email");
     }
   };
-
-  const handleGoogleFailure = (error) => {
-    setErrorMessage("Google login failed");
-    console.error(error);
-  };
+  
 
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
