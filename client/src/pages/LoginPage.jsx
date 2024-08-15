@@ -1,4 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { UserContext } from "../UserContext.jsx";
 import axios from 'axios';
 import { Navigate, Link as RouterLink } from "react-router-dom";
@@ -30,55 +31,6 @@ export default function LoginPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  
-  
-  const handleGoogleSuccess = async (googleUser) => {
-    try {
-      const id_token = googleUser.getAuthResponse().id_token;
-      const { data } = await axios.get(`/auth/google/callback?token=${id_token}`);
-      
-      const token = data.token;
-  
-      if (token) {
-        localStorage.setItem('token', token);
-        const profileResponse = await axios.get('/profile', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-        setUser(profileResponse.data);
-        setRedirect(true);
-      } else {
-        setErrorMessage("Google login failed: No token provided");
-      }
-    } catch (error) {
-      setErrorMessage("Invalid Email");
-    }
-  };
-
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = "https://accounts.google.com/gsi/client";
-    script.async = true;
-    script.defer = true;
-    script.onload = () => {
-      console.log("Google Identity Services Script Loaded");
-  
-      window.google.accounts.id.initialize({
-        client_id: '300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com',
-        callback: handleGoogleSuccess,
-      });
-  
-      window.google.accounts.id.renderButton(
-        document.getElementById("my-signin2"),
-        { theme: "outline", size: "large" }  // customization attributes
-      );
-  
-      window.google.accounts.id.prompt(); // also display the One Tap dialog
-    };
-    document.body.appendChild(script);
-  }, []);
-
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
     try {
@@ -104,6 +56,37 @@ export default function LoginPage() {
       }
     }
   }
+
+  const handleGoogleSuccess = async (response) => {
+    try {
+      const { credential } = response;
+      // Call the backend to verify the Google token
+      const { data } = await axios.get(`/auth/google/callback?token=${credential}`);
+      
+      const token = data.token; // Update this line to access the token from response data
+  
+      // If token exists, store it and set user data
+      if (token) {
+        localStorage.setItem('token', token);
+        const profileResponse = await axios.get('/profile', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        setUser(profileResponse.data);
+        setRedirect(true);
+      } else {
+        setErrorMessage("Google login failed: No token provided");
+      }
+    } catch (error) {
+      setErrorMessage("Invalid Email");
+    }
+  };
+  
+  const handleGoogleFailure = () => {
+    setErrorMessage("Invalid Email");
+  };
+  
 
   if (redirect) {
     return <Navigate to={"/account/trips"} />;
@@ -181,13 +164,20 @@ export default function LoginPage() {
             >
               Sign In
             </Button>
-            <Box
+            <Box 
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mb: 2, fontSize: isMobile ? 14 : 16 }}
-            >
-              <div id="my-signin2"></div>
+              sx={{mb: 2, fontSize: isMobile ? 14 : 16 }}>
+              <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onFailure={handleGoogleFailure}
+                  buttonText="Sign in with Google"
+                  cookiePolicy="single_host_origin"
+                  style={{ width: 250 }}
+                />
+              </GoogleOAuthProvider>
             </Box>
             <Grid container>
               <Grid item xs>
