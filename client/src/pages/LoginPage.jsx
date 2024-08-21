@@ -164,7 +164,7 @@ export default function LoginPage() {
             >
               Sign In
             </Button>
-            <Box 
+            {/*<Box 
               type="submit"
               fullWidth
               variant="contained"
@@ -178,7 +178,7 @@ export default function LoginPage() {
                   style={{ width: 250 }}
                 />
               </GoogleOAuthProvider>
-            </Box>
+            </Box>*/}
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
