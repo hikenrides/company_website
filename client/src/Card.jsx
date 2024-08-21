@@ -102,6 +102,16 @@ function Card() {
                 <h3>The driver will receive payment after getting the reference number <br/>from you at the pickup location</h3>
             </motion.div>
         </motion.div>
+        <div className="video_container" style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', maxWidth: '100%', background: '#000', marginTop: '20px', margin: '20px auto' }}>
+        <iframe
+          src="https://www.youtube.com/embed/aEKfDXvKnrI?si=crHN5bPmkxSjLBFv"
+          title="YouTube video player"
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: '0' }}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+        ></iframe>
+      </div>
         <div className="image_container">
             <motion.img src={'/images/paystack.jpg'} alt="bg" initial={{x:200, opacity:0}} animate={{x:0, opacity:1}} transition={{duration:.5, delay:0.8}} style={{ margin: 'auto', display: 'block' }} />
         </div>
