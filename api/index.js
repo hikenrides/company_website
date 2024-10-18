@@ -198,7 +198,7 @@ app.get('/auth/google/callback', async (req, res) => {
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "http://localhost:3000/auth/google/callback"
+  callbackURL: "https://hikenrides.com/auth/google/callback"
 },
 async (accessToken, refreshToken, profile, done) => {
   try {
