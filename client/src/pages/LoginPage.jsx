@@ -28,25 +28,29 @@ export default function LoginPage() {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const googleLogin = useGoogleLogin({
-    onSuccess: async (response) => {
-      try {
-        const { data } = await axios.get(`/auth/google/callback?token=${response.credential}`);
-        if (data.token) {
-          localStorage.setItem("token", data.token);
-          const profileResponse = await axios.get("/profile", {
-            headers: { Authorization: `Bearer ${data.token}` },
-          });
-          setUser(profileResponse.data);
-          setRedirect(true);
-        } else {
-          setErrorMessage("Google login failed.");
-        }
-      } catch {
+  onSuccess: async (response) => {
+    try {
+      const { data } = await axios.post("/auth/google/callback", {
+        token: response.credential,
+      });
+
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        const profileResponse = await axios.get("/profile", {
+          headers: { Authorization: `Bearer ${data.token}` },
+        });
+        setUser(profileResponse.data);
+        setRedirect(true);
+      } else {
         setErrorMessage("Google login failed.");
       }
-    },
-    onError: () => setErrorMessage("Google login failed."),
-  });
+    } catch (error) {
+      setErrorMessage("Google login failed.");
+    }
+  },
+  onError: () => setErrorMessage("Google login failed."),
+});
+
 
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
