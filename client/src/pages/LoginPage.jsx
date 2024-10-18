@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { UserContext } from "../UserContext.jsx";
 import { Navigate, Link as RouterLink } from "react-router-dom";
@@ -10,10 +10,9 @@ import {
   CssBaseline,
   TextField,
   Typography,
-  Grid,
+  Divider,
   Link,
   IconButton,
-  Divider
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
@@ -66,6 +65,23 @@ export default function LoginPage() {
     }
   };
 
+  useEffect(() => {
+    // Hide the default Google button if it's still visible
+    const hideGoogleButton = () => {
+      const googleButton = document.querySelector(".g_id_signin");
+      if (googleButton) {
+        googleButton.style.display = 'none';
+      }
+    };
+
+    hideGoogleButton();
+
+    // Set an interval to ensure the button stays hidden
+    const interval = setInterval(hideGoogleButton, 1000); // Check every second
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
+
   if (redirect) return <Navigate to={"/account/trips"} />;
 
   return (
@@ -110,37 +126,32 @@ export default function LoginPage() {
 
           <Box display="flex" flexDirection="column" gap={2}>
             <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={() => setErrorMessage("Google login failed.")}
-              />
+              <div style={{ display: 'none' }}> {/* Wrap in a div to hide the button */}
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => setErrorMessage("Google login failed.")}
+                />
+              </div>
+              <Button
+                fullWidth
+                variant="outlined"
+                sx={{ textTransform: "none" }}
+                onClick={() => {
+                  // Trigger Google login manually
+                  const googleLoginButton = document.querySelector(".g_id_signin");
+                  if (googleLoginButton) {
+                    googleLoginButton.click();
+                  }
+                }}
+              >
+                <img
+                  src="https://www.svgrepo.com/show/475656/google-color.svg" // Google logo
+                  alt="Google"
+                  style={{ height: 18, marginRight: 8 }}
+                />
+                Continue with Google
+              </Button>
             </GoogleOAuthProvider>
-
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={{ textTransform: "none" }}
-            >
-              <img
-                src="https://www.svgrepo.com/show/512317/github-142.svg"
-                alt="GitHub"
-                style={{ height: 18, marginRight: 8 }}
-              />
-              Continue with GitHub
-            </Button>
-
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={{ textTransform: "none" }}
-            >
-              <img
-                src="https://www.svgrepo.com/show/448234/linkedin.svg"
-                alt="LinkedIn"
-                style={{ height: 18, marginRight: 8 }}
-              />
-              Continue with LinkedIn
-            </Button>
           </Box>
 
           <Divider sx={{ my: 3 }}>OR</Divider>
