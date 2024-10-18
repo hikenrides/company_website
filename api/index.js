@@ -194,35 +194,6 @@ app.get('/auth/google/callback', async (req, res) => {
   }
 });
 
-app.post('/auth/google/callback', async (req, res) => {
-  const { token } = req.body;
-  if (!token) {
-    return res.status(400).json({ error: 'Token not provided' });
-  }
-
-  try {
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-
-    const payload = ticket.getPayload();
-    const { email, name, sub: googleId } = payload;
-
-    let user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ error: 'Invalid Email' });
-    }
-
-    const jwtToken = jwt.sign({ id: user._id, email: user.email }, jwtSecret);
-    res.json({ token: jwtToken });
-  } catch (error) {
-    console.error('Google login failed:', error);
-    res.status(401).json({ error: 'Google login failed' });
-  }
-});
-
-
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
