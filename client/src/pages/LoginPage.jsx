@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import React, { useContext, useState } from "react";
+import { useGoogleLogin } from "@react-oauth/google";
 import { UserContext } from "../UserContext.jsx";
 import { Navigate, Link as RouterLink } from "react-router-dom";
 import axios from "axios";
@@ -27,6 +27,27 @@ export default function LoginPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (response) => {
+      try {
+        const { data } = await axios.get(`/auth/google/callback?token=${response.credential}`);
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+          const profileResponse = await axios.get("/profile", {
+            headers: { Authorization: `Bearer ${data.token}` },
+          });
+          setUser(profileResponse.data);
+          setRedirect(true);
+        } else {
+          setErrorMessage("Google login failed.");
+        }
+      } catch {
+        setErrorMessage("Google login failed.");
+      }
+    },
+    onError: () => setErrorMessage("Google login failed."),
+  });
+
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
     try {
@@ -34,59 +55,22 @@ export default function LoginPage() {
       if (status === 200 && data.token) {
         localStorage.setItem("token", data.token);
         const profileResponse = await axios.get("/profile", {
-          headers: { Authorization: `Bearer ${data.token}` }
+          headers: { Authorization: `Bearer ${data.token}` },
         });
         setUser(profileResponse.data);
         setRedirect(true);
       } else {
-        setErrorMessage("Invalid credentials");
+        setErrorMessage("Invalid credentials.");
       }
     } catch (error) {
       setErrorMessage(error.response?.data?.error || "Login failed.");
     }
   }
 
-  const handleGoogleSuccess = async (response) => {
-    const { credential } = response;
-    try {
-      const { data } = await axios.get(`/auth/google/callback?token=${credential}`);
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        const profileResponse = await axios.get("/profile", {
-          headers: { Authorization: `Bearer ${data.token}` }
-        });
-        setUser(profileResponse.data);
-        setRedirect(true);
-      } else {
-        setErrorMessage("Google login failed.");
-      }
-    } catch {
-      setErrorMessage("Google login failed.");
-    }
-  };
-
-  useEffect(() => {
-    // Hide the default Google button if it's still visible
-    const hideGoogleButton = () => {
-      const googleButton = document.querySelector(".g_id_signin");
-      if (googleButton) {
-        googleButton.style.display = 'none';
-      }
-    };
-
-    hideGoogleButton();
-
-    // Set an interval to ensure the button stays hidden
-    const interval = setInterval(hideGoogleButton, 1000); // Check every second
-
-    return () => clearInterval(interval); // Cleanup on unmount
-  }, []);
-
   if (redirect) return <Navigate to={"/account/trips"} />;
 
   return (
     <Box
-      className="login-popup"
       sx={{
         position: "fixed",
         top: 0,
@@ -120,38 +104,21 @@ export default function LoginPage() {
           <Typography variant="h5" textAlign="center" fontWeight="bold" mb={2}>
             Login to your account
           </Typography>
-          <Typography variant="body2" textAlign="center" mb={3}>
-            You must be logged in to perform this action.
-          </Typography>
 
           <Box display="flex" flexDirection="column" gap={2}>
-            <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
-              <div style={{ display: 'none' }}> {/* Wrap in a div to hide the button */}
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={() => setErrorMessage("Google login failed.")}
-                />
-              </div>
-              <Button
-                fullWidth
-                variant="outlined"
-                sx={{ textTransform: "none" }}
-                onClick={() => {
-                  // Trigger Google login manually
-                  const googleLoginButton = document.querySelector(".g_id_signin");
-                  if (googleLoginButton) {
-                    googleLoginButton.click();
-                  }
-                }}
-              >
-                <img
-                  src="https://www.svgrepo.com/show/475656/google-color.svg" // Google logo
-                  alt="Google"
-                  style={{ height: 18, marginRight: 8 }}
-                />
-                Continue with Google
-              </Button>
-            </GoogleOAuthProvider>
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => googleLogin()}
+              sx={{ textTransform: "none" }}
+            >
+              <img
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                alt="Google"
+                style={{ height: 18, marginRight: 8 }}
+              />
+              Continue with Google
+            </Button>
           </Box>
 
           <Divider sx={{ my: 3 }}>OR</Divider>
@@ -206,4 +173,5 @@ export default function LoginPage() {
     </Box>
   );
 }
+
 
