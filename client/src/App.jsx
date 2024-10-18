@@ -26,6 +26,7 @@ import WithdrawForm from "./pages/WithdrawForm.jsx";
 import VerificationPage from './pages/VerificationPage.jsx';
 import AboutUs from './AboutUs.jsx';
 import Security from './Security.jsx';
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 axios.defaults.withCredentials = true;
@@ -47,6 +48,7 @@ function App() {
   
 
   return (
+    <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
     <UserContextProvider>
       <Routes>
         <Route path="/" element={<Layout />}>
@@ -77,6 +79,7 @@ function App() {
         </Route>
       </Routes>
     </UserContextProvider>
+    </GoogleOAuthProvider>
   );
 }
 
