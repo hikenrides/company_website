@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { UserContext } from "../UserContext.jsx";
 import { Navigate, Link as RouterLink } from "react-router-dom";
 import axios from "axios";
@@ -34,7 +34,7 @@ export default function LoginPage() {
       if (status === 200 && data.token) {
         localStorage.setItem("token", data.token);
         const profileResponse = await axios.get("/profile", {
-          headers: { Authorization: `Bearer ${data.token}` }
+          headers: { Authorization: `Bearer ${data.token}` },
         });
         setUser(profileResponse.data);
         setRedirect(true);
@@ -46,14 +46,26 @@ export default function LoginPage() {
     }
   }
 
+  const initializeGoogleLogin = () => {
+    window.google.accounts.id.initialize({
+      client_id:
+        "300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com",
+      callback: handleGoogleSuccess,
+    });
+
+    window.google.accounts.id.prompt(); // Trigger the login prompt
+  };
+
   const handleGoogleSuccess = async (response) => {
     const { credential } = response;
     try {
-      const { data } = await axios.get(`/auth/google/callback?token=${credential}`);
+      const { data } = await axios.get(
+        `/auth/google/callback?token=${credential}`
+      );
       if (data.token) {
         localStorage.setItem("token", data.token);
         const profileResponse = await axios.get("/profile", {
-          headers: { Authorization: `Bearer ${data.token}` }
+          headers: { Authorization: `Bearer ${data.token}` },
         });
         setUser(profileResponse.data);
         setRedirect(true);
@@ -66,18 +78,15 @@ export default function LoginPage() {
   };
 
   useEffect(() => {
-    // Hide the default Google button if it's still visible
-    const hideGoogleButton = () => {
-      const googleButton = document.querySelector(".g_id_signin");
-      if (googleButton) {
-        googleButton.style.display = 'none';
-      }
+    const loadGoogleScript = () => {
+      const script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
+      script.onload = initializeGoogleLogin;
+      script.async = true;
+      document.body.appendChild(script);
     };
 
-    hideGoogleButton();
-    const interval = setInterval(hideGoogleButton, 1000); // Check every second
-
-    return () => clearInterval(interval); // Cleanup on unmount
+    loadGoogleScript();
   }, []);
 
   if (redirect) return <Navigate to={"/account/trips"} />;
@@ -124,26 +133,14 @@ export default function LoginPage() {
 
           <Box display="flex" flexDirection="column" gap={2}>
             <GoogleOAuthProvider clientId="300890038465-pim80rkka1tn10ro5h80g4ncctmqeg4u.apps.googleusercontent.com">
-              <div style={{ display: 'none' }}>
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={() => setErrorMessage("Google login failed.")}
-                />
-              </div>
               <Button
                 fullWidth
                 variant="outlined"
                 sx={{ textTransform: "none" }}
-                onClick={() => {
-                  // Trigger Google login manually
-                  const googleLoginButton = document.querySelector(".g_id_signin");
-                  if (googleLoginButton) {
-                    googleLoginButton.click();
-                  }
-                }}
+                onClick={initializeGoogleLogin}
               >
                 <img
-                  src="https://www.svgrepo.com/show/475656/google-color.svg" // Google logo
+                  src="https://www.svgrepo.com/show/475656/google-color.svg"
                   alt="Google"
                   style={{ height: 18, marginRight: 8 }}
                 />
@@ -204,4 +201,5 @@ export default function LoginPage() {
     </Box>
   );
 }
+
 
