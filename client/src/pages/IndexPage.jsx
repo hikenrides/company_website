@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Typewriter, useTypewriter } from 'react-simple-typewriter';
+import { useState, useEffect } from 'react';
+import { useTypewriter } from 'react-simple-typewriter';
 import '../App.scss';
 import { IoChevronForwardCircle } from 'react-icons/io5';
 import { motion } from 'framer-motion';
@@ -16,14 +16,21 @@ let easing = [0.6, -0.05, 0.01, 0.99];
 
 function IndexPage() {
   const { user } = useContext(UserContext);
-  const [typeEffect] = useTypewriter({
+  const [typeEffect, setTypeEffect] = useTypewriter({
     words: ["Your Way.", "Safe and Secure.", "Affordable Journeys.", "Our Connection."],
-    loop:{},
+    loop: {},
     typeSpeed: 100,
     deleteSpeed: 50,
     delaySpeed: 1500,
+  });
 
-  })
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    setIsAnimating(true);
+    const timer = setTimeout(() => setIsAnimating(false), 300); // Adjust duration as needed
+    return () => clearTimeout(timer);
+  }, [typeEffect]);
 
   return (
     <motion.div initial="initial" animate="animate" className="font-sans">
@@ -46,10 +53,17 @@ function IndexPage() {
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-snug mb-4 md:mb-6">
                   Your Ride,
                 </h1>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-snug mb-4 md:mb-6">
-                  <span style={{fontWeight: 'bold', color: 'white'}}>{typeEffect}</span>
-                </h1>
-                
+                <motion.h1
+                  className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-snug mb-4 md:mb-6 min-h-[50px]" // Set a min height to avoid container shrinking
+                  animate={{
+                    scale: isAnimating ? 0.95 : 1, // Scale text slightly
+                  }}
+                  transition={{ duration: 0.3, ease: easing }}
+                  style={{ display: 'inline-block' }} // Ensures the text scales independently
+                >
+                  <span style={{ fontWeight: 'bold', color: 'white' }}>{typeEffect}</span>
+                </motion.h1>
+
                 <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 text-gray-300">
                   Connecting drivers and passengers for cost-effective, secure, and collaborative journeys.
                 </p>

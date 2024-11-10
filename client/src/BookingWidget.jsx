@@ -110,7 +110,7 @@ export default function BookingWidget({ place }) {
               className="mx-auto mt-10 block rounded-xl border-4 border-transparent bg-orange-400 px-6 py-3 text-center text-base font-medium text-orange-100 hover:outline-8 hover:duration-300"
               onClick={() => setRedirect(`/account/bookings/${bookingId}`)}
             >
-              Track Booking
+              Trip Info
             </button>
           </div>
         </div>

@@ -104,7 +104,7 @@ export default function BookingPage() {
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
               {/* SVG path */}
             </svg>
-            +1 (555) 123-4567
+            +27 82 472 4089
           </p>
         </div>
         <button
