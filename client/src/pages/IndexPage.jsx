@@ -8,7 +8,7 @@ import Footer from '../footer';
 import ProductValues from '../ProductValues.jsx';
 import ProductCTA from '../ProductCTA.jsx';
 import Card from '../Card.jsx';
-import Typed from 'react-typed';
+//import Typed from 'react-typed';
 import 'tailwindcss/tailwind.css';
 
 let easing = [0.6, -0.05, 0.01, 0.99];
@@ -37,7 +37,7 @@ function IndexPage() {
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-snug mb-4 md:mb-6">
                   Your Ride,
                 </h1>
-                <div className="text-center sm:text-left">
+                {/*<div className="text-center sm:text-left">
                   <Typed
                     className="block sm:inline-block text-2xl sm:text-3xl md:text-4xl font-extrabold leading-snug"
                     strings={[
@@ -50,7 +50,7 @@ function IndexPage() {
                     backSpeed={30}
                     loop
                   />
-                </div>
+                </div>*/}
                 <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 text-gray-300">
                   Connecting drivers and passengers for cost-effective, secure, and collaborative journeys.
                 </p>
