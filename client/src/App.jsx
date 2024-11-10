@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import axios from "axios";
 import { UserContextProvider } from "./UserContext.jsx";
 import IndexPage from "./pages/IndexPage.jsx";
@@ -21,11 +21,11 @@ import BookingPage2 from './pages/BookingPage2';
 import PageRequest from './pages/PageRequest';
 import TermsAndConditions from "./pages/TermsPage.jsx";
 import DepositPage from "./pages/DepositPage.jsx";
-import WithdrawPage from "./pages/WithdrawPage.jsx";
 import WithdrawForm from "./pages/WithdrawForm.jsx";
 import VerificationPage from './pages/VerificationPage.jsx';
 import AboutUs from './AboutUs.jsx';
 import Security from './Security.jsx';
+import { initGA, logPageView } from './analytics.jsx';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 axios.defaults.withCredentials = true;
@@ -44,8 +44,17 @@ function App() {
       return Promise.reject(error);
     }
   );
-  
 
+  const location = useLocation();
+
+  useEffect(() => {
+    initGA();
+  }, []);
+
+  useEffect(() => {
+    logPageView();
+  }, [location]);
+  
   return (
     <UserContextProvider>
       <Routes>
@@ -68,8 +77,7 @@ function App() {
           <Route path="/account/requests" element={<RequestOfferPage />} />
           <Route path="/Terms and Conditions" element={<TermsAndConditions />} />
           <Route path="/deposit" element={<DepositPage />} />
-          <Route path="/withdraw" element={<WithdrawPage />} />
-          <Route path="/WithdrawalForm" element={<WithdrawForm />} />
+          <Route path="/withdraw" element={<WithdrawForm />} />
           <Route path="/verification" element={<VerificationPage />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/security" element={<Security />} />
