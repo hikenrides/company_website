@@ -54,7 +54,7 @@ const Footer= () =>{
                 <div className="sb__footer-below">
                     <div className="sb__footer-copyright">
                         <p>
-                            @2023 Hikenrides. All Rights Reserved.
+                            @2024 Hikenrides. All Rights Reserved.
                         </p>
                     </div>
                     <div className="sb__footer-below-links">

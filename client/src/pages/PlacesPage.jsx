@@ -5,6 +5,13 @@ import axios from "axios";
 import { UserContext } from "../UserContext";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 export default function PlacesPage() {
   const { user } = useContext(UserContext);
@@ -94,15 +101,14 @@ export default function PlacesPage() {
 
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '60vh' }}>
-      <div className="hidden md:block mb-4">
+    <div className="max-w-full mx-auto px-4">
+      {/*<div className="hidden z">
         <AccountNav />
-      </div>
-      <div className="text-center mb-4 mt-4">
+      </div>*/}
+      <div className="text-center mb-4 mt-40 ">
         <Link
           className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
           to={'/account/Mytrips/new'}
-          onClick={handleAddTripClick}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -112,84 +118,35 @@ export default function PlacesPage() {
           >
             <path fillRule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clipRule="evenodd" />
           </svg>
-          Add trip offer
+          Add Trip Offer
         </Link>
-        {verificationMessage && (
-          <p className="text-red-700 mt-2">{verificationMessage}</p>
-        )}
       </div>
-      <div className="text-center">
-        <div>
-          <div className="mt-4">
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="trip offers table">
+          <TableHead>
+            <TableRow>
+              <TableCell><strong>Pick-up Area</strong></TableCell>
+              <TableCell><strong>Destination</strong></TableCell>
+              <TableCell><strong>Price</strong></TableCell>
+              <TableCell><strong>Date</strong></TableCell>
+              <TableCell><strong>Status</strong></TableCell>
+              <TableCell align="center"><strong>Actions</strong></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {places.length > 0 ? (
               places.map((place) => (
-                <div
-                  key={place._id}
-                  className={`bg-gray-200 p-4 mb-4 rounded-lg shadow-md ${expandedPlaces[place._id] ? "expanded" : ""}`}
-                >
-                  <div className="text-left">
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>pick-up area:</strong>
-                      <span>{place.province}, {place.from}</span>
+                <TableRow key={place._id}>
+                  <TableCell>{place.province}, {place.from}</TableCell>
+                  <TableCell>{place.province2}, {place.destination}</TableCell>
+                  <TableCell>R{place.price} per person</TableCell>
+                  <TableCell>{new Date(place.date).toLocaleDateString('en-US')}</TableCell>
+                  <TableCell>
+                    <div className={`w-max font-bold py-1 px-2 rounded-md ${place.status === 'active' ? 'bg-green-500/20 text-green-900' : 'bg-red-500/20 text-red-900'}`}>
+                      {place.status}
                     </div>
-                    <hr style={{ border: '1px solid gray' }} />
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>destination:</strong>
-                      <span>{place.province2}, {place.destination}</span>
-                    </div>
-                    <hr style={{ border: '1px solid gray' }} />
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <strong style={{ color: 'orange', marginRight: '8px' }}>price:</strong>
-                      <span>{place.price} per person</span>
-                    </div>
-                    <hr style={{ border: '1px solid gray' }} />
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <strong className="text-sm mt-2" style={{ color: 'orange', marginRight: '8px' }}>date:</strong>
-                      <span>{new Date(place.date).toLocaleDateString('en-US')}</span>
-                    </div>
-                    <hr style={{ border: '1px solid gray' }} />
-                    {expandedPlaces[place._id] && (
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>vehicle-destination:</strong>
-                          <span>{place.brand}, {place.color}, {place.type}</span>
-                        </div>
-                        <hr style={{ border: '1px solid gray' }} />
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <p><strong style={{ color: 'orange', marginRight: '8px' }}>Extra Info:</strong> {place.extraInfo}</p>
-                        </div>
-                        <hr style={{ border: '1px solid gray' }} />
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>Max passengers:</strong>
-                          <span>{place.maxGuests}</span>
-                        </div>
-                        <hr style={{ border: '1px solid gray' }} />
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>Trip frequency:</strong>
-                          <span>{place.frequency}</span>
-                        </div>
-                        <hr style={{ border: '1px solid gray' }} />
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <strong className="text-xl font-medium" style={{ color: 'orange', marginRight: '8px' }}>Trip status:</strong>
-                          <span>{place.status}</span>
-                          <button
-                            onClick={() => handleToggleStatus(place._id, place.status)}
-                            className="ml-2 bg-green-500 text-white px-2 py-1 rounded-lg hover:bg-green-600"
-                          >
-                            {place.status === 'active' ? 'Hide' : 'Activate'}
-                          </button>
-                        </div>
-                        <hr style={{ border: '1px solid gray' }} />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex justify-end mt-2">
-                    <button
-                      onClick={() => handleExpandClick(place._id)}
-                      className="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-600 mr-2"
-                    >
-                      {expandedPlaces[place._id] ? "Show Less" : "Show More"}
-                    </button>
+                  </TableCell>
+                  <TableCell align="center">
                     <IconButton
                       onClick={() => handleDeleteClick(place._id)}
                       aria-label="delete"
@@ -197,17 +154,25 @@ export default function PlacesPage() {
                     >
                       <DeleteIcon fontSize="inherit" />
                     </IconButton>
-                  </div>
-                </div>
+                    <button
+                      onClick={() => handleToggleStatus(place._id, place.status)}
+                      className={`ml-2 px-2 py-1 rounded-lg ${place.status === 'active' ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'}`}
+                    >
+                      {place.status === 'active' ? 'Hide' : 'Activate'}
+                    </button>
+                  </TableCell>
+                </TableRow>
               ))
             ) : (
-              <div className="text-center">
-                <p>No Trip offers found. Please add some trip offers</p>
-              </div>
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  No Trip Offers Found. Please Add Some.
+                </TableCell>
+              </TableRow>
             )}
-          </div>
-        </div>
-      </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./find-car-form.css";
 import { Form, FormGroup } from "reactstrap";
+import { FaUser, FaCalendarAlt } from "react-icons/fa";
 
 const provinces = [
   "Eastern Cape",
@@ -17,44 +18,71 @@ const provinces = [
 const FindCarForm = ({ onSearch }) => {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [destination, setDestination] = useState("");
+  const [passengerCount, setPassengerCount] = useState(1);
+  const [date, setDate] = useState("");
 
   const handleSearch = () => {
-    // Call the onSearch prop with the selected province and destination
     onSearch(selectedProvince, destination);
   };
 
   return (
-    <Form className="form">
-      <div className="d-flex align-items-center justify-content-between flex">
+    <Form className="form-container mt-20">
+      <div className="search-bar">
+        {/* Leaving From */}
         <FormGroup className="form__group">
-          <select
+          <input
+            type="text"
+            placeholder="Leaving from"
             value={selectedProvince}
             onChange={(e) => setSelectedProvince(e.target.value)}
+            className="input-field"
             required
+          />
+        </FormGroup>
+
+        {/* Going To */}
+        <FormGroup className="form__group">
+          <input
+            type="text"
+            placeholder="Going to"
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
+            className="input-field"
+            required
+          />
+        </FormGroup>
+
+        {/* Date Picker */}
+        <FormGroup className="form__group icon-field">
+          <FaCalendarAlt className="icon" />
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="input-field"
+          />
+        </FormGroup>
+
+        {/* Passenger Count */}
+        <FormGroup className="form__group icon-field">
+          <FaUser className="icon" />
+          <select
+            value={passengerCount}
+            onChange={(e) => setPassengerCount(e.target.value)}
+            className="input-field"
           >
-            <option value="" disabled>
-              Select Province
-            </option>
-            {provinces.map((province) => (
-              <option key={province} value={province}>
-                {province}
+            {[...Array(5).keys()].map((num) => (
+              <option key={num + 1} value={num + 1}>
+                {num + 1} passenger{num > 0 && "s"}
               </option>
             ))}
           </select>
         </FormGroup>
 
-        <FormGroup className="form__group flex">
-          <input
-            type="text"
-            placeholder="City, Town"
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-            required
-          />
-          <button type="button" onClick={handleSearch}>
-            Search
-          </button>
-        </FormGroup>
+        {/* Search Button */}
+        <button type="button" className="search-btn" onClick={handleSearch}>
+          Search
+        </button>
       </div>
     </Form>
   );

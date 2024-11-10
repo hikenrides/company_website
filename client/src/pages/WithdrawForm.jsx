@@ -48,7 +48,7 @@ const WithdrawForm = () => {
   };
 
   return (
-    <div className="bg-gray-800 p-4 rounded-lg shadow-md text-white max-w-lg mx-auto">
+    <div className="bg-gray-800 p-4 rounded-lg shadow-md text-white max-w-lg mx-auto mt-20">
       <h2 className="text-2xl font-bold mb-4">Withdraw Funds</h2>
       <form onSubmit={handleWithdraw}>
         <div className="mb-4">

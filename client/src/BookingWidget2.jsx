@@ -79,6 +79,7 @@ export default function BookingWidget2({ request }) {
         },
         { withCredentials: true }
       );
+      setBookingStatus(response.data); // Store booking status
       setAction("accept");
       setOpen(true); // Show the modal on success
     } catch (error) {
@@ -88,7 +89,7 @@ export default function BookingWidget2({ request }) {
 
   async function cancelBooking() {
     try {
-      const response = await axios.put(
+      await axios.put(
         `/bookings2/cancel/${bookingStatus._id}`,
         { status: "driver cancelled" },
         { withCredentials: true }

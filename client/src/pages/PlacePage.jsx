@@ -26,7 +26,7 @@ export default function PlacePage() {
   };
 
   return (
-    <div className="mt-4 bg-gray-100 -mx-8 px-8 pt-8">
+    <div className="mt-20 bg-gray-100 -mx-8 px-8 pt-8">
       <AddressLink>{place.province2}, {place.destination}</AddressLink>
       <div className="mt-8 mb-8 grid gap-8 grid-cols-1 md:grid-cols-[2fr_1fr]">
         <div>

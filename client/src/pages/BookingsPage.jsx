@@ -3,63 +3,67 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import AddressLink from "../AddressLink";
-
-import { useMediaQuery } from "react-responsive"; // Import for media query hook
+import { useMediaQuery } from "react-responsive";
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   useEffect(() => {
     axios.get('/bookings', { withCredentials: true }).then(response => {
       setBookings(response.data);
-      setLoading(false); // Set loading to false after fetching data
+      setLoading(false);
     });
   }, []);
 
-  // Use media query hook to detect screen size
-  const isMobile = useMediaQuery({ query: "(max-width: 768px)" }); // Adjust breakpoint as needed
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '60vh' }}>
-      <div className={`hidden md:block ${isMobile ? 'hidden' : ''}`}> {/* Conditionally render AccountNav on larger screens */}
-        <AccountNav />
-      </div>
-      <div>
-        {loading ? ( // Display loading indicator while fetching data
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '60vh', marginTop: '60px',}}>
+      {/*
+      {!isMobile && <AccountNav />}
+      */}
+      <div className="flex items-center justify-center mt-20">
+        {loading ? (
           <p>Loading...</p>
-        ) : bookings.length > 0 ? ( // Check if there are bookings
-          bookings.map(booking => (
-            <Link key={booking._id} to={`/account/bookings/${booking._id}`} className={`flex gap-4 bg-gray-300 rounded-2xl overflow-hidden mt-6 ${isMobile ? 'flex-col items-center' : ''}`}>
-              <div className={`py-3 pr-3 grow ${isMobile ? 'w-full' : ''}`}> {/* Adjust layout and width for mobile */}
-                {booking.place && ( // Add null check for booking.place
-                  <AddressLink className="my-2 block">
-                    <span style={{ color: '#FF8C00' }}>pick-up area:  </span>{booking.place.from}
-                  </AddressLink>
-                )}
-                {booking.place && ( // Add null check for booking.place
-                  <AddressLink className="my-2 block">
-                    <span style={{ color: '#FF8C00' }}>Destination:  </span>{booking.place.destination}
-                  </AddressLink>
-                )}
-                <div className="text-xl">
-                  <div className="flex gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-8 h-8 ${isMobile ? 'w-6 h-6' : ''}`}> {/* Adjust icon size for mobile */}
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
-                    </svg>
-                    <h2 className={`text-2xl ${isMobile ? 'text-xl' : ''}`}> {/* Adjust heading size for mobile */}
-                      <span style={{ color: '#FF8C00' }}>Total price: </span>R{booking.price * booking.passengers}
-                    </h2>
-                  </div>
-                </div>
-              </div>
-              {!isMobile && ( // Render "Tap for more info" only on larger screens */}
-                <h1>Tap for more info</h1>
-              )}
-            </Link>
-          ))
+        ) : bookings.length > 0 ? (
+          <div className="overflow-x-auto w-full">
+            <table className="min-w-full bg-white shadow-md rounded-xl">
+              <thead>
+                <tr className="bg-blue-gray-100 text-gray-700">
+                  <th className="py-3 px-4 text-left">Pick-up Area</th>
+                  <th className="py-3 px-4 text-left">Destination</th>
+                  <th className="py-3 px-4 text-left">Total Price</th>
+                  <th className="py-3 px-4 text-left">Action</th>
+                </tr>
+              </thead>
+              <tbody className="text-blue-gray-900">
+                {bookings.map((booking) => (
+                  <tr key={booking._id} className="border-b border-blue-gray-200">
+                    <td className="py-3 px-4">
+                      <AddressLink className="block">
+                        {booking.place ? booking.place.from : 'N/A'}
+                      </AddressLink>
+                    </td>
+                    <td className="py-3 px-4">
+                      <AddressLink className="block">
+                        {booking.place ? booking.place.destination : 'N/A'}
+                      </AddressLink>
+                    </td>
+                    <td className="py-3 px-4">
+                      R{booking.price * booking.passengers}
+                    </td>
+                    <td className="py-3 px-4">
+                      <Link to={`/account/bookings/${booking._id}`} className="font-medium text-blue-600 hover:text-blue-800">
+                        View Details
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         ) : (
-          <p >You have not yet made any bookings.</p> // Display message when no bookings
+          <p>You have not yet made any bookings.</p>
         )}
       </div>
     </div>

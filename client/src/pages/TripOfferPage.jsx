@@ -7,15 +7,9 @@ import { UserContext } from "../UserContext";
 import Footer from "../footer";
 
 const provinces = [
-  "Eastern Cape",
-  "Free State",
-  "Gauteng",
-  "KwaZulu-Natal",
-  "Limpopo",
-  "Mpumalanga",
-  "North West",
-  "Northern Cape",
-  "Western Cape",
+  "Eastern Cape", "Free State", "Gauteng", "KwaZulu-Natal",
+  "Limpopo", "Mpumalanga", "North West", "Northern Cape",
+  "Western Cape"
 ];
 
 export default function TripOfferPage() {
@@ -53,119 +47,93 @@ export default function TripOfferPage() {
     const result = places.filter((place) => {
       const normalizedDestination = place.destination.toLowerCase();
       const normalizedInput = destination.toLowerCase();
-
       return (
         (selectedProvince ? place.province2 === selectedProvince : true) &&
         normalizedDestination.includes(normalizedInput)
       );
     });
-    if (result.length > 0) {
-      setMatchingPlaces(result);
-    } else {
-      setMatchingPlaces([]);
-      console.log("No matching Trips found.");
-    }
+    setMatchingPlaces(result.length > 0 ? result : []);
   };
 
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
-    return formattedDate;
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
   return (
-    <div className="mt-10">
-      <section className="p-0 mb-10">
-        <div className="hero__form">
-          <Container>
-            <Row className="form__row">
-              <Col lg="4" md="4">
-                <div className="find__cars-left">
-                  <h2>Find out who's travelling your way</h2>
-                </div>
-              </Col>
+    <div className="min-h-screen">
+      <div className="min-h-screen flex flex-col justify-between">
+        <Container className="max-w-7xl mx-auto px-4">
+            <Row className="justify-content-center mb-6">
               <Col lg="8" md="8" sm="12">
                 <FindCarForm onSearch={handleSearch} />
               </Col>
-              {searchPerformed && matchingPlaces.length === 0 && (
-                <p className="text-red-700">
-                  No matching Trips found. Please refine your search criteria.
-                </p>
-              )}
-              {matchingPlaces.length > 0 && (
-                <div>
-                  {matchingPlaces.map((place) => (
-                    <Link
-                      key={place._id}
-                      to={'/trip/' + place._id}
-                      className="block cursor-pointer gap-4 bg-gray-300 p-4 rounded-2xl"
-                      style={{ marginBottom: '16px' }}
-                    >
-                      <h2 className="font-bold">
-                        <span style={{ color: 'orange' }}>Pick-up area:</span> {place.province}, {place.from}
-                      </h2>
-                      <h3 className="text-sm text-gray-500">
-                        <span style={{ color: 'orange' }}>Destination:</span> {place.province2}, {place.destination}
-                      </h3>
-                      <h3 className="text-sm text-gray-500">
-                        <span style={{ color: 'orange' }}>Date:</span> {formatDate(place.date)}
-                      </h3>
-                      <div className="mt-1">
-                        <span className="font-bold">R{place.price}</span> per person
-                      </div>
-                    </Link>
-                  ))}
+            </Row>
+            {searchPerformed && matchingPlaces.length === 0 && (
+              <p className="text-center text-red-500 font-semibold">
+                No matching trips found. Please refine your search.
+              </p>
+            )}
+          </Container>
+
+        <Container className="max-w-full mx-auto px-4">
+
+          {provinces.map((province, index) => (
+            <div key={index} className="bg-white shadow rounded-lg mb-4">
+              <h2
+                className="p-4 text-lg font-semibold text-gray-700 cursor-pointer bg-gray-200 rounded-t-lg flex justify-between items-center"
+                onClick={() => handleProvinceSelect(province)}
+              >
+                {province}
+                <span>{selectedProvince === province ? '▲' : '▼'}</span>
+              </h2>
+              {selectedProvince === province && (
+                <div className="p-4">
+                  <div className="table-responsive">
+                    <table className="min-w-full table-fixed bg-white border border-gray-200 rounded-lg overflow-hidden">
+                      <thead className="bg-gray-300">
+                        <tr>
+                          <th className="p-2 text-sm font-medium text-gray-700">Pick-up Area</th>
+                          <th className="p-2 text-sm font-medium text-gray-700">Destination</th>
+                          <th className="p-2 text-sm font-medium text-gray-700">Date</th>
+                          <th className="p-2 text-sm font-medium text-gray-700">Price (R)</th>
+                          <th className="p-2 text-sm font-medium text-gray-700">Details</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {places.filter(place => place.province2 === province).map((place) => (
+                          <tr key={place._id} className="bg-white border-b border-gray-100 hover:bg-gray-50">
+                            <td className="p-3 text-center text-gray-600">{place.province}, {place.from}</td>
+                            <td className="p-3 text-center text-gray-600">{place.province2}, {place.destination}</td>
+                            <td className="p-3 text-center text-gray-600">{formatDate(place.date)}</td>
+                            <td className="p-3 text-center text-gray-600">R{place.price}</td>
+                            <td className="p-3 text-center">
+                              <Link
+                                to={user && user.verification !== "not verified" ? `/trip/${place._id}` : "#"}
+                                onClick={(e) => {
+                                  if (user && user.verification === "not verified") {
+                                    e.preventDefault();
+                                    alert("Only verified users can view available trips.");
+                                  }
+                                }}
+                                className="text-blue-500 font-semibold hover:underline"
+                              >
+                                View
+                              </Link>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               )}
-            </Row>
-          </Container>
-        </div>
-      </section>
-      {provinces.map((province, index) => (
-        <div key={index}>
-          <h2
-            className="cursor-pointer bg-gray-300 p-4 rounded-2xl flex justify-between items-center"
-            onClick={() => handleProvinceSelect(province)}
-            style={{ marginBottom: '16px' }}
-          >
-            {province} {selectedProvince === province ? '▲' : '▼'}
-          </h2>
-          {selectedProvince === province && (
-            <>
-              {places.filter(place => place.province2 === province).map(place => (
-                <Link
-                  key={place._id}
-                  to={user && user.verification !== "not verified" ? '/trip/' + place._id : '#'}
-                  className="block cursor-pointer gap-4 bg-gray-100 p-4 rounded-2xl"
-                  style={{ marginBottom: '16px' }}
-                  onClick={(e) => {
-                    if (user && user.verification === "not verified") {
-                      e.preventDefault();
-                      alert("Only verified users can view available trips.");
-                    }
-                  }}
-                >
-                  <h2 className="font-bold">
-                    <span style={{ color: 'orange' }}>Pick-up area:</span> {place.province}, {place.from}
-                  </h2>
-                  <h3 className="text-sm text-gray-500">
-                    <span style={{ color: 'orange' }}>Destination:</span> {place.province2}, {place.destination}
-                  </h3>
-                  <h3 className="text-sm text-gray-500">
-                    <span style={{ color: 'orange' }}>Date:</span> {formatDate(place.date)}
-                  </h3>
-                  <div className="mt-1">
-                    <span className="font-bold">R{place.price}</span> per person
-                  </div>
-                </Link>
-              ))}
-            </>
-          )}
-        </div>
-      ))}
-      <div className="mt-20">
-        <Footer />
-        </div>
+            </div>
+          ))}
+        </Container>
+
+      </div>
+      <Footer />
     </div>
   );
 }

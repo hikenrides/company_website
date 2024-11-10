@@ -3,7 +3,7 @@ import Footer from './footer';
 
 const AboutUs = () => {
   return (
-    <div className="about-us">
+    <div className="about-us mt-20">
       <h2 style={{ marginBottom: '1.5rem', fontSize: '1.5rem', fontWeight: 'bold', color: '#333', fontFamily: 'Verdana' }}>About Us</h2>
       <p style={{ color: '#333', fontFamily: 'Verdana' }}>Welcome to Hikenrides, where we're transforming the way people commute by connecting drivers with cars and passengers. Our mission is to make travel more affordable, convenient, and eco-friendly by facilitating ride-sharing opportunities.</p>
       <h2 style={{ marginBottom: '1.5rem', marginTop: '1.5rem', fontSize: '1.5rem', fontWeight: 'bold', color: '#333', fontFamily: 'Verdana'}}>Our Mission</h2>

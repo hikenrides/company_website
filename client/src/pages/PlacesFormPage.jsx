@@ -4,6 +4,13 @@ import AccountNav from "../AccountNav";
 import { Navigate, useParams } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { 
+  Input,
+  Typography,
+  Select,
+  Option
+} from "@material-tailwind/react";
+import { format } from "date-fns";
 
 const provinces = [
   "Eastern Cape",
@@ -41,9 +48,6 @@ export default function PlacesFormPage() {
       setFormError(false);
       return true;
     } else {
-      console.log({
-        province, from, province2, destination, color, brand, type, seats, date, maxGuests, price, owner_number
-      });
       setFormError(true);
       return false;
     }
@@ -85,7 +89,7 @@ export default function PlacesFormPage() {
 
   function inputHeader(text) {
     return (
-      <h2 className="text-white text-2xl mt-4">{text}</h2>
+      <h2 className="text-gray-600 text-lg">{text}</h2>
     );
   }
 
@@ -112,7 +116,7 @@ export default function PlacesFormPage() {
     const placeData = {
       province, from, province2, destination,
       color, brand, type, seats, extraInfo, owner_number,
-      date, maxGuests, price, frequency, // Add frequency to place data
+      date, maxGuests, price, frequency,
     };
     const token = localStorage.getItem('token');
     const config = {
@@ -149,232 +153,181 @@ export default function PlacesFormPage() {
   }
 
   return (
-    <div>
-      <div className="hidden md:block">
-        <AccountNav />
-      </div>
-      <form onSubmit={savePlace}>
-        {preInput('From', 'Please indicate your preferred pick-up location for passengers.')}
+    <section className="px-8 py-20 container mx-auto">
+      <div className="grid bg-white rounded-lg shadow-xl w-full md:w-12/12 lg:w-3/4 mx-auto p-6">
+        <div className="flex justify-center py-4">
+        </div>
+        <div className="flex justify-center mb-4">
+          <h1 className="text-gray-600 font-bold text-2xl">Create or Update Trip</h1>
+        </div>
+        <form onSubmit={savePlace}>
+        <div className="mt-4">
+            {preInput('From', 'Please indicate your preferred pick-up location for passengers.')}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="col-span-1">
+                <select
+                  className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  value={province}
+                  onChange={(ev) => setProvince(ev.target.value)}
+                >
+                  <option value="">Select Province</option>
+                  {renderProvinceOptions()}
+                </select>
+              </div>
 
-        <select
-          className="bg-gray-300"
-          value={province}
-          onChange={(ev) => setProvince(ev.target.value)}
-        >
-          <option value="">Select Province</option>
-          {renderProvinceOptions()}
-        </select>
-        <input
-          className="bg-gray-300"
-          type="text"
-          value={from}
-          onChange={(ev) => setFrom(ev.target.value)}
-          placeholder="City, Township, or specific address"
-        />
-
-        {preInput('Destination', 'indicate the destination of your trip')}
-        <select
-          className="bg-gray-300"
-          value={province2}
-          onChange={(ev) => setProvince2(ev.target.value)}
-        >
-          <option value="">Select Province</option>
-          {renderProvinceOptions()}
-        </select>
-        <input
-          className="bg-gray-300"
-          type="text"
-          value={destination}
-          onChange={(ev) => setDestination(ev.target.value)}
-          placeholder="City, Township, or specific address"
-        />
-        <div className="vehicle-description">
-          {preInput('Vehicle description', 'description of the vehicle')}
-          <div className="horizontal-selects">
-            <div className="select-container">
-              <label htmlFor="colorSelect" className="text-white mt-2 -mb-1">
-                Color:
-              </label>
-              <select id="colorSelect" className="bg-gray-300" value={color} onChange={(ev) => setColor(ev.target.value)}>
-                <option value="white">White</option>
-                <option value="black">Black</option>
-                <option value="silver">Silver</option>
-                <option value="gray">Gray</option>
-                <option value="red">Red</option>
-                <option value="blue">Blue</option>
-                <option value="green">Green</option>
-                <option value="yellow">Yellow</option>
-                <option value="orange">Orange</option>
-                <option value="brown">Brown</option>
-                <option value="purple">Purple</option>
-                <option value="pink">Pink</option>
-                <option value="gold">Gold</option>
-                <option value="bronze">Bronze</option>
-                <option value="beige">Beige</option>
-                <option value="burgundy">Burgundy</option>
-                <option value="turquoise">Turquoise</option>
-                <option value="lavender">Lavender</option>
-                <option value="teal">Teal</option>
-              </select>
-            </div>
-            <div className="select-container">
-              <label htmlFor="brandSelect" className="text-white mt-2 -mb-1">
-                Brand:
-              </label>
-              <select id="brandSelect" className="bg-gray-300" value={brand} onChange={(ev) => setBrand(ev.target.value)}>
-                <option value="toyota">Toyota</option>
-                <option value="honda">Honda</option>
-                <option value="ford">Ford</option>
-                <option value="renault">Renault</option>
-                <option value="haval">Haval</option>
-                <option value="bmw">BMW</option>
-                <option value="alfa romeo">ALFA Romeo</option>
-                <option value="gwm">GWM</option>
-                <option value="baic">BAIC</option>
-                <option value="volkswagen">Volkswagen</option>
-                <option value="cadillac">Cadillac</option>
-                <option value="peugeot">Peugeot</option>
-                <option value="seat">SEAT</option>
-                <option value="mercedes-benz">Mercedes-Benz</option>
-                <option value="nissan">Nissan</option>
-                <option value="hyundai">Hyundai</option>
-                <option value="kia">Kia</option>
-                <option value="suzuki">Suzuki</option>
-                <option value="audi">Audi</option>
-                <option value="fiat">Fiat</option>
-                <option value="aston martin">Aston Martin</option>
-                <option value="opel">Opel</option>
-                <option value="porsche">Porsche</option>
-                {/* Add more brand options here */}
-              </select>
-            </div>
-            <div className="select-container">
-              <label htmlFor="typeSelect" className="text-white mt-2 -mb-1">
-                Type:
-              </label>
-              <select id="typeSelect" className="bg-gray-300" value={type} onChange={(ev) => setType(ev.target.value)}>
-                <option value="hatchback">Hatchback</option>
-                <option value="sedan">Sedan</option>
-                <option value="suv">SUV</option>
-                <option value="coupe">Coupe</option>
-                <option value="convertible">Convertible</option>
-                <option value="pickup">Pickup</option>
-                <option value="van">Van</option>
-                <option value="minivan">Minivan</option>
-                <option value="wagon">Wagon</option>
-                <option value="crossover">Crossover</option>
-                <option value="luxury">Luxury</option>
-                <option value="electric">Electric</option>
-                <option value="sports">Sports Car</option>
-                <option value="diesel">Diesel</option>
-                <option value="hybrid">Hybrid</option>
-              </select>
-            </div>
-            <div className="select-container">
-              <label htmlFor="seatsSelect" className="text-white mt-2 -mb-1">
-                Seats:
-              </label>
-              <select id="seatsSelect" className="bg-gray-300" value={seats} onChange={(ev) => setSeats(ev.target.value)}>
-                <option value="2">2</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-              </select>
+              <div className="col-span-1">
+                <input
+                  className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  type="text"
+                  value={from}
+                  onChange={(ev) => setFrom(ev.target.value)}
+                  placeholder="City, Township, or specific address"
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        {preInput('Date', 'indicate the date')}
-        <div>
+          <div className="mt-4">
+            {preInput('Destination', 'Indicate the destination of your trip.')}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="col-span-1">
+                <select
+                  className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  value={province2}
+                  onChange={(ev) => setProvince2(ev.target.value)}
+                >
+                  <option value="">Select Province</option>
+                  {renderProvinceOptions()}
+                </select>
+              </div>
+
+              <div className="col-span-1">
+                <input
+                  className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  type="text"
+                  value={destination}
+                  onChange={(ev) => setDestination(ev.target.value)}
+                  placeholder="City, Township, or specific address"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4">
+            {preInput('Vehicle Description', 'Provide a description of the vehicle.')}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="col-span-1">
+                <label htmlFor="colorSelect">Color:</label>
+                <select
+                  id="colorSelect"
+                  className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1"
+                  value={color}
+                  onChange={(ev) => setColor(ev.target.value)}
+                >
+                  <option value="white">White</option>
+                  <option value="black">Black</option>
+                  <option value="red">Red</option>
+                  {/* Add more color options */}
+                </select>
+              </div>
+
+              <div className="col-span-1">
+                <label htmlFor="brandSelect">Brand:</label>
+                <select
+                  id="brandSelect"
+                  className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1"
+                  value={brand}
+                  onChange={(ev) => setBrand(ev.target.value)}
+                >
+                  <option value="toyota">Toyota</option>
+                  <option value="honda">Honda</option>
+                  <option value="ford">Ford</option>
+                  {/* Add more brand options */}
+                </select>
+              </div>
+
+              <div className="col-span-1">
+                <label htmlFor="typeSelect">Type:</label>
+                <select
+                  id="typeSelect"
+                  className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1"
+                  value={type}
+                  onChange={(ev) => setType(ev.target.value)}
+                >
+                  <option value="hatchback">Hatchback</option>
+                  <option value="sedan">Sedan</option>
+                  <option value="suv">SUV</option>
+                  {/* Add more types */}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4">
+            {preInput('Additional Information', 'Any other details you would like to share?')}
+            <input
+              className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 w-full"
+              type="text"
+              value={extraInfo}
+              onChange={(ev) => setExtraInfo(ev.target.value)}
+              placeholder="Any other relevant details"
+            />
+          </div>
+
+          <div className="mt-4">
+            {preInput('Max Guests', 'How many passengers can be accommodated?')}
+            <input
+              className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 w-full"
+              type="number"
+              value={maxGuests}
+              onChange={(ev) => setMaxGuests(ev.target.value)}
+              placeholder="Max number of passengers"
+            />
+          </div>
+
+          <div className="mt-4">
+            {preInput('Price', 'Set the price for the trip.')}
+            <input
+              className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 w-full"
+              type="number"
+              value={price}
+              onChange={(ev) => setPrice(ev.target.value)}
+              placeholder="Price in ZAR"
+            />
+          </div>
+
+          <div className="mt-4">
+            {preInput('Phone Number', 'Please provide your contact number.')}
+            <input
+              className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 w-full"
+              type="text"
+              value={owner_number}
+              onChange={(ev) => setPhone(ev.target.value)}
+              placeholder="Contact number"
+            />
+          </div>
+
+          <div className="mt-4">
+            {preInput('Trip Date', 'When would you like the trip to occur?')}
             <DatePicker
-              className="bg-gray-300"
               selected={date}
               onChange={(date) => setDate(date)}
-              placeholderText="Select leaving date"
-              dateFormat="MM/dd/yyyy"
-              popperPlacement="top-start"
               minDate={new Date()}
+              className="py-2 px-3 rounded-lg border-2 border-purple-300 w-full mt-1"
+              dateFormat="dd/MM/yyyy"
             />
           </div>
 
-        {preInput('Max number of passengers', 'Indicate the maximum number of passengers you are willing to accommodate in your vehicle')}
-        <input
-          className="bg-gray-300"
-          type="number"
-          value={maxGuests}
-          onChange={(ev) => setMaxGuests(ev.target.value)}
-          placeholder="Max number of passengers"
-        />
-
-        {preInput('Price per passenger', 'indicate the price you charge per passenger')}
-        <input
-          className="bg-gray-300"
-          type="number"
-          value={price}
-          onChange={(ev) => setPrice(ev.target.value)}
-          placeholder="Price per passenger"
-        />
-
-        {preInput('Trip Frequency', 'Indicate how frequently this trip will occur')}
-        <div className="flex flex-col md:flex-row gap-2 mt-2">
-          <label className="text-white">
-            <input
-              type="radio"
-              value="Regular"
-              checked={frequency === 'Regular'}
-              onChange={(ev) => setFrequency(ev.target.value)}
-              className="mr-1"
-            />
-            Regular
-          </label>
-          <label className="text-white">
-            <input
-              type="radio"
-              value="Once-off"
-              checked={frequency === 'Once-off'}
-              onChange={(ev) => setFrequency(ev.target.value)}
-              className="mr-1"
-            />
-            Once-off
-          </label>
-          <label className="text-white">
-            <input
-              type="radio"
-              value="Daily"
-              checked={frequency === 'Daily'}
-              onChange={(ev) => setFrequency(ev.target.value)}
-              className="mr-1"
-            />
-            Daily
-          </label>
-          <label className="text-white">
-            <input
-              type="radio"
-              value="Weekly"
-              checked={frequency === 'Weekly'}
-              onChange={(ev) => setFrequency(ev.target.value)}
-              className="mr-1"
-            />
-            Weekly
-          </label>
-        </div>
-
-        {preInput('Description', 'Add any additional information about the trip')}
-        <textarea
-          className="bg-gray-300"
-          value={extraInfo}
-          onChange={(ev) => setExtraInfo(ev.target.value)}
-        />
-
-        <button className="primary my-4">Save</button>
-        {formError && <p className="text-red-500">Please fill in all fields before saving.</p>}
-      </form>
-    </div>
+          <div className="mt-6 flex justify-between items-center">
+            <button
+              type="submit"
+              className="bg-purple-600 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+            >
+              Save Trip
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
   );
 }

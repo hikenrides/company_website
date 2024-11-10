@@ -83,19 +83,21 @@ export default function RegisterPage() {
   }
 
   return (
+    <div className="max-w-lg mx-auto bg-white rounded-lg shadow-md px-8 py-6 flex flex-col items-center mt-12 mb-12">
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
-            marginTop: isMobile ? 2 : 8,
+            marginTop: 2,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            marginBottom: isMobile ? 2 : 8,
-            padding: isMobile ? 2 : 4,
+            marginBottom: 2,
+            padding: 2,
           }}
         >
+
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -297,5 +299,6 @@ export default function RegisterPage() {
         </Box>
       </Container>
     </ThemeProvider>
+    </div>
   );
 }
