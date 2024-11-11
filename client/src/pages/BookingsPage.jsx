@@ -18,11 +18,18 @@ export default function BookingsPage() {
   }, []);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '60vh', marginTop: '60px',}}>
-      {/*
-      {!isMobile && <AccountNav />}
-      */}
-      <div className="flex items-center justify-center mt-20">
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '60vh', marginTop: '60px' }}>
+      {/* Optional Account Navigation */}
+      {/* {!isMobile && <AccountNav />} */}
+
+      {/* Heading Section */}
+      <div className="text-center mt-10 mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">My Bookings</h1>
+        <p className="text-gray-600 mt-2">Manage and view all your Bookings here.</p>
+      </div>
+
+      {/* Main Content Section */}
+      <div className="flex items-center justify-center mt-8">
         {loading ? (
           <p>Loading...</p>
         ) : bookings.length > 0 ? (

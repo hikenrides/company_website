@@ -42,10 +42,9 @@ function IndexPage() {
             className="absolute inset-0 bg-cover bg-center"
             style={{
               backgroundImage:
-                "url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')",
+                "url('https://images.unsplash.com/photo-1552937075-967cf58b74a4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
             }}
           ></div>
-
           <div className="container mx-auto px-4 py-16 sm:py-24 md:py-32 relative z-10">
             <div className="flex flex-col md:flex-row items-center justify-between space-y-8 md:space-y-0">
               {/* Left Content */}
@@ -64,7 +63,7 @@ function IndexPage() {
                   <span style={{ fontWeight: 'bold', color: 'white' }}>{typeEffect}</span>
                 </motion.h1>
 
-                <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 text-gray-300">
+                <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 font-extrabold">
                   Connecting drivers and passengers for cost-effective, secure, and collaborative journeys.
                 </p>
 

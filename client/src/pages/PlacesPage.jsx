@@ -52,7 +52,7 @@ export default function PlacesPage() {
         setVerificationMessage("Only drivers can create trip offers.");
         return;
       }
-      navigate('/account/Mytrips/new'); // This line should navigate to the page if all checks pass
+      navigate('/account/Mytrips/new');
     }
   };
 
@@ -64,7 +64,7 @@ export default function PlacesPage() {
           Authorization: `Bearer ${token}`
         }
       })
-      .then(({ data }) => {
+      .then(() => {
         setPlaces(places.filter((place) => place._id !== id));
       })
       .catch(error => {
@@ -99,13 +99,15 @@ export default function PlacesPage() {
     }
   };
 
-
   return (
-    <div className="max-w-full mx-auto px-4">
-      {/*<div className="hidden z">
-        <AccountNav />
-      </div>*/}
-      <div className="text-center mb-4 mt-40 ">
+    <div className="max-w-full mx-auto px-4 mt-20">
+      {/* Heading Section */}
+      <div className="text-center mt-10 mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">My Trip Offers</h1>
+        <p className="text-gray-600 mt-2">Manage and view all your trip offers here.</p>
+      </div>
+
+      <div className="text-center mb-4 mt-8">
         <Link
           className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
           to={'/account/Mytrips/new'}

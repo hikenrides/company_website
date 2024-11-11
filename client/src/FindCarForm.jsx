@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./find-car-form.css";
 import { Form, FormGroup } from "reactstrap";
-import { FaUser, FaCalendarAlt } from "react-icons/fa";
+//import { FaUser, FaCalendarAlt } from "react-icons/fa";
 
 const provinces = [
   "Eastern Cape",
@@ -18,8 +18,8 @@ const provinces = [
 const FindCarForm = ({ onSearch }) => {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [destination, setDestination] = useState("");
-  const [passengerCount, setPassengerCount] = useState(1);
-  const [date, setDate] = useState("");
+  //const [passengerCount, setPassengerCount] = useState(1);
+  //const [date, setDate] = useState("");
 
   const handleSearch = () => {
     onSearch(selectedProvince, destination);
@@ -52,8 +52,8 @@ const FindCarForm = ({ onSearch }) => {
           />
         </FormGroup>
 
-        {/* Date Picker */}
-        <FormGroup className="form__group icon-field">
+       
+        {/*<FormGroup className="form__group icon-field">
           <FaCalendarAlt className="icon" />
           <input
             type="date"
@@ -63,7 +63,7 @@ const FindCarForm = ({ onSearch }) => {
           />
         </FormGroup>
 
-        {/* Passenger Count */}
+       
         <FormGroup className="form__group icon-field">
           <FaUser className="icon" />
           <select
@@ -77,7 +77,7 @@ const FindCarForm = ({ onSearch }) => {
               </option>
             ))}
           </select>
-        </FormGroup>
+        </FormGroup>*/}
 
         {/* Search Button */}
         <button type="button" className="search-btn" onClick={handleSearch}>

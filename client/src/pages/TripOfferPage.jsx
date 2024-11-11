@@ -96,7 +96,7 @@ export default function TripOfferPage() {
                           <th className="p-2 text-sm font-medium text-gray-700">Pick-up Area</th>
                           <th className="p-2 text-sm font-medium text-gray-700">Destination</th>
                           <th className="p-2 text-sm font-medium text-gray-700">Date</th>
-                          <th className="p-2 text-sm font-medium text-gray-700">Price (R)</th>
+                          <th className="p-2 text-sm font-medium text-gray-700">Price</th>
                           <th className="p-2 text-sm font-medium text-gray-700">Details</th>
                         </tr>
                       </thead>

@@ -224,10 +224,25 @@ export default function PlacesFormPage() {
                   value={color}
                   onChange={(ev) => setColor(ev.target.value)}
                 >
-                  <option value="white">White</option>
+                   <option value="white">White</option>
                   <option value="black">Black</option>
+                  <option value="silver">Silver</option>
+                  <option value="gray">Gray</option>
                   <option value="red">Red</option>
-                  {/* Add more color options */}
+                  <option value="blue">Blue</option>
+                  <option value="green">Green</option>
+                  <option value="yellow">Yellow</option>
+                  <option value="orange">Orange</option>
+                  <option value="brown">Brown</option>
+                  <option value="purple">Purple</option>
+                  <option value="pink">Pink</option>
+                  <option value="gold">Gold</option>
+                  <option value="bronze">Bronze</option>
+                  <option value="beige">Beige</option>
+                  <option value="burgundy">Burgundy</option>
+                  <option value="turquoise">Turquoise</option>
+                  <option value="lavender">Lavender</option>
+                  <option value="teal">Teal</option>
                 </select>
               </div>
 
@@ -242,7 +257,26 @@ export default function PlacesFormPage() {
                   <option value="toyota">Toyota</option>
                   <option value="honda">Honda</option>
                   <option value="ford">Ford</option>
-                  {/* Add more brand options */}
+                  <option value="renault">Renault</option>
+                  <option value="haval">Haval</option>
+                  <option value="bmw">BMW</option>
+                  <option value="alfa romeo">ALFA Romeo</option>
+                  <option value="gwm">GWM</option>
+                  <option value="baic">BAIC</option>
+                  <option value="volkswagen">Volkswagen</option>
+                  <option value="cadillac">Cadillac</option>
+                  <option value="peugeot">Peugeot</option>
+                  <option value="seat">SEAT</option>
+                  <option value="mercedes-benz">Mercedes-Benz</option>
+                  <option value="nissan">Nissan</option>
+                  <option value="hyundai">Hyundai</option>
+                  <option value="kia">Kia</option>
+                  <option value="suzuki">Suzuki</option>
+                  <option value="audi">Audi</option>
+                  <option value="fiat">Fiat</option>
+                  <option value="aston martin">Aston Martin</option>
+                  <option value="opel">Opel</option>
+                  <option value="porsche">Porsche</option>
                 </select>
               </div>
 
@@ -257,7 +291,18 @@ export default function PlacesFormPage() {
                   <option value="hatchback">Hatchback</option>
                   <option value="sedan">Sedan</option>
                   <option value="suv">SUV</option>
-                  {/* Add more types */}
+                  <option value="coupe">Coupe</option>
+                  <option value="convertible">Convertible</option>
+                  <option value="pickup">Pickup</option>
+                  <option value="van">Van</option>
+                  <option value="minivan">Minivan</option>
+                  <option value="wagon">Wagon</option>
+                  <option value="crossover">Crossover</option>
+                  <option value="luxury">Luxury</option>
+                  <option value="electric">Electric</option>
+                  <option value="sports">Sports Car</option>
+                  <option value="diesel">Diesel</option>
+                  <option value="hybrid">Hybrid</option>
                 </select>
               </div>
             </div>

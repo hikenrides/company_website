@@ -81,11 +81,15 @@ export default function RequestsPage() {
   };
 
   return (
-    <div className="max-w-full mx-auto px-4">
-      {/*<div className="hidden md:block mb-4">
-        <AccountNav />
-      </div>*/}
-      <div className="text-center mb-4 mt-20">
+    <div className="max-w-full mx-auto px-4 mt-20">
+      {/* Page Heading */}
+      <div className="text-center mt-10 mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">My Trip Requests</h1>
+        <p className="text-gray-600 mt-2">Manage and view all your trip requests here.</p>
+      </div>
+
+      {/* Add Request Button */}
+      <div className="text-center mb-4 mt-10">
         <Link
           className="inline-flex items-center gap-1 bg-primary text-white py-2 px-6 rounded-full"
           to={'/account/Myrequests/new'}
@@ -105,6 +109,8 @@ export default function RequestsPage() {
           <p className="text-red-700 mt-2">{verificationMessage}</p>
         )}
       </div>
+
+      {/* Requests Table */}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="trip requests table">
           <TableHead>
