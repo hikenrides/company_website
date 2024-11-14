@@ -3,26 +3,14 @@ import "./find-car-form.css";
 import { Form, FormGroup } from "reactstrap";
 //import { FaUser, FaCalendarAlt } from "react-icons/fa";
 
-const provinces = [
-  "Eastern Cape",
-  "Free State",
-  "Gauteng",
-  "KwaZulu-Natal",
-  "Limpopo",
-  "Mpumalanga",
-  "North West",
-  "Northern Cape",
-  "Western Cape",
-];
-
 const FindCarForm = ({ onSearch }) => {
-  const [selectedProvince, setSelectedProvince] = useState("");
+  const [from, setFrom] = useState("");
   const [destination, setDestination] = useState("");
   //const [passengerCount, setPassengerCount] = useState(1);
   //const [date, setDate] = useState("");
 
   const handleSearch = () => {
-    onSearch(selectedProvince, destination);
+    onSearch(from, destination);
   };
 
   return (
@@ -33,8 +21,8 @@ const FindCarForm = ({ onSearch }) => {
           <input
             type="text"
             placeholder="Leaving from"
-            value={selectedProvince}
-            onChange={(e) => setSelectedProvince(e.target.value)}
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
             className="input-field"
             required
           />

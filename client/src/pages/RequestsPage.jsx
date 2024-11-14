@@ -125,8 +125,13 @@ export default function RequestsPage() {
           </TableHead>
           <TableBody>
             {requests.length > 0 ? (
-              requests.map((request) => (
-                <TableRow key={request._id}>
+              requests.map((request, index) => (
+                <TableRow 
+                  key={request._id}
+                  sx={{
+                    backgroundColor: index % 2 === 0 ? '#f7f7f7' : '#e0e0e0'
+                  }}
+                >
                   <TableCell>{request.province}, {request.from}</TableCell>
                   <TableCell>{request.province2}, {request.destination}</TableCell>
                   <TableCell>R{request.price} per person</TableCell>

@@ -44,8 +44,11 @@ export default function BookingsPage() {
                 </tr>
               </thead>
               <tbody className="text-blue-gray-900">
-                {bookings.map((booking) => (
-                  <tr key={booking._id} className="border-b border-blue-gray-200">
+                {bookings.map((booking, index) => (
+                  <tr
+                    key={booking._id}
+                    className={`border-b border-blue-gray-200 ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}`}
+                  >
                     <td className="py-3 px-4">
                       <AddressLink className="block">
                         {booking.place ? booking.place.from : 'N/A'}

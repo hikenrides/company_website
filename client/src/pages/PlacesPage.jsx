@@ -137,8 +137,13 @@ export default function PlacesPage() {
           </TableHead>
           <TableBody>
             {places.length > 0 ? (
-              places.map((place) => (
-                <TableRow key={place._id}>
+              places.map((place, index) => (
+                <TableRow
+                  key={place._id}
+                  sx={{
+                    backgroundColor: index % 2 === 0 ? '#f7f7f7' : '#e0e0e0'
+                  }}
+                >
                   <TableCell>{place.province}, {place.from}</TableCell>
                   <TableCell>{place.province2}, {place.destination}</TableCell>
                   <TableCell>R{place.price} per person</TableCell>
