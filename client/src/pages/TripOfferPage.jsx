@@ -143,7 +143,7 @@ export default function TripOfferPage() {
                 <span>{selectedProvince === province ? '▲' : '▼'}</span>
               </h2>
               {selectedProvince === province && (
-                <div className="p-4 overflow-x-auto">
+                <div className="overflow-x-auto">
                   <table className="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
                     <thead className="bg-gray-300">
                       <tr>

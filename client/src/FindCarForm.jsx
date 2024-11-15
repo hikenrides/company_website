@@ -14,7 +14,7 @@ const FindCarForm = ({ onSearch }) => {
   };
 
   return (
-    <Form className="form-container mt-20">
+    <Form className="form-container mt-16">
       <div className="search-bar">
         {/* Leaving From */}
         <FormGroup className="form__group">

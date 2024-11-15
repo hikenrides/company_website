@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FindCarForm from "../FindCarForm";
 import { Container, Row, Col } from "reactstrap";
 import { UserContext } from "../UserContext";
@@ -21,6 +21,7 @@ const provinces = [
 export default function RequestOfferPage() {
   const { user } = useContext(UserContext);
   const [requests, setRequests] = useState([]);
+  const navigate = useNavigate();
   const [selectedProvince, setSelectedProvince] = useState('');
   const [matchingRequests, setMatchingRequests] = useState([]);
   const [searchPerformed, setSearchPerformed] = useState(false);
@@ -85,6 +86,14 @@ export default function RequestOfferPage() {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
     return formattedDate;
+  };
+
+  const navigateToRequest = (id) => {
+    if (user && user.verification !== "not verified") {
+      navigate(`/request/${id}`);
+    } else {
+      alert("Only verified users can view available trips.");
+    }
   };
 
   return (
@@ -181,6 +190,49 @@ export default function RequestOfferPage() {
                       </tbody>
                     </table>
                   </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </Container>
+        <Container className="max-w-full mx-auto px-4">
+          {provinces.map((province, index) => (
+            <div key={index} className="bg-white shadow rounded-lg mb-4">
+              <h2
+                className="p-4 text-lg font-semibold text-gray-700 cursor-pointer bg-gray-200 rounded-t-lg flex justify-between items-center"
+                onClick={() => handleProvinceSelect(province)}
+              >
+                {province}
+                <span>{selectedProvince === province ? '▲' : '▼'}</span>
+              </h2>
+              {selectedProvince === province && (
+                <div className="p-4 overflow-x-auto">
+                  <table className="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+                    <thead className="bg-gray-300">
+                      <tr>
+                        <th className="p-2 text-sm font-medium text-gray-700">Pick-up Area</th>
+                        <th className="p-2 text-sm font-medium text-gray-700">Destination</th>
+                        <th className="p-2 text-sm font-medium text-gray-700">Date</th>
+                        <th className="p-2 text-sm font-medium text-gray-700">Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+  {requests.filter(request => request.province2 === province).map((request, index) => (
+    <tr 
+      key={request._id} 
+      className={`${
+        index % 2 === 0 ? 'bg-white' : 'bg-gray-300'
+      } border-b border-gray-100 hover:bg-gray-50 cursor-pointer`}
+      onClick={() => navigateToRequest(request._id)}
+    >
+      <td className="p-3 text-center text-gray-600">{request.province}, {request.from}</td>
+      <td className="p-3 text-center text-gray-600">{request.province2}, {request.destination}</td>
+      <td className="p-3 text-center text-gray-600">{formatDate(request.date)}</td>
+      <td className="p-3 text-center text-gray-600">R{request.price}</td>
+    </tr>
+  ))}
+</tbody>
+                  </table>
                 </div>
               )}
             </div>

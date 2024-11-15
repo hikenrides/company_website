@@ -11,14 +11,14 @@ export default function BookingsPage() {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   useEffect(() => {
-    axios.get('/bookings', { withCredentials: true }).then(response => {
+    axios.get('/bookings', { withCredentials: true }).then((response) => {
       setBookings(response.data);
       setLoading(false);
     });
   }, []);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '60vh', marginTop: '60px' }}>
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "60vh", marginTop: "60px" }}>
       {/* Optional Account Navigation */}
       {/* {!isMobile && <AccountNav />} */}
 
@@ -33,44 +33,66 @@ export default function BookingsPage() {
         {loading ? (
           <p>Loading...</p>
         ) : bookings.length > 0 ? (
-          <div className="overflow-x-auto w-full">
-            <table className="min-w-full bg-white shadow-md rounded-xl">
-              <thead>
-                <tr className="bg-blue-gray-100 text-gray-700">
-                  <th className="py-3 px-4 text-left">Pick-up Area</th>
-                  <th className="py-3 px-4 text-left">Destination</th>
-                  <th className="py-3 px-4 text-left">Total Price</th>
-                  <th className="py-3 px-4 text-left">Action</th>
-                </tr>
-              </thead>
-              <tbody className="text-blue-gray-900">
-                {bookings.map((booking, index) => (
-                  <tr
-                    key={booking._id}
-                    className={`border-b border-blue-gray-200 ${index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200'}`}
-                  >
-                    <td className="py-3 px-4">
-                      <AddressLink className="block">
-                        {booking.place ? booking.place.from : 'N/A'}
-                      </AddressLink>
-                    </td>
-                    <td className="py-3 px-4">
-                      <AddressLink className="block">
-                        {booking.place ? booking.place.destination : 'N/A'}
-                      </AddressLink>
-                    </td>
-                    <td className="py-3 px-4">
-                      R{booking.price * booking.passengers}
-                    </td>
-                    <td className="py-3 px-4">
-                      <Link to={`/account/bookings/${booking._id}`} className="font-medium text-blue-600 hover:text-blue-800">
-                        View Details
-                      </Link>
-                    </td>
+          <div className="w-full px-4">
+            {!isMobile ? (
+              <table className="min-w-full bg-white shadow-md rounded-xl">
+                <thead>
+                  <tr className="bg-blue-gray-100 text-gray-700">
+                    <th className="py-3 px-4 text-left">Pick-up Area</th>
+                    <th className="py-3 px-4 text-left">Destination</th>
+                    <th className="py-3 px-4 text-left">Total Price</th>
                   </tr>
+                </thead>
+                <tbody className="text-blue-gray-900">
+                  {bookings.map((booking, index) => (
+                    <tr
+                      key={booking._id}
+                      className={`border-b border-blue-gray-200 ${index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}`}
+                    >
+                      <td className="py-3 px-4">
+                        <Link to={`/account/bookings/${booking._id}`} className="block hover:underline">
+                          <AddressLink className="block">
+                            {booking.place ? booking.place.from : "N/A"}
+                          </AddressLink>
+                        </Link>
+                      </td>
+                      <td className="py-3 px-4">
+                        <Link to={`/account/bookings/${booking._id}`} className="block hover:underline">
+                          <AddressLink className="block">
+                            {booking.place ? booking.place.destination : "N/A"}
+                          </AddressLink>
+                        </Link>
+                      </td>
+                      <td className="py-3 px-4">
+                        <Link to={`/account/bookings/${booking._id}`} className="block hover:underline">
+                          R{booking.price * booking.passengers}
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="space-y-4">
+                {bookings.map((booking) => (
+                  <Link
+                    to={`/account/bookings/${booking._id}`}
+                    key={booking._id}
+                    className="block bg-white shadow-md rounded-xl p-4 hover:shadow-lg transition-shadow"
+                  >
+                    <p className="text-gray-800 font-bold">
+                      Pick-up Area: {booking.place ? booking.place.from : "N/A"}
+                    </p>
+                    <p className="text-gray-600 mt-1">
+                      Destination: {booking.place ? booking.place.destination : "N/A"}
+                    </p>
+                    <p className="text-blue-gray-900 mt-1">
+                      Total Price: R{booking.price * booking.passengers}
+                    </p>
+                  </Link>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            )}
           </div>
         ) : (
           <p>You have not yet made any bookings.</p>
