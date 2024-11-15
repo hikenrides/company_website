@@ -34,7 +34,7 @@ function IndexPage() {
 
   return (
     <motion.div initial="initial" animate="animate" className="font-sans">
-      <main className="pt-12 md:pt-16">
+      <main className="pt-14 md:pt-16">
         {/* Hero Section */}
         <section className="relative bg-gradient-to-br from-blue-900 to-indigo-800 text-white overflow-hidden">
           <div className="absolute inset-0 bg-black opacity-40"></div>
