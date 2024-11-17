@@ -44,10 +44,10 @@ export default function Sidebar({ children }) {
     >
       <nav className="h-full flex flex-col bg-white border-l shadow-sm">
         <div className="flex justify-end items-center">
-      {/*<h2 className="font-semibold text-white">
+          {/*<h2 className="font-semibold text-white">
             {user ? `${user.name}` : "LOGIN"}
           </h2>*/}
-        <div className="p-2 pb-2 pr-10 flex justify-end items-center mr-20">
+        <div className="p-2 pb-2 pr-10 flex justify-end items-center mr-10">
           <button
             onClick={() => setExpanded((curr) => !curr)}
             className="p-2 rounded-lg bg-gray-300 hover:bg-gray-100"
