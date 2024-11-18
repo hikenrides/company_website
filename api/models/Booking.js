@@ -6,6 +6,7 @@ const bookingSchema = new mongoose.Schema({
   name: {type:String, required:true},
   owner_number: Number,
   phone: Number,
+  status: {type:String, required:true},
   price: Number,
   passengers: Number,
   reference: {type:String, required:true, unique:true},
