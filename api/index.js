@@ -858,113 +858,31 @@ app.get('/bookings2', async (req, res) => {
   }
 });
 
-app.post('/verify-reference', async (req, res) => {
+app.post('/drivers/earnings', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { reference } = req.body;
 
   try {
     const booking = await Booking.findOne({ reference });
     if (!booking) {
-      return res.status(404).json({ error: 'Invalid reference number' });
+      return res.status(404).json({ error: 'Booking not found.' });
     }
 
-    // Only return relevant details
-    res.json({ 
-      place: booking.place,
-      price: booking.price,
-      passengers: booking.passengers,
-      owner_number: booking.owner_number,
-      reference: booking.reference 
-    });
-  } catch (error) {
-    console.error('Error verifying reference:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-app.post('/process-driver-payment', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { reference, driverId } = req.body;
-
-  try {
-    const booking = await Booking.findOne({ reference });
-    if (!booking) {
-      return res.status(404).json({ error: 'Invalid reference number' });
+    const driver = await User.findById(booking.user);
+    if (!driver.isDriver) {
+      return res.status(403).json({ error: 'Not authorized.' });
     }
 
-    const amountToPayDriver = booking.price * 0.9; // 90% of the price
-    const driver = await User.findById(driverId);
-
-    if (!driver || !driver.isDriver) {
-      return res.status(400).json({ error: 'Invalid driver' });
-    }
-
-    // Update the driver's balance
-    driver.balance = (driver.balance || 0) + amountToPayDriver;
+    const earnings = booking.price * 0.9;
+    driver.balance += earnings;
     await driver.save();
 
-    // Mark the booking/payment as completed
-    booking.status = 'completed';
-    await booking.save();
-
-    res.json({ message: 'Payment processed successfully', driverBalance: driver.balance });
-  } catch (error) {
-    console.error('Error processing driver payment:', error);
+    res.json({ message: `R${earnings.toFixed(2)} has been added to your balance.` });
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-app.get('/driver-profile/:id', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { id } = req.params;
-
-  try {
-    const driver = await User.findById(id);
-    if (!driver || !driver.isDriver) {
-      return res.status(404).json({ error: 'Driver not found' });
-    }
-
-    const { name, email, balance, phone_number, verification, age, gender } = driver;
-    res.json({ name, email, balance, phone_number, verification, age, gender });
-  } catch (error) {
-    console.error('Error fetching driver profile:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-app.get('/driver-bookings/:driverId', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { driverId } = req.params;
-
-  try {
-    const bookings = await Booking.find({ owner_number: driverId }); // Assuming owner_number is driver ID
-    res.json(bookings);
-  } catch (error) {
-    console.error('Error fetching bookings:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-app.post('/update-booking-status', async (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { reference, status } = req.body;
-
-  try {
-    const booking = await Booking.findOne({ reference });
-    if (!booking) {
-      return res.status(404).json({ error: 'Booking not found' });
-    }
-
-    booking.status = status;
-    await booking.save();
-
-    res.json({ message: 'Booking status updated successfully' });
-  } catch (error) {
-    console.error('Error updating booking status:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
 
 app.post('/upload-verification', upload.fields([{ name: 'idPhoto' }, { name: 'documentPhoto' }]), async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
