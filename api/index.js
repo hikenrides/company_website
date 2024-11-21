@@ -323,7 +323,7 @@ app.post('/requests', async (req, res) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "An error occurred while creating the request."
+      message: "Insufficient funds. Please deposit money to your account to request trips."
     });
   }
 });
