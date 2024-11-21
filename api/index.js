@@ -34,7 +34,7 @@ const nodemailer = require("nodemailer");
 
 // Configure the email transport
 const transporter = nodemailer.createTransport({
-  service: "Gmail", // You can use other services or configure SMTP directly
+  service: "Gmail",
   auth: {
     user: process.env.COMPANY_EMAIL, // Company email address
     pass: process.env.EMAIL_PASSWORD, // App password or email password
