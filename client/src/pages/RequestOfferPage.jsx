@@ -78,7 +78,7 @@ export default function RequestOfferPage() {
 
       return (exactFromB + exactDestB) - (exactFromA + exactDestA);
     });
-
+requ
     setMatchingRequests(sortedResults);
   };
 
@@ -92,7 +92,7 @@ export default function RequestOfferPage() {
     if (user && user.verification !== "not verified") {
       navigate(`/request/${id}`);
     } else {
-      alert("Only verified users can view available trips.");
+      alert("Only verified users can view available .");
     }
   };
 
@@ -141,60 +141,6 @@ export default function RequestOfferPage() {
             )}
           </Container>
 
-        <Container className="max-w-full mx-auto px-4">
-          {provinces.map((province, index) => (
-            <div key={index} className="bg-white shadow rounded-lg mb-4">
-              <h2
-                className="p-4 text-lg font-semibold text-gray-700 cursor-pointer bg-gray-200 rounded-t-lg flex justify-between items-center"
-                onClick={() => handleProvinceSelect(province)}
-              >
-                {province}
-                <span>{selectedProvince === province ? '▲' : '▼'}</span>
-              </h2>
-              {selectedProvince === province && (
-                <div className="p-4">
-                  <div className="table-responsive">
-                    <table className="min-w-full table-fixed bg-white border border-gray-200 rounded-lg overflow-hidden">
-                      <thead className="bg-gray-300">
-                        <tr>
-                          <th className="p-2 text-sm font-medium text-gray-700">Pick-up Area</th>
-                          <th className="p-2 text-sm font-medium text-gray-700">Destination</th>
-                          <th className="p-2 text-sm font-medium text-gray-700">Date</th>
-                          <th className="p-2 text-sm font-medium text-gray-700">Price (R)</th>
-                          <th className="p-2 text-sm font-medium text-gray-700">Details</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {requests.filter(request => request.province2 === province).map((request) => (
-                          <tr key={request._id} className="bg-white border-b border-gray-100 hover:bg-gray-50">
-                            <td className="p-3 text-center text-gray-600">{request.province}, {request.from}</td>
-                            <td className="p-3 text-center text-gray-600">{request.province2}, {request.destination}</td>
-                            <td className="p-3 text-center text-gray-600">{formatDate(request.date)}</td>
-                            <td className="p-3 text-center text-gray-600">R{request.price}</td>
-                            <td className="p-3 text-center">
-                              <Link
-                                to={user && user.verification !== "not verified" ? `/trip/${request._id}` : "#"}
-                                onClick={(e) => {
-                                  if (user && user.verification === "not verified") {
-                                    e.preventDefault();
-                                    alert("Only verified users can view available trips.");
-                                  }
-                                }}
-                                className="text-blue-500 font-semibold hover:underline"
-                              >
-                                View
-                              </Link>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </Container>
         <Container className="max-w-full mx-auto px-4">
           {provinces.map((province, index) => (
             <div key={index} className="bg-white shadow rounded-lg mb-4">

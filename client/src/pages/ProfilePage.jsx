@@ -3,7 +3,6 @@ import { UserContext } from '../UserContext.jsx';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import PlacesPage from './PlacesPage';
-import AccountNav from '../AccountNav';
 import RequestsPage from './RequestsPage.jsx';
 import DepositPage from './DepositPage.jsx';
 import { Button } from 'reactstrap';
@@ -14,21 +13,14 @@ const ProfilePage = () => {
   const [paystackError, setPayStackError] = useState(false);
 
   const handlePayStackClick = () => {
-    // Redirect the user to the PayStack payment page
     window.location.href = "https://paystack.com/pay/jmk8k9skzp";
-    // Set the paystackError state to false (assuming it should be reset after redirection)
     setPayStackError(false);
   };
+
   let { subpage } = useParams();
   if (subpage === undefined) {
     subpage = 'profile';
   }
-
-  {/*async function logout() {
-    await axios.post('/logout', { withCredentials: true });
-    setRedirect('/');
-    setUser(null);
-  }*/}
 
   if (!ready) {
     return 'Loading...';
@@ -57,9 +49,6 @@ const ProfilePage = () => {
 
   return (
     <div className="mb-64 mt-20 max-w-7xl mx-auto px-4">
-      {/*<div className="hidden md:block">
-        <AccountNav />
-      </div>*/}
       {subpage === 'profile' && (
         <div className="bg-white overflow-hidden shadow rounded-lg border max-w-2xl mx-auto">
           <div className="px-4 py-5 sm:px-6">
@@ -108,12 +97,14 @@ const ProfilePage = () => {
                     >
                       Withdraw
                     </Link>
-                    {/*<button
-                      onClick={logout}
-                      className="bg-red-600 text-white py-2 px-4 rounded-full mt-2"
-                    >
-                      Logout
-                    </button>*/}
+                    {user.isDriver && (
+                      <Link
+                        to="/account/driver-earnings"
+                        className="bg-green-500 text-white py-2 px-4 rounded-full"
+                      >
+                        Driver Earnings
+                      </Link>
+                    )}
                   </div>
                 </dd>
               </div>
@@ -124,7 +115,6 @@ const ProfilePage = () => {
       {subpage === 'places' && <PlacesPage />}
       {subpage === 'requests' && <RequestsPage />}
       {subpage === 'deposit' && <DepositPage />}
-      {subpage === 'withdraw' && <WithdrawPage />}
     </div>
   );
 };

@@ -140,7 +140,7 @@ export default function TripRequest() {
           {formError && <p className="text-red-500">Please fill out all the required information!</p>}
 
           <div className="mt-4">
-          {preInput('From', 'Please indicate your preferred pick-up location for passengers.')}
+          {preInput('From*', 'Please indicate your preferred pick-up location for passengers.')}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="col-span-1">
                 <select
@@ -166,7 +166,7 @@ export default function TripRequest() {
           </div>
 
           <div className="mt-4">
-          {preInput('Destination', 'Indicate the destination of your trip.')}
+          {preInput('Destination*', 'Indicate the destination of your trip.')}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="col-span-1">
                 <select
@@ -203,18 +203,18 @@ export default function TripRequest() {
           </div>
 
           <div className="mt-4">
-            {preInput('Max Guests', 'How many passengers can be accommodated?')}
+            {preInput('Max Guests*', 'How many passengers can be accommodated?')}
             <input
               className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 w-full"
               type="number"
               value={NumOfPassengers}
-              onChange={(ev) => setMaxGuests(ev.target.value)}
+              onChange={(ev) => setPassengers(ev.target.value)}
               placeholder="Max number of passengers"
             />
           </div>
 
           <div className="mt-4">
-            {preInput('Price', 'Set the price for the trip.')}
+            {preInput('Price*', 'Set the price for the trip.')}
             <input
               className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 w-full"
               type="number"
@@ -225,7 +225,7 @@ export default function TripRequest() {
           </div>
 
           <div className="mt-4">
-            {preInput('Phone Number', 'Please provide your contact number.')}
+            {preInput('Phone Number*', 'Please provide your contact number.')}
             <input
               className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 w-full"
               type="text"
@@ -236,7 +236,7 @@ export default function TripRequest() {
           </div>
 
           <div className="mt-4">
-            {preInput('Trip Date', 'When would you like the trip to occur?')}
+            {preInput('Trip Date*', 'When would you like the trip to occur?')}
             <DatePicker
               selected={date}
               onChange={(date) => setDate(date)}

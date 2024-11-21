@@ -18,6 +18,7 @@ export default function RequestsPage() {
   const [requests, setRequests] = useState([]);
   const [verificationMessage, setVerificationMessage] = useState("");
   const [expandedRequests, setExpandedRequests] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -35,9 +36,14 @@ export default function RequestsPage() {
   }, []);
 
   const handleAddRequestClick = (event) => {
-    if (user && user.verification === "not verified") {
-      event.preventDefault();
-      setVerificationMessage("Only verified users can create trip requests.");
+    if (user) {
+      if (user.verification === "not verified") {
+        event.preventDefault();
+        setVerificationMessage("Only verified users can create trip requests.");
+        return;
+      }
+      setVerificationMessage(""); // Clear the message if the user is verified
+      navigate('/account/Myrequests/new'); // Navigate to the new request page
     }
   };
 
@@ -90,10 +96,9 @@ export default function RequestsPage() {
 
       {/* Add Request Button */}
       <div className="text-center mb-4 mt-10">
-        <Link
-          className="inline-flex items-center gap-1 bg-primary text-white py-2 px-6 rounded-full"
-          to={'/account/Myrequests/new'}
+        <button
           onClick={handleAddRequestClick}
+          className="inline-flex items-center gap-1 bg-primary text-white py-2 px-6 rounded-full"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -104,7 +109,7 @@ export default function RequestsPage() {
             <path fillRule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clipRule="evenodd" />
           </svg>
           Add Trip Request
-        </Link>
+        </button>
         {verificationMessage && (
           <p className="text-red-700 mt-2">{verificationMessage}</p>
         )}

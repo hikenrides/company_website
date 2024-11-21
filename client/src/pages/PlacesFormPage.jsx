@@ -162,7 +162,7 @@ export default function PlacesFormPage() {
         </div>
         <form onSubmit={savePlace}>
         <div className="mt-4">
-            {preInput('From', 'Please indicate your preferred pick-up location for passengers.')}
+            {preInput('From*', 'Please indicate your preferred pick-up location for passengers.')}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="col-span-1">
                 <select
@@ -188,7 +188,7 @@ export default function PlacesFormPage() {
           </div>
 
           <div className="mt-4">
-            {preInput('Destination', 'Indicate the destination of your trip.')}
+            {preInput('Destination*', 'Indicate the destination of your trip.')}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="col-span-1">
                 <select
@@ -214,7 +214,7 @@ export default function PlacesFormPage() {
           </div>
 
           <div className="mt-4">
-            {preInput('Vehicle Description', 'Provide a description of the vehicle.')}
+            {preInput('Vehicle Description*', 'Provide a description of the vehicle.')}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="col-span-1">
                 <label htmlFor="colorSelect">Color:</label>
@@ -320,7 +320,7 @@ export default function PlacesFormPage() {
           </div>
 
           <div className="mt-4">
-            {preInput('Max Guests', 'How many passengers can be accommodated?')}
+            {preInput('Max Guests*', 'How many passengers can be accommodated?')}
             <input
               className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 w-full"
               type="number"
@@ -331,7 +331,7 @@ export default function PlacesFormPage() {
           </div>
 
           <div className="mt-4">
-            {preInput('Price', 'Set the price for the trip.')}
+            {preInput('Price*', 'Set the price for the trip.')}
             <input
               className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 w-full"
               type="number"
@@ -342,7 +342,7 @@ export default function PlacesFormPage() {
           </div>
 
           <div className="mt-4">
-            {preInput('Phone Number', 'Please provide your contact number.')}
+            {preInput('Phone Number*', 'Please provide your contact number.')}
             <input
               className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 w-full"
               type="text"
@@ -353,7 +353,7 @@ export default function PlacesFormPage() {
           </div>
 
           <div className="mt-4">
-            {preInput('Trip Date', 'When would you like the trip to occur?')}
+            {preInput('Trip Date*', 'When would you like the trip to occur?')}
             <DatePicker
               selected={date}
               onChange={(date) => setDate(date)}

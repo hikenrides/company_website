@@ -26,6 +26,7 @@ import VerificationPage from './pages/VerificationPage.jsx';
 import AboutUs from './AboutUs.jsx';
 import Security from './Security.jsx';
 import { initGA, logPageView } from './analytics.jsx';
+import DriverEarningsPage from './pages/DriverEarningsPage.jsx';
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
 axios.defaults.withCredentials = true;
@@ -81,6 +82,7 @@ function App() {
           <Route path="/verification" element={<VerificationPage />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/security" element={<Security />} />
+          <Route path="/account/driver-earnings" element={<DriverEarningsPage />} />
 
         </Route>
       </Routes>

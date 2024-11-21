@@ -16,7 +16,7 @@ import Paper from '@mui/material/Paper';
 export default function PlacesPage() {
   const { user } = useContext(UserContext);
   const [places, setPlaces] = useState([]);
-  const [verificationMessage, setVerificationMessage] = useState("");
+  const [verificationMessage, setVerificationMessage] = useState(""); // State for the message
   const [expandedPlaces, setExpandedPlaces] = useState({});
   const navigate = useNavigate();
 
@@ -45,13 +45,14 @@ export default function PlacesPage() {
     if (user) {
       if (user.verification === "not verified") {
         event.preventDefault();
-        setVerificationMessage("Only verified users can create trip offers.");
+        setVerificationMessage("Only verified users can create trip offers."); // Set the message
         return;
       } else if (!user.isDriver) {
         event.preventDefault();
-        setVerificationMessage("Only drivers can create trip offers.");
+        setVerificationMessage("Only drivers can create trip offers."); // Set the message
         return;
       }
+      setVerificationMessage(""); // Clear message if conditions are met
       navigate('/account/Mytrips/new');
     }
   };
@@ -107,10 +108,11 @@ export default function PlacesPage() {
         <p className="text-gray-600 mt-2">Manage and view all your trip offers here.</p>
       </div>
 
+      {/* Add Trip Button with Verification */}
       <div className="text-center mb-4 mt-8">
-        <Link
+        <button
+          onClick={handleAddTripClick}
           className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
-          to={'/account/Mytrips/new'}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -118,11 +120,23 @@ export default function PlacesPage() {
             fill="currentColor"
             className="w-6 h-6"
           >
-            <path fillRule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clipRule="evenodd" />
+            <path
+              fillRule="evenodd"
+              d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
+              clipRule="evenodd"
+            />
           </svg>
           Add Trip Offer
-        </Link>
+        </button>
       </div>
+
+      {/* Verification Message */}
+      {verificationMessage && (
+        <div className="text-center text-red-500 font-semibold mb-4">
+          {verificationMessage}
+        </div>
+      )}
+
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="trip offers table">
           <TableHead>
@@ -149,7 +163,13 @@ export default function PlacesPage() {
                   <TableCell>R{place.price} per person</TableCell>
                   <TableCell>{new Date(place.date).toLocaleDateString('en-US')}</TableCell>
                   <TableCell>
-                    <div className={`w-max font-bold py-1 px-2 rounded-md ${place.status === 'active' ? 'bg-green-500/20 text-green-900' : 'bg-red-500/20 text-red-900'}`}>
+                    <div
+                      className={`w-max font-bold py-1 px-2 rounded-md ${
+                        place.status === 'active'
+                          ? 'bg-green-500/20 text-green-900'
+                          : 'bg-red-500/20 text-red-900'
+                      }`}
+                    >
                       {place.status}
                     </div>
                   </TableCell>
@@ -163,7 +183,11 @@ export default function PlacesPage() {
                     </IconButton>
                     <button
                       onClick={() => handleToggleStatus(place._id, place.status)}
-                      className={`ml-2 px-2 py-1 rounded-lg ${place.status === 'active' ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'}`}
+                      className={`ml-2 px-2 py-1 rounded-lg ${
+                        place.status === 'active'
+                          ? 'bg-green-500 text-white'
+                          : 'bg-gray-500 text-white'
+                      }`}
                     >
                       {place.status === 'active' ? 'Hide' : 'Activate'}
                     </button>
