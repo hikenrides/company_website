@@ -873,8 +873,17 @@ app.post('/drivers/earnings', async (req, res) => {
       return res.status(403).json({ error: 'Not authorized.' });
     }
 
+    // Calculate earnings
     const earnings = booking.price * 0.9;
     driver.balance += earnings;
+
+    // Mark the place as "settled" and update its status
+    const place = await Place.findById(booking.place);
+    if (place) {
+      place.status = 'settled';
+      await place.save();
+    }
+
     await driver.save();
 
     res.json({ message: `R${earnings.toFixed(2)} has been added to your balance.` });
@@ -883,6 +892,7 @@ app.post('/drivers/earnings', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 app.post('/upload-verification', upload.fields([{ name: 'idPhoto' }, { name: 'documentPhoto' }]), async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
