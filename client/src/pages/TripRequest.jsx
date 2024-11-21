@@ -225,15 +225,27 @@ export default function TripRequest() {
           </div>
 
           <div className="mt-4">
-            {preInput('Phone Number*', 'Please provide your contact number.')}
-            <input
-              className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 w-full"
-              type="text"
-              value={owner_number}
-              onChange={(ev) => setPhone(ev.target.value)}
-              placeholder="Contact number"
-            />
-          </div>
+  {preInput('Phone Number*', 'Please provide your contact number.')}
+  <input
+    className="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 w-full"
+    type="text"
+    value={
+      owner_number 
+        ? owner_number.toString().startsWith('0') 
+          ? owner_number 
+          : `0${owner_number}` 
+        : '' // Default to an empty string if owner_number is null/undefined
+    }
+    onChange={(ev) => {
+      const inputValue = ev.target.value;
+      // Ensure only valid numbers are entered
+      const formattedValue = inputValue.replace(/[^0-9]/g, '');
+      setPhone(formattedValue.startsWith('0') ? formattedValue : `0${formattedValue}`);
+    }}
+    placeholder="Contact number"
+  />
+</div>
+
 
           <div className="mt-4">
             {preInput('Trip Date*', 'When would you like the trip to occur?')}
