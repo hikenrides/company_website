@@ -4,7 +4,6 @@ import AccountNav from "../AccountNav";
 import { Navigate, useParams } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Input, Typography, Select, Option } from "@material-tailwind/react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
 const provinces = [
@@ -37,69 +36,47 @@ export default function TripRequest() {
   const [open, setOpen] = useState(false);
 
   const validateForm = () => {
-    return province && from && province2 && destination && date && NumOfPassengers && price && owner_number;
+    if (province && from && province2 && destination && date && NumOfPassengers && price && owner_number) {
+      setFormError(false);
+      return true;
+    } else {
+      setFormError(true);
+      return false;
+    }
   };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const config = { headers: { Authorization: `Bearer ${token}` } };
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
 
     if (!id) {
-      axios.get('/profile', config).then(response => setPhone(response.data.phone_number));
-    } else {
-      axios.get('/requests/' + id, config).then(response => {
-        const data = response.data;
-        setProvince(data.province);
-        setFrom(data.from);
-        setProvince2(data.province2);
-        setDestination(data.address);
-        setExtraInfo(data.extraInfo);
-        setDate(new Date(data.date));
-        setPassengers(data.NumOfPassengers);
-        setPrice(data.price);
+      axios.get('/profile', config).then(response => {
+        const { data } = response;
         setPhone(data.phone_number);
       });
-    }
-  }, [id]);
-
-  async function saveRequest(ev) {
-    ev.preventDefault();
-    if (!validateForm()) {
-      setFormError(true);
       return;
     }
-    setFormError(false);
-    
-    const RequestData = {
-      province, from, province2, destination, extraInfo, owner_number, date, NumOfPassengers, price,
-    };
-    const token = localStorage.getItem('token');
-    const config = { headers: { Authorization: `Bearer ${token}` } };
-
-    try {
-      const response = id
-        ? await axios.put(`/requests/${id}`, RequestData, config)
-        : await axios.post('/requests', RequestData, config);
-      
+    axios.get('/requests/' + id, config).then(response => {
       const { data } = response;
-      setMessage(data.message);
-      setMessageType(data.success ? 'success' : 'error');
-      setOpen(true);
-    } catch (error) {
-      setMessage("An error occurred while saving the request.");
-      setMessageType('error');
-      setOpen(true);
-    }
-  }
-
-  const handleClose = () => {
-    setOpen(false);
-    if (messageType === 'success') setRedirect(true);
-  };
+      setProvince(data.province);
+      setFrom(data.from);
+      setProvince2(data.province2);
+      setDestination(data.address);
+      setExtraInfo(data.extraInfo);
+      setDate(new Date(data.date));
+      setPassengers(data.NumOfPassengers);
+      setPrice(data.price);
+      setPhone(data.phone_number);
+    });
+  }, [id]);
 
   function inputHeader(text) {
     return (
-      <h2 className="text-gray-600 text-lg">{text}</h2>
+      <h2 className="text-white text-2xl mt-4">{text}</h2>
     );
   }
 
@@ -118,16 +95,72 @@ export default function TripRequest() {
     );
   }
 
+  async function saveRequest(ev) {
+    ev.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
+    const RequestData = {
+      province,
+      from,
+      province2,
+      destination,
+      extraInfo,
+      owner_number,
+      date,
+      NumOfPassengers,
+      price,
+    };
+    const token = localStorage.getItem('token');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+    try {
+      if (id) {
+        await axios.put(`/requests/${id}`, RequestData, config);
+      } else {
+        const response = await axios.post('/requests', RequestData, config);
+        const { data } = response;
+        if (data.success) {
+          setMessage(data.message);
+          setMessageType('success');
+          setRedirect(true);
+        } else {
+          setMessage(data.message);
+          setMessageType('error');
+        }
+        setOpen(true); // Open the dialog
+      }
+    } catch (error) {
+      if (error.response && error.response.data) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage("An error occurred while saving the request.");
+      }
+      setMessageType('error');
+      setOpen(true); // Open the dialog
+    }
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+    if (messageType === 'success') {
+      setRedirect(true);
+    }
+  };
+
+  if (redirect) {
+    return <Navigate to={'/account/Myrequests'} />
+  }
+
   function renderProvinceOptions() {
     return provinces.map((province, index) => (
       <option key={index} value={province}>
         {province}
       </option>
     ));
-  }
-
-  if (redirect) {
-    return <Navigate to={'/account/Myrequests'} />;
   }
 
   return (
