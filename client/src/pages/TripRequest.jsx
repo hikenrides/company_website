@@ -247,12 +247,12 @@ export default function TripRequest() {
           </div>
 
           <div className="mt-6 flex justify-between items-center">
-            <button
-              type="submit"
-              className="bg-purple-600 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
-            >
-              Save
-            </button>
+          <button
+  type="submit"
+  class="bg-purple-600 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400">
+  Save
+</button>
+
           </div>
         </form>
       </div>
