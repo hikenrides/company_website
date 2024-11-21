@@ -24,11 +24,22 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
+
 require('dotenv').config();
 
 const app = express();
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
+const nodemailer = require("nodemailer");
+
+// Configure the email transport
+const transporter = nodemailer.createTransport({
+  service: "Gmail", // You can use other services or configure SMTP directly
+  auth: {
+    user: process.env.COMPANY_EMAIL, // Company email address
+    pass: process.env.EMAIL_PASSWORD, // App password or email password
+  },
+});
 
 const corsOptions = {
   origin: ['https://hikenrides.com', 'http://localhost:5173', 'http://localhost:5174'],
@@ -811,13 +822,13 @@ app.post('/bookings2', async (req, res) => {
     if (!requestData) {
       return res.status(404).json({ error: 'Request not found' });
     }
+
     const ownerNumber = requestData.owner_number;
 
     const bookingDoc = await Booking2.create({
       request, passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
     });
 
-    // Move the request to BookedRequest with status booked
     await BookedRequest.create({
       request: requestData._id,
       passengers,
@@ -830,14 +841,26 @@ app.post('/bookings2', async (req, res) => {
       status: 'booked',
     });
 
+    // Send email notification
+    const mailOptions = {
+      from: process.env.COMPANY_EMAIL,
+      to: process.env.COMPANY_EMAIL, // The company email
+      subject: "Request Accepted Notification",
+      text: `Driver ${name} (Phone: ${phone}) has accepted a request. 
+        Request ID: ${requestData._id}
+        Passengers: ${passengers}
+        Total Price: R${price}
+        Reference: ${reference}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
     res.json(bookingDoc);
   } catch (error) {
     console.error('Error creating booking2:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-
 
 app.get('/bookings', async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
