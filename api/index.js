@@ -30,16 +30,6 @@ require('dotenv').config();
 const app = express();
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
-const nodemailer = require("nodemailer");
-
-// Configure the email transport
-const transporter = nodemailer.createTransport({
-  service: "Gmail",
-  auth: {
-    user: process.env.COMPANY_EMAIL, // Company email address
-    pass: process.env.EMAIL_PASSWORD, // App password or email password
-  },
-});
 
 const corsOptions = {
   origin: ['https://hikenrides.com', 'http://localhost:5173', 'http://localhost:5174'],
@@ -323,7 +313,7 @@ app.post('/requests', async (req, res) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      message: "Insufficient funds. Please deposit money to your account to request trips."
+      message: "An error occurred while creating the request."
     });
   }
 });
@@ -639,7 +629,7 @@ app.put('/bookings2/cancel/:id', async (req, res) => {
     }
 
     booking.status = req.body.status;
-    await booking.save();
+    await booking.save();q
 
     res.json({ success: true });
   } catch (error) {
@@ -822,13 +812,13 @@ app.post('/bookings2', async (req, res) => {
     if (!requestData) {
       return res.status(404).json({ error: 'Request not found' });
     }
-
     const ownerNumber = requestData.owner_number;
 
     const bookingDoc = await Booking2.create({
       request, passengers, name, phone, price, reference, owner_number: ownerNumber, user: userData.id,
     });
 
+    // Move the request to BookedRequest with status booked
     await BookedRequest.create({
       request: requestData._id,
       passengers,
@@ -840,20 +830,6 @@ app.post('/bookings2', async (req, res) => {
       user: userData.id,
       status: 'booked',
     });
-
-    // Send email notification
-    const mailOptions = {
-      from: process.env.COMPANY_EMAIL,
-      to: process.env.COMPANY_EMAIL, // The company email
-      subject: "Request Accepted Notification",
-      text: `Driver ${name} (Phone: ${phone}) has accepted a request. 
-        Request ID: ${requestData._id}
-        Passengers: ${passengers}
-        Total Price: R${price}
-        Reference: ${reference}`,
-    };
-
-    await transporter.sendMail(mailOptions);
 
     res.json(bookingDoc);
   } catch (error) {
