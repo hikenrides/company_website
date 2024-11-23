@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import FAQ from './FAQ';
 
 const item = {
   hidden: { opacity: 0, y: 20 },
@@ -119,6 +120,7 @@ function Card() {
             transition={{ duration: 0.5 }}
           />
         </div>
+        <FAQ />
     </div>
   );
 }

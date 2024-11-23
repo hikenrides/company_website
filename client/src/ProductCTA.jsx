@@ -31,7 +31,7 @@ function ProductCTA() {
   };
 
   return (
-    <Container component="section" sx={{ mt: 10, display: 'flex' }}>
+    <Container component="section" sx={{ display: 'flex' }}>
       <Grid container>
         <Grid item xs={12} md={6} sx={{ zIndex: 1 }}>
           <Box
