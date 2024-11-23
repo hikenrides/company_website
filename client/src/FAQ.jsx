@@ -11,9 +11,9 @@ function FAQ() {
     { question: "What is the process for verifying my account?", answer: "To verify your account, navigate to the 'Profile' section in the sidebar and click on the 'Verify Account' button. Follow the instructions provided after clicking the button to complete the verification process." },
     { question: "What is the procedure for requesting a trip or ride?", answer: "To request a trip or ride, go to the 'Request Trip' section under 'My Profile' in the sidebar and submit your trip or ride request by following the prompts provided." },
     { question: "What is the procedure for creating a trip offer?", answer: "To create a trip offer, navigate to the 'Create Trip Offer' section under 'My Profile' in the sidebar and click the 'Add Trip Offer' button. Follow the provided instructions to complete the process." },
-    { question: "Can I change the domain you give me?", answer: "Laboris qui labore cillum culpa in sunt quis sint veniam. Dolore ex aute deserunt esse ipsum elit aliqua." },
-    { question: "How many sites I can create at once?", answer: "Laboris qui labore cillum culpa in sunt quis sint veniam. Dolore ex aute deserunt esse ipsum elit aliqua." },
-    { question: "How can I communicate with you?", answer: "Laboris qui labore cillum culpa in sunt quis sint veniam. Dolore ex aute deserunt esse ipsum elit aliqua." },
+    { question: "How can drivers receive their payments?", answer: "Drivers can receive their payments by navigating to the Created Trips section within their profile, selecting the relevant trip in progress, and entering the payment reference provided by the passenger." },
+    { question: "How can I fund my account?", answer: "To fund your account, navigate to the My Profile section in the sidebar and click on the 'Deposit' button. Follow the prompts to complete the funding process." },
+    //{ question: "How can I communicate with you?", answer: "Laboris qui labore cillum culpa in sunt quis sint veniam. Dolore ex aute deserunt esse ipsum elit aliqua." },
   ];
 
   return (
