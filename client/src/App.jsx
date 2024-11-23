@@ -82,7 +82,7 @@ function App() {
           <Route path="/verification" element={<VerificationPage />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/security" element={<Security />} />
-          <Route path="/account/driver-earnings" element={<DriverEarningsPage />} />
+          <Route path="/account/Mytrips/driver-earnings" element={<DriverEarningsPage />} />
 
         </Route>
       </Routes>

@@ -97,14 +97,14 @@ const ProfilePage = () => {
                     >
                       Withdraw
                     </Link>
-                    {user.isDriver && (
+                  {/*  {user.isDriver && (
                       <Link
                         to="/account/driver-earnings"
                         className="bg-green-500 text-white py-2 px-4 rounded-full"
                       >
                         Driver Earnings
                       </Link>
-                    )}
+                    )}*/}
                   </div>
                 </dd>
               </div>

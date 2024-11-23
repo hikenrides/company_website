@@ -155,8 +155,12 @@ export default function PlacesPage() {
                 <TableRow
                   key={place._id}
                   sx={{
-                    backgroundColor: index % 2 === 0 ? '#f7f7f7' : '#e0e0e0'
+                    backgroundColor: index % 2 === 0 ? '#f7f7f7' : '#e0e0e0',
+                    cursor: 'pointer',
                   }}
+                  component={Link}
+                  to={'/account/Mytrips/driver-earnings'} // Link to driver earnings
+                  style={{ textDecoration: 'none' }}
                 >
                   <TableCell>{place.province}, {place.from}</TableCell>
                   <TableCell>{place.province2}, {place.destination}</TableCell>
