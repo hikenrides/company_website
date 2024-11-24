@@ -48,6 +48,15 @@ function FAQ() {
           </div>
         </div>
       </section>
+      <div className="flex flex-col items-center w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-1/3 mx-auto">
+  <div 
+    className="relative h-0 overflow-hidden w-full" 
+    style={{ paddingBottom: '56.25%' }}
+  >
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/_9EJJPr7aWw?si=oKxaBBbAq432dXn6" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+</div>
+
     </div>
   );
 }

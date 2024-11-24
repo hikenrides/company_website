@@ -22,7 +22,9 @@ export default function TripOfferPage() {
 
   useEffect(() => {
     axios.get('/places', { withCredentials: true }).then(response => {
-      const activePlaces = response.data.filter(place => place.status === "active");
+      const activePlaces = response.data.filter(
+        place => place.status === "active" && place.maxGuests > 0
+      );
       setPlaces(activePlaces);
     });
   }, []);
@@ -35,7 +37,9 @@ export default function TripOfferPage() {
     setSearchPerformed(true);
     if (places.length === 0) {
       axios.get('/places').then(response => {
-        const activePlaces = response.data.filter(place => place.status === "active");
+        const activePlaces = response.data.filter(
+          place => place.status === "active" && place.maxGuests > 0
+        );
         setPlaces(activePlaces);
         filterAndLogResults(activePlaces, from, destination);
       });
@@ -107,22 +111,21 @@ export default function TripOfferPage() {
                       </tr>
                     </thead>
                     <tbody>
-  {matchingPlaces.map((place, index) => (
-    <tr 
-      key={place._id} 
-      className={`${
-        index % 2 === 0 ? 'bg-white' : 'bg-gray-300'
-      } border-b border-gray-100 hover:bg-gray-50 cursor-pointer`}
-      onClick={() => navigateToTrip(place._id)}
-    >
-      <td className="p-3 text-center text-gray-600">{place.province}, {place.from}</td>
-      <td className="p-3 text-center text-gray-600">{place.province2}, {place.destination}</td>
-      <td className="p-3 text-center text-gray-600">{formatDate(place.date)}</td>
-      <td className="p-3 text-center text-gray-600">R{place.price}</td>
-    </tr>
-  ))}
-</tbody>
-
+                      {matchingPlaces.map((place, index) => (
+                        <tr 
+                          key={place._id} 
+                          className={`${
+                            index % 2 === 0 ? 'bg-white' : 'bg-gray-300'
+                          } border-b border-gray-100 hover:bg-gray-50 cursor-pointer`}
+                          onClick={() => navigateToTrip(place._id)}
+                        >
+                          <td className="p-3 text-center text-gray-600">{place.province}, {place.from}</td>
+                          <td className="p-3 text-center text-gray-600">{place.province2}, {place.destination}</td>
+                          <td className="p-3 text-center text-gray-600">{formatDate(place.date)}</td>
+                          <td className="p-3 text-center text-gray-600">R{place.price}</td>
+                        </tr>
+                      ))}
+                    </tbody>
                   </table>
                 </div>
               </div>
@@ -154,21 +157,21 @@ export default function TripOfferPage() {
                       </tr>
                     </thead>
                     <tbody>
-  {places.filter(place => place.province2 === province).map((place, index) => (
-    <tr 
-      key={place._id} 
-      className={`${
-        index % 2 === 0 ? 'bg-white' : 'bg-gray-300'
-      } border-b border-gray-100 hover:bg-gray-50 cursor-pointer`}
-      onClick={() => navigateToTrip(place._id)}
-    >
-      <td className="p-3 text-center text-gray-600">{place.province}, {place.from}</td>
-      <td className="p-3 text-center text-gray-600">{place.province2}, {place.destination}</td>
-      <td className="p-3 text-center text-gray-600">{formatDate(place.date)}</td>
-      <td className="p-3 text-center text-gray-600">R{place.price}</td>
-    </tr>
-  ))}
-</tbody>
+                      {places.filter(place => place.province2 === province).map((place, index) => (
+                        <tr 
+                          key={place._id} 
+                          className={`${
+                            index % 2 === 0 ? 'bg-white' : 'bg-gray-300'
+                          } border-b border-gray-100 hover:bg-gray-50 cursor-pointer`}
+                          onClick={() => navigateToTrip(place._id)}
+                        >
+                          <td className="p-3 text-center text-gray-600">{place.province}, {place.from}</td>
+                          <td className="p-3 text-center text-gray-600">{place.province2}, {place.destination}</td>
+                          <td className="p-3 text-center text-gray-600">{formatDate(place.date)}</td>
+                          <td className="p-3 text-center text-gray-600">R{place.price}</td>
+                        </tr>
+                      ))}
+                    </tbody>
                   </table>
                 </div>
               )}
