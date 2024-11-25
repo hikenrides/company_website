@@ -73,11 +73,13 @@ function IndexPage() {
                       Available Trips
                     </button>
                   </Link>
-                  <Link to={user ? "/account" : "/login"}>
-                    <button className="w-full sm:w-auto bg-white text-blue-900 font-semibold px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-blue-100 transition duration-300">
-                      Login/Register
-                    </button>
-                  </Link>
+                  {!user && (
+                    <Link to="/login">
+                      <button className="w-full sm:w-auto bg-white text-blue-900 font-semibold px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-blue-100 transition duration-300">
+                        Login/Register
+                      </button>
+                    </Link>
+                  )}
                 </div>
               </div>
 

@@ -83,7 +83,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="max-w-lg mx-auto bg-white rounded-lg shadow-md px-8 py-6 flex flex-col items-center mt-12 mb-12">
+    <div className="max-w-lg mx-auto bg-white rounded-lg shadow-md px-8 py-6 flex flex-col items-center mt-16 mb-12">
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -104,6 +104,19 @@ export default function RegisterPage() {
           <Typography component="h1" variant={isMobile ? "h6" : "h5"}>
             Register
           </Typography>
+          <Typography 
+              component="p" 
+              sx={{
+                mt: 2,
+                mb: 3,
+                color: 'text.secondary',
+                fontSize: isMobile ? 12 : 14,
+                textAlign: 'center',
+              }}
+            >
+              <strong>Note:</strong> We will notify you about updates and confirmations 
+              via WhatsApp. Please ensure your phone number is valid and linked to WhatsApp.
+            </Typography>
           <Box component="form" noValidate onSubmit={registerUser} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
