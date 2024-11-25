@@ -36,76 +36,78 @@ function IndexPage() {
     <motion.div initial="initial" animate="animate" className="font-sans">
       <main className="pt-14 md:pt-16">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-blue-900 to-indigo-800 text-white overflow-hidden">
-          <div className="absolute inset-0 bg-black opacity-40"></div>
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1552937075-967cf58b74a4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
-            }}
-          ></div>
-          <div className="container mx-auto px-4 py-16 sm:py-24 md:py-32 relative z-10">
-            <div className="flex flex-col md:flex-row items-center justify-between space-y-8 md:space-y-0">
-              {/* Left Content */}
-              <div className="w-full md:w-1/2 text-center md:text-left">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-snug mb-4 md:mb-6">
-                  Your Ride,
-                </h1>
-                <motion.h1
-                  className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-snug mb-4 md:mb-6 min-h-[50px]" // Set a min height to avoid container shrinking
-                  animate={{
-                    scale: isAnimating ? 0.95 : 1, // Scale text slightly
-                  }}
-                  transition={{ duration: 0.3, ease: easing }}
-                  style={{ display: 'inline-block' }} // Ensures the text scales independently
-                >
-                  <span style={{ fontWeight: 'bold', color: 'white' }}>{typeEffect}</span>
-                </motion.h1>
+        <section
+  className="relative bg-gradient-to-br from-blue-900 to-indigo-800 text-white overflow-hidden min-h-[700px] sm:min-h-[600px]"
+>
+  <div className="absolute inset-0 bg-black opacity-40"></div>
+  <div
+    className="absolute inset-0 bg-cover bg-center"
+    style={{
+      backgroundImage:
+        "url('https://images.unsplash.com/photo-1552937075-967cf58b74a4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+    }}
+  ></div>
+  <div className="container mx-auto px-4 py-16 sm:py-24 md:py-32 relative z-10">
+    <div className="flex flex-col md:flex-row items-center justify-between space-y-8 md:space-y-0">
+      {/* Left Content */}
+      <div className="w-full md:w-1/2 text-center md:text-left">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-snug mb-4 md:mb-6">
+          Your Ride,
+        </h1>
+        <motion.h1
+          className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-snug mb-4 md:mb-6 min-h-[50px]" // Set a min height to avoid container shrinking
+          animate={{
+            scale: isAnimating ? 0.95 : 1, // Scale text slightly
+          }}
+          transition={{ duration: 0.3, ease: easing }}
+          style={{ display: 'inline-block' }} // Ensures the text scales independently
+        >
+          <span style={{ fontWeight: 'bold', color: 'white' }}>{typeEffect}</span>
+        </motion.h1>
 
-                <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 font-extrabold">
-                  Connecting drivers and passengers for cost-effective, secure, and collaborative journeys.
-                </p>
+        <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 font-extrabold">
+          Connecting drivers and passengers for cost-effective, secure, and collaborative journeys.
+        </p>
 
-                <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                  <Link to="/account/trips">
-                    <button className="w-full sm:w-auto bg-white text-blue-900 font-semibold px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-blue-100 transition duration-300">
-                      Available Trips
-                    </button>
-                  </Link>
-                  {!user && (
-                    <Link to="/login">
-                      <button className="w-full sm:w-auto bg-white text-blue-900 font-semibold px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-blue-100 transition duration-300">
-                        Login/Register
-                      </button>
-                    </Link>
-                  )}
-                </div>
-              </div>
+        <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
+          <Link to="/account/trips">
+            <button className="w-full sm:w-auto bg-white text-blue-900 font-semibold px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-blue-100 transition duration-300">
+              Available Trips
+            </button>
+          </Link>
+          {!user && (
+            <Link to="/login">
+              <button className="w-full sm:w-auto bg-white text-blue-900 font-semibold px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-blue-100 transition duration-300">
+                Login/Register
+              </button>
+            </Link>
+          )}
+        </div>
+      </div>
 
-              {/* Right Content */}
-              <div className="w-full md:w-1/2">
-                <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4 sm:p-6 shadow-2xl space-y-4 sm:space-y-6">
-                  <h2 className="text-xl sm:text-2xl font-semibold">Why Hikenrides?</h2>
-                  <ul className="space-y-3 sm:space-y-4">
-                    <li className="flex items-center">
-                      <IoChevronForwardCircle className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-yellow-400" />
-                      <span className="text-sm sm:text-base">Cost-Effective Transportation</span>
-                    </li>
-                    <li className="flex items-center">
-                      <IoChevronForwardCircle className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-green-400" />
-                      <span className="text-sm sm:text-base">Convenient and Flexible Travel</span>
-                    </li>
-                    <li className="flex items-center">
-                      <IoChevronForwardCircle className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-purple-400" />
-                      <span className="text-sm sm:text-base">Reduced Traffic and Environmental Impact</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+      {/* Right Content */}
+      <div className="w-full md:w-1/2">
+        <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4 sm:p-6 shadow-2xl space-y-4 sm:space-y-6">
+          <h2 className="text-xl sm:text-2xl font-semibold">Why Hikenrides?</h2>
+          <ul className="space-y-3 sm:space-y-4">
+            <li className="flex items-center">
+              <IoChevronForwardCircle className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-yellow-400" />
+              <span className="text-sm sm:text-base">Cost-Effective Transportation</span>
+            </li>
+            <li className="flex items-center">
+              <IoChevronForwardCircle className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-green-400" />
+              <span className="text-sm sm:text-base">Convenient and Flexible Travel</span>
+            </li>
+            <li className="flex items-center">
+              <IoChevronForwardCircle className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-purple-400" />
+              <span className="text-sm sm:text-base">Reduced Traffic and Environmental Impact</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
         {/* Information Section */}
         <div className="w-full bg-white py-12 px-4 sm:py-16 sm:px-8">
